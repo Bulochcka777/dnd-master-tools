@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Сетка на карту — DnD Master Tools</title>
+  <link rel="stylesheet" href="../../css/theme.css">
+  <link rel="stylesheet" href="grid-overlay.css">
+</head>
+<body>
+  <!-- Header -->
+  <header class="app-header">
+    <a href="../../index.html" class="app-back-link">← На главную</a>
+    <div class="app-title-block">
+      <h1 class="app-title"><span class="app-title-icon">📐</span>СЕТКА НА КАРТУ</h1>
+    </div>
+  </header>
+
+  <main class="go-layout">
+    <!-- Sidebar Controls -->
+    <aside class="go-sidebar" id="sidebar">
+      
+      <!-- Upload Section -->
+      <div class="go-control-group">
+        <h3 class="go-group-title">📁 Изображение</h3>
+        <div class="go-dropzone" id="dropzone">
+          <span class="go-dropzone-icon">🖼️</span>
+          <span class="go-dropzone-text">Перетащите изображение сюда</span>
+          <span class="go-dropzone-hint">или нажмите для выбора</span>
+          <input type="file" id="fileInput" accept="image/*" class="go-file-input">
+        </div>
+        <div class="go-file-info" id="fileInfo" hidden>
+          <span id="fileName"></span>
+          <span id="fileSize"></span>
+        </div>
+      </div>
+
+      <!-- Grid Type -->
+      <div class="go-control-group">
+        <h3 class="go-group-title">⬡ Тип сетки</h3>
+        <div class="go-radio-group">
+          <label class="go-radio-label">
+            <input type="radio" name="gridType" value="square" checked> Квадратная
+          </label>
+          <label class="go-radio-label">
+            <input type="radio" name="gridType" value="hex"> Гексагональная
+          </label>
+        </div>
+      </div>
+
+      <!-- Grid Size -->
+      <div class="go-control-group">
+        <h3 class="go-group-title">🔢 Размер сетки</h3>
+        <div class="go-input-row">
+          <label class="go-label">
+            <span>Столбцы</span>
+            <input type="number" id="colsInput" value="10" min="1" max="200" class="go-input">
+          </label>
+          <label class="go-label" id="rowsLabel">
+            <span>Строки</span>
+            <input type="number" id="rowsInput" value="10" min="1" max="200" class="go-input">
+          </label>
+        </div>
+        <label class="go-checkbox-label" id="squareToggleLabel">
+          <input type="checkbox" id="squareToggle"> Квадратные ячейки 1:1
+        </label>
+      </div>
+
+      <!-- Appearance -->
+      <div class="go-control-group">
+        <h3 class="go-group-title">🎨 Внешний вид</h3>
+        <label class="go-label">
+          <span>Цвет сетки</span>
+          <input type="color" id="colorPicker" value="#808080" class="go-color-input">
+        </label>
+        <label class="go-label">
+          <span>Толщина линий: <strong id="thicknessValue">2</strong>px</span>
+          <input type="range" id="thicknessInput" value="2" min="1" max="10" step="1" class="go-range">
+        </label>
+        <label class="go-label">
+          <span>Прозрачность: <strong id="opacityValue">100</strong>%</span>
+          <input type="range" id="opacityInput" value="100" min="5" max="100" step="5" class="go-range">
+        </label>
+      </div>
+
+      <!-- Options -->
+      <div class="go-control-group">
+        <h3 class="go-group-title">⚙️ Опции</h3>
+        <label class="go-checkbox-label">
+          <input type="checkbox" id="labelsToggle"> 🏷️ Метки ячеек (A1, B2...)
+        </label>
+        <label class="go-checkbox-label" id="diagonalToggleLabel">
+          <input type="checkbox" id="diagonalToggle"> ❌ Диагональные линии
+        </label>
+      </div>
+
+      <!-- Drag Mode -->
+      <div class="go-control-group">
+        <h3 class="go-group-title">✋ Перемещение</h3>
+        <button id="dragToggle" class="btn go-btn-drag">Перетащить сетку</button>
+        <button id="resetPosition" class="btn go-btn-secondary" hidden>Сбросить позицию</button>
+      </div>
+
+      <!-- Download -->
+      <div class="go-control-group">
+        <h3 class="go-group-title">💾 Экспорт</h3>
+        <div class="go-input-row">
+          <select id="formatSelect" class="go-select">
+            <option value="png">PNG</option>
+            <option value="jpg">JPG</option>
+            <option value="webp">WEBP</option>
+          </select>
+          <button id="downloadBtn" class="btn btn--primary go-btn-download" disabled>Скачать</button>
+        </div>
+      </div>
+
+      <!-- Reset -->
+      <div class="go-control-group">
+        <button id="resetBtn" class="btn btn--danger go-btn-reset">🗑️ Сбросить всё</button>
+      </div>
+
+    </aside>
+
+    <!-- Canvas Area -->
+    <section class="go-canvas-area" id="canvasArea">
+      <div class="go-canvas-placeholder" id="placeholder">
+        <span class="go-placeholder-icon">🗺️</span>
+        <p>Загрузите изображение карты</p>
+        <p class="go-placeholder-hint">Поддерживаются форматы: PNG, JPG, WEBP, GIF</p>
+      </div>
+      <div class="go-canvas-wrapper" id="canvasWrapper" hidden>
+        <canvas id="gridCanvas"></canvas>
+      </div>
+    </section>
+  </main>
+
+  <script src="grid-overlay.js"></script>
+</body>
+</html>

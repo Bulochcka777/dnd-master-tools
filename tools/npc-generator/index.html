@@ -1,0 +1,346 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Генератор NPC для D&D 5E 2024. Создание неигровых персонажей с предысторией, характеристиками, чертами характера и тайнами.">
+  <title>Генератор NPC — DnD Master Tools</title>
+
+  <link rel="stylesheet" href="../../css/theme.css">
+  <link rel="stylesheet" href="npc.css">
+</head>
+<body>
+
+  <!-- ===== Header ===== -->
+  <header class="app-header">
+    <a href="../../index.html" class="app-back-link">← На главную</a>
+    <div class="app-title-block">
+      <h1 class="app-title"><span class="app-title-icon">🧙‍♂️</span>ГЕНЕРАТОР NPC</h1>
+    </div>
+    <div class="app-header-actions">
+      <button id="btn-open-saved" class="btn-secondary" aria-label="Открыть сохранённых персонажей">
+        ⭐ Сохранённые (<span id="saved-count-badge">0</span>)
+      </button>
+    </div>
+  </header>
+
+  <div class="container" style="margin-top: var(--space-lg);">
+
+    <!-- ===== Controls & Filters ===== -->
+    <section class="npc-controls" aria-label="Параметры генерации">
+      <div class="npc-controls__grid">
+
+        <!-- Race -->
+        <div class="control-group">
+          <label for="filter-race">Раса (Вид)</label>
+          <select id="filter-race" class="control-select">
+            <option value="random">🎲 Случайная</option>
+          </select>
+        </div>
+
+        <!-- Gender -->
+        <div class="control-group">
+          <label for="filter-gender">Пол</label>
+          <select id="filter-gender" class="control-select">
+            <option value="random">🎲 Любой</option>
+            <option value="male">Мужской</option>
+            <option value="female">Женский</option>
+          </select>
+        </div>
+
+        <!-- Class -->
+        <div class="control-group">
+          <label for="filter-class">Класс</label>
+          <select id="filter-class" class="control-select">
+            <option value="random">🎲 Случайный</option>
+          </select>
+        </div>
+
+        <!-- Level -->
+        <div class="control-group">
+          <label for="filter-level">Уровень (1–20)</label>
+          <select id="filter-level" class="control-select">
+            <option value="1">1 уровень</option>
+            <option value="2">2 уровень</option>
+            <option value="3">3 уровень</option>
+            <option value="4">4 уровень</option>
+            <option value="5">5 уровень</option>
+            <option value="6">6 уровень</option>
+            <option value="7">7 уровень</option>
+            <option value="8">8 уровень</option>
+            <option value="9">9 уровень</option>
+            <option value="10">10 уровень</option>
+            <option value="12">12 уровень</option>
+            <option value="15">15 уровень</option>
+            <option value="20">20 уровень</option>
+          </select>
+        </div>
+
+        <!-- Background -->
+        <div class="control-group">
+          <label for="filter-bg">Предыстория</label>
+          <select id="filter-bg" class="control-select">
+            <option value="random">🎲 Случайная</option>
+          </select>
+        </div>
+
+        <!-- Alignment -->
+        <div class="control-group">
+          <label for="filter-align">Мировоззрение</label>
+          <select id="filter-align" class="control-select">
+            <option value="random">🎲 Случайное</option>
+          </select>
+        </div>
+
+        <!-- Stats Method -->
+        <div class="control-group">
+          <label for="filter-stats">Метод характеристик</label>
+          <select id="filter-stats" class="control-select">
+            <option value="4d6">Бросок 4d6 (drop lowest)</option>
+            <option value="standard">Стандартный набор (15, 14, 13...)</option>
+          </select>
+        </div>
+
+      </div>
+
+      <!-- Action Buttons -->
+      <div class="npc-controls__buttons">
+        <div class="npc-controls__buttons-left">
+          <button id="btn-generate" class="btn-generate" title="Сгенерировать нового персонажа (Пробел)">
+            🎲 Сгенерировать NPC
+          </button>
+          <button id="btn-quick-random" class="btn-secondary" title="Сбросить фильтры и сгенерировать">
+            ⚡ Полный рандом
+          </button>
+        </div>
+
+        <div class="npc-controls__buttons-right">
+          <button id="btn-copy-md" class="btn-secondary" title="Скопировать карточку в формате Markdown">
+            📋 Скопировать Markdown
+          </button>
+          <button id="btn-print-npc" class="btn-secondary" title="Распечатать карточку или сохранить в PDF">
+            🖨️ Печать
+          </button>
+        </div>
+      </div>
+    </section>
+
+    <!-- ===== NPC Sheet (Parchment Card) ===== -->
+    <main class="npc-sheet-wrapper">
+      <article id="npc-sheet" class="npc-sheet" aria-label="Карточка персонажа">
+
+        <!-- Decorative Corners -->
+        <div class="npc-sheet__ornament-tl" aria-hidden="true"></div>
+        <div class="npc-sheet__ornament-tr" aria-hidden="true"></div>
+        <div class="npc-sheet__ornament-bl" aria-hidden="true"></div>
+        <div class="npc-sheet__ornament-br" aria-hidden="true"></div>
+
+        <!-- Header -->
+        <header class="npc-sheet__header">
+          <div class="npc-sheet__name-group">
+            <h2 class="npc-sheet__name">
+              <span id="npc-name">Загрузка...</span>
+              <button class="btn-reroll" data-field="name" title="Перебросить имя" aria-label="Перебросить имя">↻</button>
+            </h2>
+            <div id="npc-meta" class="npc-sheet__meta">
+              Человек · Воин (1 ур.) · Солдат · Законно-добрый
+            </div>
+          </div>
+          <div class="npc-sheet__header-actions">
+            <button id="btn-save-npc" class="btn-secondary" title="Добавить в избранное">
+              ☆ Сохранить
+            </button>
+          </div>
+        </header>
+
+        <!-- Combat Vitals -->
+        <section class="npc-vitals" aria-label="Боевые параметры">
+          <div class="vital-item">
+            <span class="vital-label">Хиты (HP)</span>
+            <span id="vital-hp" class="vital-value">--</span>
+          </div>
+          <div class="vital-item">
+            <span class="vital-label">Класс брони (AC)</span>
+            <span id="vital-ac" class="vital-value">--</span>
+          </div>
+          <div class="vital-item">
+            <span class="vital-label">Инициатива</span>
+            <span id="vital-init" class="vital-value">--</span>
+          </div>
+          <div class="vital-item">
+            <span class="vital-label">Скорость</span>
+            <span id="vital-speed" class="vital-value">30 фт.</span>
+          </div>
+          <div class="vital-item">
+            <span class="vital-label">Мастерство</span>
+            <span id="vital-pb" class="vital-value">+2</span>
+          </div>
+        </section>
+
+        <!-- Ability Scores Grid -->
+        <section aria-label="Основные характеристики">
+          <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: var(--space-xs);">
+            <span style="font-family: var(--font-heading); font-size: var(--fs-xs); color: var(--color-text-muted); text-transform: uppercase;">
+              Характеристики (D&D 5e)
+            </span>
+            <button class="btn-reroll" data-field="stats" title="Перебросить характеристики" aria-label="Перебросить характеристики">
+              ↻ Перебросить кубы
+            </button>
+          </div>
+
+          <div class="npc-stats-grid">
+            <div class="stat-box">
+              <div class="stat-name">СИЛ</div>
+              <div id="score-str" class="stat-score">10</div>
+              <div id="mod-str" class="stat-modifier">+0</div>
+            </div>
+            <div class="stat-box">
+              <div class="stat-name">ЛОВ</div>
+              <div id="score-dex" class="stat-score">10</div>
+              <div id="mod-dex" class="stat-modifier">+0</div>
+            </div>
+            <div class="stat-box">
+              <div class="stat-name">ТЕЛ</div>
+              <div id="score-con" class="stat-score">10</div>
+              <div id="mod-con" class="stat-modifier">+0</div>
+            </div>
+            <div class="stat-box">
+              <div class="stat-name">ИНТ</div>
+              <div id="score-int" class="stat-score">10</div>
+              <div id="mod-int" class="stat-modifier">+0</div>
+            </div>
+            <div class="stat-box">
+              <div class="stat-name">МУД</div>
+              <div id="score-wis" class="stat-score">10</div>
+              <div id="mod-wis" class="stat-modifier">+0</div>
+            </div>
+            <div class="stat-box">
+              <div class="stat-name">ХАР</div>
+              <div id="score-cha" class="stat-score">10</div>
+              <div id="mod-cha" class="stat-modifier">+0</div>
+            </div>
+          </div>
+        </section>
+
+        <!-- Narrative Sections -->
+        <div class="npc-sections-grid">
+
+          <!-- Appearance -->
+          <div class="npc-section">
+            <div class="npc-section__header">
+              <h3 class="npc-section__title">👁️ Внешний вид и приметы</h3>
+              <button class="btn-reroll" data-field="appearance" title="Перебросить внешность">↻</button>
+            </div>
+            <div id="narrative-appearance" class="npc-section__content">--</div>
+          </div>
+
+          <!-- Speech & Quirks -->
+          <div class="npc-section">
+            <div class="npc-section__header">
+              <h3 class="npc-section__title">🗣️ Манеры и речь</h3>
+              <button class="btn-reroll" data-field="speech" title="Перебросить речь">↻</button>
+            </div>
+            <div id="narrative-speech" class="npc-section__content">--</div>
+          </div>
+
+          <!-- Personality & Ideals -->
+          <div class="npc-section">
+            <div class="npc-section__header">
+              <h3 class="npc-section__title">🎭 Характер и Идеал</h3>
+              <div>
+                <button class="btn-reroll" data-field="personality" title="Перебросить характер">↻ Х</button>
+                <button class="btn-reroll" data-field="ideal" title="Перебросить идеал">↻ И</button>
+              </div>
+            </div>
+            <div class="npc-section__content">
+              <p><strong>Характер:</strong> <span id="narrative-personality">--</span></p>
+              <p style="margin-top: var(--space-xs);"><strong>Идеал:</strong> <span id="narrative-ideal">--</span></p>
+            </div>
+          </div>
+
+          <!-- Bonds & Flaws -->
+          <div class="npc-section">
+            <div class="npc-section__header">
+              <h3 class="npc-section__title">⛓️ Привязанность и Слабость</h3>
+              <div>
+                <button class="btn-reroll" data-field="bond" title="Перебросить привязанность">↻ П</button>
+                <button class="btn-reroll" data-field="flaw" title="Перебросить слабость">↻ С</button>
+              </div>
+            </div>
+            <div class="npc-section__content">
+              <p><strong>Привязанность:</strong> <span id="narrative-bond">--</span></p>
+              <p style="margin-top: var(--space-xs);"><strong>Слабость:</strong> <span id="narrative-flaw">--</span></p>
+            </div>
+          </div>
+
+          <!-- Motivation -->
+          <div class="npc-section">
+            <div class="npc-section__header">
+              <h3 class="npc-section__title">🎯 Текущая цель и мотивация</h3>
+              <button class="btn-reroll" data-field="motivation" title="Перебросить мотивацию">↻</button>
+            </div>
+            <div id="narrative-motivation" class="npc-section__content">--</div>
+          </div>
+
+          <!-- Secret / Hook -->
+          <div class="npc-section npc-section--secret">
+            <div class="npc-section__header">
+              <h3 class="npc-section__title">🔒 Тайный секрет / Зацепка для квеста</h3>
+              <button class="btn-reroll" data-field="secret" title="Перебросить тайну">↻</button>
+            </div>
+            <div id="narrative-secret" class="npc-section__content">--</div>
+          </div>
+
+        </div>
+
+        <!-- Features & Equipment -->
+        <section class="npc-section" style="margin-block-end: 0;" aria-label="Снаряжение и особенности">
+          <div class="npc-section__header">
+            <h3 class="npc-section__title">🎒 Снаряжение и особенности</h3>
+          </div>
+          <div class="npc-section__content">
+            <p><strong>Экипировка:</strong> <span id="narrative-gear">--</span></p>
+            <div id="features-tags" class="npc-tags"></div>
+          </div>
+        </section>
+
+      </article>
+    </main>
+
+  </div>
+
+  <!-- ===== Dice Animation Overlay ===== -->
+  <div id="dice-overlay" class="dice-overlay" aria-hidden="true">
+    <div class="dice-d20-container">
+      <svg class="dice-d20" viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <polygon points="50,5 92,28 92,72 50,95 8,72 8,28" fill="#1a1a2e" stroke="#c9a84c" stroke-width="3" />
+        <polygon points="50,5 50,95 8,28" fill="#16162b" stroke="#c9a84c" stroke-width="1.5" />
+        <polygon points="50,5 92,28 50,95" fill="#252540" stroke="#c9a84c" stroke-width="1.5" />
+        <polygon points="50,25 80,68 20,68" fill="#2e1a47" stroke="#f5c842" stroke-width="2" />
+        <text x="50" y="58" font-family="'Cinzel', serif" font-weight="900" font-size="22" fill="#f5c842" text-anchor="middle">20</text>
+      </svg>
+    </div>
+    <div class="dice-overlay__text">Бросок кубика d20...</div>
+  </div>
+
+  <!-- ===== Saved NPCs Drawer ===== -->
+  <div id="drawer-backdrop" class="drawer-backdrop" aria-hidden="true"></div>
+  <aside id="saved-drawer" class="drawer" aria-label="Сохранённые персонажи">
+    <div class="drawer__header">
+      <h3 class="drawer__title">⭐ Избранные персонажи</h3>
+      <button id="drawer-close" class="drawer__close" aria-label="Закрыть панель">✕</button>
+    </div>
+    <div id="saved-list-container" class="drawer__content">
+      <!-- Injected by JavaScript -->
+    </div>
+  </aside>
+
+  <!-- ===== Toast Notifications Container ===== -->
+  <div id="toast-container" class="toast-container" aria-live="polite"></div>
+
+  <!-- ===== Scripts ===== -->
+  <script src="../../js/utils.js"></script>
+  <script src="npc-data.js"></script>
+  <script src="npc.js"></script>
+</body>
+</html>

@@ -1,0 +1,361 @@
+/* ============================================
+   DnD Master Tools — Grid Overlay (Сетка на карту)
+   Styles for map grid tool
+   ============================================ */
+
+/* --- Page Layout --- */
+body {
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+  overflow-x: hidden;
+}
+
+/* --- Header (inherited from theme.css) --- */
+.go-header {
+  /* uses .app-header from theme.css */
+}
+
+.go-subtitle {
+  font-size: var(--fs-xs);
+  color: var(--color-text-muted);
+  margin-top: var(--space-xs);
+  font-style: italic;
+}
+
+/* --- Main Layout --- */
+.go-layout {
+  display: flex;
+  flex: 1;
+  min-height: calc(100vh - 80px);
+  overflow: hidden;
+}
+
+/* --- Sidebar --- */
+.go-sidebar {
+  width: 320px;
+  min-width: 300px;
+  background: var(--color-bg-card);
+  border-right: var(--border-ornament);
+  padding: var(--space-md) var(--space-lg);
+  overflow-y: auto;
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-md);
+  box-shadow: 4px 0 20px rgba(0, 0, 0, 0.6);
+  z-index: 5;
+}
+
+.go-control-group {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-xs);
+  padding-bottom: var(--space-sm);
+  border-bottom: 1px solid rgba(201, 168, 76, 0.15);
+}
+
+.go-control-group:last-child {
+  border-bottom: none;
+}
+
+.go-group-title {
+  font-family: var(--font-heading);
+  font-size: var(--fs-xs);
+  font-weight: 700;
+  color: var(--color-gold-bright);
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  margin-bottom: var(--space-xs);
+}
+
+/* --- Dropzone --- */
+.go-dropzone {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: var(--space-md);
+  min-height: 100px;
+  border: 2px dashed var(--color-gold-dim);
+  border-radius: var(--radius-md);
+  background: rgba(13, 13, 26, 0.6);
+  cursor: pointer;
+  text-align: center;
+  transition: all var(--transition-fast);
+}
+
+.go-dropzone:hover,
+.go-dropzone.go-dropzone--active {
+  border-color: var(--color-gold-bright);
+  background: rgba(201, 168, 76, 0.1);
+  box-shadow: var(--glow-gold);
+}
+
+.go-dropzone-icon {
+  font-size: 1.8rem;
+  margin-bottom: var(--space-xs);
+}
+
+.go-dropzone-text {
+  font-family: var(--font-heading);
+  font-size: var(--fs-xs);
+  color: var(--color-text-parchment);
+  font-weight: 600;
+}
+
+.go-dropzone-hint {
+  font-size: 0.72rem;
+  color: var(--color-text-muted);
+  margin-top: 2px;
+}
+
+.go-file-input {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  opacity: 0;
+  cursor: pointer;
+}
+
+.go-file-info {
+  display: flex;
+  justify-content: space-between;
+  font-size: 0.75rem;
+  color: var(--color-gold);
+  background: rgba(0, 0, 0, 0.4);
+  padding: 4px 8px;
+  border-radius: var(--radius-sm);
+  margin-top: 4px;
+}
+
+/* --- Form Controls --- */
+.go-radio-group {
+  display: flex;
+  gap: var(--space-md);
+}
+
+.go-radio-label,
+.go-checkbox-label {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-xs);
+  font-size: var(--fs-xs);
+  color: var(--color-text-light);
+  cursor: pointer;
+  user-select: none;
+}
+
+.go-radio-label input,
+.go-checkbox-label input {
+  accent-color: var(--color-gold);
+  cursor: pointer;
+  width: 15px;
+  height: 15px;
+}
+
+.go-input-row {
+  display: flex;
+  gap: var(--space-sm);
+  align-items: center;
+}
+
+.go-label {
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+  flex: 1;
+  font-size: var(--fs-xs);
+  color: var(--color-text-light);
+}
+
+.go-label span strong {
+  color: var(--color-gold-bright);
+}
+
+.go-input,
+.go-select {
+  font-family: var(--font-body);
+  font-size: var(--fs-sm);
+  color: var(--color-text-parchment);
+  background: var(--color-bg-dark);
+  border: 1px solid var(--color-gold-dim);
+  border-radius: var(--radius-sm);
+  padding: 4px 8px;
+  transition: all var(--transition-fast);
+  width: 100%;
+}
+
+.go-input:focus,
+.go-select:focus {
+  outline: none;
+  border-color: var(--color-gold-bright);
+  box-shadow: var(--glow-gold);
+}
+
+.go-color-input {
+  width: 100%;
+  height: 36px;
+  padding: 2px;
+  background: var(--color-bg-dark);
+  border: 1px solid var(--color-gold-dim);
+  border-radius: var(--radius-sm);
+  cursor: pointer;
+}
+
+.go-color-input::-webkit-color-swatch-wrapper {
+  padding: 0;
+}
+
+.go-color-input::-webkit-color-swatch {
+  border: none;
+  border-radius: 2px;
+}
+
+.go-range {
+  width: 100%;
+  accent-color: var(--color-gold);
+  cursor: pointer;
+}
+
+/* --- Buttons --- */
+.go-btn-drag {
+  width: 100%;
+  border-color: var(--color-gold-dim);
+  background: rgba(30, 30, 60, 0.6);
+  padding: var(--space-xs) var(--space-sm);
+  font-size: var(--fs-xs);
+}
+
+.go-btn-drag.go-btn-drag--active {
+  background: rgba(201, 168, 76, 0.25);
+  border-color: var(--color-gold-bright);
+  color: var(--color-gold-bright);
+  box-shadow: var(--glow-gold);
+}
+
+.go-btn-secondary {
+  width: 100%;
+  background: transparent;
+  border: 1px dashed var(--color-text-muted);
+  color: var(--color-text-muted);
+  font-size: 0.72rem;
+  padding: 4px 8px;
+  margin-top: 4px;
+}
+
+.go-btn-secondary:hover {
+  border-color: var(--color-gold);
+  color: var(--color-gold);
+}
+
+.go-btn-download {
+  flex: 1;
+  padding: var(--space-xs) var(--space-md);
+  font-size: var(--fs-xs);
+  white-space: nowrap;
+}
+
+.go-btn-reset {
+  width: 100%;
+  padding: var(--space-xs) var(--space-sm);
+  font-size: var(--fs-xs);
+}
+
+/* --- Canvas Area --- */
+.go-canvas-area {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+  background: radial-gradient(circle at center, rgba(26, 26, 46, 0.7) 0%, rgba(7, 7, 15, 0.95) 100%);
+  padding: var(--space-md);
+  overflow: auto;
+}
+
+[hidden],
+.go-canvas-placeholder[hidden],
+.go-canvas-wrapper[hidden],
+.go-file-info[hidden] {
+  display: none !important;
+}
+
+.go-canvas-placeholder {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  color: var(--color-text-muted);
+  padding: var(--space-2xl);
+  border: 2px dashed rgba(201, 168, 76, 0.15);
+  border-radius: var(--radius-xl);
+  max-width: 480px;
+}
+
+.go-placeholder-icon {
+  font-size: 4rem;
+  margin-bottom: var(--space-md);
+  opacity: 0.5;
+  filter: drop-shadow(0 0 12px rgba(201, 168, 76, 0.2));
+}
+
+.go-canvas-placeholder p {
+  font-family: var(--font-heading);
+  font-size: var(--fs-md);
+  color: var(--color-text-light);
+  margin-bottom: var(--space-xs);
+}
+
+.go-placeholder-hint {
+  font-size: var(--fs-xs);
+  color: var(--color-text-dim);
+}
+
+/* Checkerboard wrapper */
+.go-canvas-wrapper {
+  position: relative;
+  box-shadow: 0 10px 40px rgba(0, 0, 0, 0.8), 0 0 15px rgba(201, 168, 76, 0.2);
+  border: 1px solid var(--color-gold-dim);
+  border-radius: var(--radius-sm);
+  background-color: #12121e;
+  background-image:
+    linear-gradient(45deg, #181829 25%, transparent 25%),
+    linear-gradient(-45deg, #181829 25%, transparent 25%),
+    linear-gradient(45deg, transparent 75%, #181829 75%),
+    linear-gradient(-45deg, transparent 75%, #181829 75%);
+  background-size: 20px 20px;
+  background-position: 0 0, 0 10px, 10px -10px, -10px 0px;
+  line-height: 0;
+  max-width: 100%;
+}
+
+#gridCanvas {
+  display: block;
+  max-width: 100%;
+  max-height: calc(100vh - 130px);
+  object-fit: contain;
+  cursor: default;
+}
+
+/* --- Responsive --- */
+@media (max-width: 900px) {
+  .go-layout {
+    flex-direction: column;
+    min-height: auto;
+  }
+
+  .go-sidebar {
+    width: 100%;
+    min-width: 100%;
+    border-right: none;
+    border-bottom: var(--border-ornament);
+    max-height: 45vh;
+  }
+
+  .go-canvas-area {
+    min-height: 55vh;
+  }
+}

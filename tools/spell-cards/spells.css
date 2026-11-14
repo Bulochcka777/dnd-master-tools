@@ -1,0 +1,2093 @@
+/* ============================================
+   DnD Master Tools — Spell Cards (Exact Design)
+   Matches official D&D 5e Russian card style
+   ============================================ */
+
+:root {
+  /* Default: Large A4 fit */
+  --card-width: 66mm;
+  --card-height: 94mm;
+  --card-gap: 0mm;
+
+  /* School color themes */
+  --school-transmutation: #b87e28;
+  --school-evocation: #b23225;
+  --school-abjuration: #2b5fa8;
+  --school-necromancy: #446835;
+  --school-conjuration: #693394;
+  --school-illusion: #1f7785;
+  --school-enchantment: #942b63;
+  --school-divination: #947a26;
+}
+
+/* --- Layout Grid (App view) --- */
+.spell-app {
+  display: grid;
+  grid-template-columns: 380px 1fr;
+  gap: var(--space-xl);
+  align-items: start;
+}
+
+/* --- Left Sidebar --- */
+.sidebar {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-md);
+  max-height: calc(100vh - 100px);
+  position: sticky;
+  top: 15px;
+  overflow-y: auto;
+  padding-inline-end: 4px;
+}
+
+.panel {
+  background: var(--color-bg-card);
+  border: 1px solid rgba(201, 168, 76, 0.25);
+  border-radius: var(--radius-md);
+  padding: var(--space-md);
+  box-shadow: var(--shadow-card);
+}
+
+.panel__title {
+  font-family: var(--font-heading);
+  font-size: var(--fs-sm);
+  color: var(--color-gold);
+  border-block-end: 1px solid rgba(201, 168, 76, 0.2);
+  padding-block-end: var(--space-xs);
+  margin-block-end: var(--space-sm);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.field-group {
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+}
+
+.field-group label {
+  font-family: var(--font-heading);
+  font-size: 0.72rem;
+  color: var(--color-text-light);
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+.field-input, .field-select {
+  background: var(--color-bg-deepest);
+  border: 1px solid rgba(201, 168, 76, 0.3);
+  color: var(--color-text-parchment);
+  font-family: var(--font-body);
+  font-size: 0.85rem;
+  padding: 0.45rem 0.65rem;
+  border-radius: var(--radius-sm);
+  outline: none;
+  transition: border-color var(--transition-fast);
+}
+
+.field-input:focus, .field-select:focus {
+  border-color: var(--color-gold-bright);
+}
+
+/* Search and Filters */
+.search-box {
+  width: 100%;
+  margin-block-end: var(--space-sm);
+}
+
+.catalog-filter-row {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: var(--space-xs);
+  margin-block-end: var(--space-sm);
+}
+
+.spell-catalog-list {
+  max-height: 280px;
+  overflow-y: auto;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  border: 1px solid rgba(201, 168, 76, 0.15);
+  border-radius: var(--radius-sm);
+  background: var(--color-bg-deepest);
+  padding: 4px;
+}
+
+.catalog-item {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 6px 8px;
+  background: rgba(255, 255, 255, 0.03);
+  border-radius: var(--radius-sm);
+  font-size: 0.82rem;
+  cursor: pointer;
+  transition: background var(--transition-fast);
+}
+
+.catalog-item:hover {
+  background: rgba(201, 168, 76, 0.15);
+}
+
+.catalog-item__info {
+  display: flex;
+  align-items: baseline;
+  gap: 6px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.catalog-item__level {
+  font-family: var(--font-heading);
+  font-size: 0.7rem;
+  padding: 1px 5px;
+  border-radius: 3px;
+  background: rgba(201, 168, 76, 0.2);
+  color: var(--color-gold-bright);
+  font-weight: 700;
+}
+
+.catalog-item__btn-add {
+  background: transparent;
+  border: 1px solid var(--color-gold-dim);
+  color: var(--color-gold);
+  border-radius: 3px;
+  padding: 2px 8px;
+  font-size: 0.72rem;
+  cursor: pointer;
+  white-space: nowrap;
+  transition: all var(--transition-fast);
+}
+
+.catalog-item__btn-add:hover {
+  background: var(--color-gold);
+  color: #07070f;
+}
+
+.catalog-item__actions {
+  display: inline-flex;
+  align-items: center;
+  gap: 3px;
+}
+
+.catalog-item__badge-custom {
+  background: rgba(201, 168, 76, 0.2);
+  border: 0.5px solid var(--color-gold);
+  color: var(--color-gold-bright);
+  font-size: 0.65rem;
+  font-weight: 700;
+  padding: 1px 4px;
+  border-radius: 3px;
+  margin-left: 4px;
+}
+
+.catalog-item__btn-edit,
+.catalog-item__btn-delete {
+  background: transparent;
+  border: none;
+  font-size: 0.78rem;
+  cursor: pointer;
+  padding: 1px 3px;
+  opacity: 0.75;
+  transition: opacity 0.15s, transform 0.15s;
+}
+
+.catalog-item__btn-edit:hover,
+.catalog-item__btn-delete:hover {
+  opacity: 1;
+  transform: scale(1.15);
+}
+
+.btn-create-spell {
+  background: linear-gradient(135deg, rgba(201, 168, 76, 0.22) 0%, rgba(201, 168, 76, 0.08) 100%);
+  border: 1px solid var(--color-gold);
+  color: var(--color-gold-bright);
+  font-family: var(--font-heading);
+  font-size: 0.74rem;
+  font-weight: 700;
+  border-radius: 4px;
+  padding: 3px 9px;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  transition: all var(--transition-fast);
+}
+
+.btn-create-spell:hover {
+  background: var(--color-gold);
+  color: #07070f;
+  transform: translateY(-1px);
+  box-shadow: 0 4px 12px rgba(201, 168, 76, 0.35);
+}
+
+.custom-spell-modal-content {
+  background: var(--color-bg-card);
+  border: 1px solid var(--color-gold);
+  border-radius: var(--radius-md);
+  padding: var(--space-md);
+  max-width: 620px;
+  width: 94%;
+  max-height: 90vh;
+  overflow-y: auto;
+  box-shadow: 0 10px 40px rgba(0, 0, 0, 0.85);
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-sm);
+}
+
+/* Deck Manager (Selected spells) */
+.deck-summary {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-block-end: var(--space-xs);
+  font-size: 0.82rem;
+  color: var(--color-text-muted);
+}
+
+.deck-list {
+  max-height: 240px;
+  overflow-y: auto;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  border: 1px solid rgba(201, 168, 76, 0.2);
+  border-radius: var(--radius-sm);
+  background: var(--color-bg-deepest);
+  padding: 4px;
+}
+
+.deck-item {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 5px 8px;
+  background: rgba(201, 168, 76, 0.08);
+  border-radius: var(--radius-sm);
+  font-size: 0.82rem;
+}
+
+.deck-item__remove {
+  background: transparent;
+  border: none;
+  color: var(--color-crimson-bright);
+  cursor: pointer;
+  padding: 2px 6px;
+  font-weight: bold;
+}
+
+/* --- Right Side: Sheet Preview --- */
+.preview-area {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-md);
+  align-items: center;
+  width: 100%;
+}
+
+.preview-toolbar {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  background: var(--color-bg-card);
+  border: 1px solid rgba(201, 168, 76, 0.25);
+  border-radius: var(--radius-md);
+  padding: var(--space-sm) var(--space-md);
+  box-shadow: var(--shadow-card);
+  flex-wrap: wrap;
+  gap: var(--space-md);
+}
+
+.preview-toolbar__left {
+  display: flex;
+  align-items: center;
+  gap: var(--space-md);
+  flex-wrap: wrap;
+}
+
+.btn-print-large {
+  background: linear-gradient(135deg, #c9a84c 0%, #8a7230 100%);
+  color: #07070f;
+  font-family: var(--font-heading);
+  font-weight: 700;
+  font-size: var(--fs-sm);
+  padding: 0.6rem 1.4rem;
+  border: none;
+  border-radius: var(--radius-sm);
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-xs);
+  box-shadow: 0 4px 15px rgba(201, 168, 76, 0.35);
+  transition: all var(--transition-fast);
+}
+
+.btn-print-large:hover {
+  background: linear-gradient(135deg, #f5c842 0%, #c9a84c 100%);
+  transform: translateY(-2px);
+  box-shadow: 0 6px 20px rgba(245, 200, 66, 0.5);
+}
+
+/* --- Sheet Containers (A4 Screen View) --- */
+.sheets-container {
+  display: flex;
+  flex-direction: column;
+  gap: 30px;
+  align-items: center;
+  width: 100%;
+}
+
+.print-sheet {
+  width: 210mm;
+  height: 297mm;
+  min-height: 297mm;
+  max-height: 297mm;
+  background: #ffffff;
+  color: #111111;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.7);
+  border-radius: 2px;
+  box-sizing: border-box;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+  overflow: hidden;
+}
+
+/* 3x3 Grid of 9 cards */
+.cards-grid {
+  display: grid;
+  grid-template-columns: repeat(3, var(--card-width));
+  grid-template-rows: repeat(3, var(--card-height));
+  gap: var(--card-gap, 0mm);
+  width: calc(3 * var(--card-width) + 2 * var(--card-gap, 0mm));
+  height: calc(3 * var(--card-height) + 2 * var(--card-gap, 0mm));
+  box-sizing: border-box;
+}
+
+/* ============================================
+   SPELL CARD: EXACT VISUAL REPLICA
+   ============================================ */
+.spell-card {
+  width: var(--card-width);
+  height: var(--card-height);
+  box-sizing: border-box;
+  background: #fdfcf9;
+  color: #111111;
+  border: 0.8pt solid var(--school-color, #c9a84c);
+  border-radius: var(--card-radius, 2.5mm);
+  display: flex;
+  position: relative;
+  overflow: hidden;
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+}
+
+/* On-screen card hover zoom */
+.print-sheet .spell-card {
+  cursor: zoom-in;
+  transition: transform 0.18s ease, box-shadow 0.18s ease;
+}
+
+.print-sheet .spell-card:hover {
+  transform: translateY(-2px) scale(1.03);
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.28);
+  z-index: 10;
+}
+
+/* --- Left Ribbon (Sidebar of the Card) --- */
+.card-ribbon {
+  width: 22%;
+  background: var(--school-color, #b87e28);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  color: #ffffff;
+  position: relative;
+  flex-shrink: 0;
+  box-sizing: border-box;
+  padding-bottom: 2mm;
+}
+
+/* Top Crest/Shield with Spell Level */
+.card-ribbon__crest {
+  width: 100%;
+  background: #181920;
+  color: #ffffff;
+  text-align: center;
+  padding: 1.5mm 0 2mm 0;
+  clip-path: polygon(0 0, 100% 0, 100% 80%, 50% 100%, 0 80%);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 2mm;
+}
+
+.card-ribbon__level-num {
+  font-family: 'Cinzel', Georgia, serif;
+  font-size: 14pt;
+  font-weight: 900;
+  line-height: 1;
+  text-shadow: 0 1px 3px rgba(0,0,0,0.5);
+}
+
+/* Quick Vertical Icons under crest */
+.card-ribbon__quick-icons {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 1.5mm;
+  font-size: 7.5pt;
+  font-weight: 700;
+  text-shadow: 0 1px 2px rgba(0,0,0,0.4);
+  margin-bottom: 1.5mm;
+}
+
+.card-ribbon__icon-item {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  line-height: 1.1;
+}
+
+.card-ribbon__glyph {
+  font-size: 9pt;
+  line-height: 1;
+}
+
+/* Elemental ornament in the middle of ribbon */
+.card-ribbon__ornament {
+  width: 80%;
+  max-height: 22mm;
+  margin-top: auto;
+  margin-bottom: 2mm;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  opacity: 0.85;
+  filter: drop-shadow(0 1px 2px rgba(0,0,0,0.25));
+}
+
+.ribbon-ornament {
+  width: 100%;
+  height: auto;
+  max-height: 20mm;
+}
+
+/* Vertical School Name at bottom of ribbon */
+.card-ribbon__school {
+  writing-mode: vertical-rl;
+  transform: rotate(180deg);
+  font-family: 'Cinzel', Georgia, serif;
+  font-size: 6pt;
+  font-weight: 900;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: #ffffff;
+  text-shadow: 0 1px 2px rgba(0,0,0,0.5);
+  padding: 2mm 0;
+}
+
+/* --- Main Card Body --- */
+.card-main {
+  width: 78%;
+  display: flex;
+  flex-direction: column;
+  padding: 2mm 2.5mm 1.5mm 2.5mm;
+  box-sizing: border-box;
+  background-color: #fdfcf9;
+  background-image: radial-gradient(#ece7dc 0.65px, transparent 0.65px);
+  background-size: 5mm 5mm;
+  position: relative;
+}
+
+/* Title */
+.card-title {
+  font-family: 'Cinzel', Georgia, serif;
+  font-size: 8.5pt;
+  font-weight: 900;
+  color: #0e0e12;
+  margin: 0 0 1.2mm 0;
+  line-height: 1.15;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+/* Badges Capsules Row */
+.card-badges {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1mm;
+  margin-bottom: 1.2mm;
+}
+
+.card-badge {
+  background: rgba(0, 0, 0, 0.04);
+  border: 0.4pt solid #cccccc;
+  border-radius: 1.2mm;
+  font-size: 5pt;
+  font-weight: 600;
+  color: #222222;
+  padding: 0.4mm 1.2mm;
+  display: inline-flex;
+  align-items: center;
+  gap: 1px;
+  line-height: 1;
+  white-space: nowrap;
+}
+
+/* Material component row */
+.card-material {
+  font-size: 4.8pt;
+  font-style: italic;
+  color: #444444;
+  margin-bottom: 1mm;
+  display: flex;
+  align-items: baseline;
+  gap: 1mm;
+  line-height: 1.1;
+}
+
+/* Thin horizontal divider with center diamond */
+.card-divider {
+  width: 100%;
+  height: 1px;
+  background: #d8d2c4;
+  position: relative;
+  margin: 0.8mm 0 1.2mm 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.card-divider::after {
+  content: "♦";
+  position: absolute;
+  background: #fdfcf9;
+  padding: 0 1mm;
+  font-size: 3.5pt;
+  color: #999999;
+}
+
+/* Description Text Body */
+.card-body-text {
+  flex-grow: 1;
+  font-size: 5.6pt;
+  line-height: 1.28;
+  color: #111111;
+  overflow: hidden;
+  position: relative;
+  z-index: 1;
+  word-break: normal;
+}
+
+.card-p {
+  margin: 0 0 0.8mm 0;
+  text-align: justify;
+  text-justify: inter-word;
+}
+
+.card-p:last-child {
+  margin-bottom: 0;
+}
+
+.card-list {
+  margin: 0 0 0.8mm 0;
+  padding-left: 2.5mm;
+  list-style: disc;
+}
+
+.card-list li {
+  margin-bottom: 0.3mm;
+  text-align: justify;
+}
+
+/* Level 0A: Large font for short text (< 260 chars) */
+.card--large .card-body-text {
+  font-size: 6.0pt;
+  line-height: 1.34;
+}
+.card--large .card-p {
+  margin-bottom: 1.1mm;
+}
+
+/* Level 0B: Medium font for moderate text (260-450 chars) */
+.card--medium .card-body-text {
+  font-size: 5.4pt;
+  line-height: 1.25;
+}
+.card--medium .card-p {
+  margin-bottom: 0.8mm;
+}
+
+/* Level 1 Density (450-720 chars) */
+.card--dense .card-body-text {
+  font-size: 4.95pt;
+  line-height: 1.18;
+}
+
+.card--dense .card-p {
+  margin-bottom: 0.6mm;
+}
+
+.card--dense .card-badges {
+  margin-bottom: 0.8mm;
+  gap: 0.8mm;
+}
+
+.card--dense .card-combat-bar {
+  margin-bottom: 0.8mm;
+  padding: 0.3mm 1.2mm;
+  font-size: 4.8pt;
+}
+
+.card--dense .card-divider {
+  margin: 0.5mm 0 0.8mm 0;
+}
+
+.card--dense .card-higher-levels-block {
+  margin-top: 0.5mm;
+  padding-top: 0.4mm;
+}
+
+.card--dense .card-higher-text {
+  font-size: 4.6pt;
+  line-height: 1.16;
+}
+
+/* Level 2 Density: Compact (650-1000 chars) */
+.card--compact .card-body-text {
+  font-size: 4.35pt;
+  line-height: 1.14;
+}
+
+.card--compact .card-p {
+  margin-bottom: 0.5mm;
+}
+
+.card--compact .card-badge {
+  font-size: 4.6pt;
+  padding: 0.2mm 0.9mm;
+}
+
+.card--compact .card-badges {
+  margin-bottom: 0.6mm;
+  gap: 0.6mm;
+}
+
+.card--compact .card-combat-bar {
+  margin-bottom: 0.6mm;
+  padding: 0.2mm 0.9mm;
+  font-size: 4.4pt;
+}
+
+.card--compact .card-divider {
+  margin: 0.3mm 0 0.5mm 0;
+}
+
+.card--compact .card-higher-levels-block {
+  margin-top: 0.4mm;
+  padding-top: 0.3mm;
+}
+
+.card--compact .card-higher-text {
+  font-size: 4.2pt;
+  line-height: 1.12;
+}
+
+/* Level 3 Density: Micro (> 1000 chars) */
+.card--micro .card-body-text {
+  font-size: 3.9pt;
+  line-height: 1.09;
+}
+
+.card--micro .card-p {
+  margin-bottom: 0.4mm;
+}
+
+.card--micro .card-list {
+  padding-left: 2mm;
+  margin-bottom: 0.4mm;
+}
+
+.card--micro .card-title {
+  font-size: 7.8pt;
+  margin-bottom: 0.8mm;
+}
+
+.card--micro .card-badge {
+  font-size: 4.2pt;
+  padding: 0.2mm 0.8mm;
+}
+
+.card--micro .card-badges {
+  margin-bottom: 0.5mm;
+  gap: 0.5mm;
+}
+
+.card--micro .card-combat-bar {
+  display: none; /* Hide combat bar on micro cards to save vital space for text */
+}
+
+.card--micro .card-divider {
+  margin: 0.2mm 0 0.4mm 0;
+}
+
+.card--micro .card-higher-levels-block {
+  margin-top: 0.3mm;
+  padding-top: 0.2mm;
+}
+
+.card--micro .card-higher-text {
+  font-size: 3.8pt;
+  line-height: 1.08;
+}
+
+/* Combat Highlights Bar (Damage / Save / Attack) */
+.card-combat-bar {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 1.2mm;
+  background: rgba(0, 0, 0, 0.035);
+  border: 0.4pt solid #d8d2c4;
+  border-radius: 1mm;
+  padding: 0.5mm 1.5mm;
+  font-size: 5.2pt;
+  font-weight: 600;
+  color: #1a1a1a;
+  margin-bottom: 1.2mm;
+  position: relative;
+  z-index: 1;
+}
+
+.card-combat-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 1px;
+}
+
+/* Card Tables (Радужные слои, Смятение, Реинкарнация etc.) */
+.card-table {
+  width: 100%;
+  border-collapse: collapse;
+  margin: 1mm 0 1.2mm 0;
+  font-size: 0.94em;
+  line-height: 1.15;
+  background: rgba(255, 255, 255, 0.75);
+  border: 0.4pt solid #c9a84c;
+  border-radius: 1mm;
+  overflow: hidden;
+}
+
+.card-table caption {
+  font-family: 'Cinzel', Georgia, serif;
+  font-weight: 700;
+  font-size: 1.05em;
+  color: #1a1c2e;
+  padding: 0.5mm 0 0.8mm 0;
+  text-align: center;
+  caption-side: top;
+  letter-spacing: 0.04em;
+}
+
+.card-table thead tr {
+  background: #181930;
+  color: #e6c875;
+  border-bottom: 0.8pt solid #c9a84c;
+}
+
+.card-table th {
+  padding: 0.6mm 1mm;
+  font-family: 'Cinzel', Georgia, serif;
+  font-weight: 700;
+  font-size: 0.92em;
+  letter-spacing: 0.03em;
+  border-right: 0.3pt solid rgba(201, 168, 76, 0.3);
+}
+
+.card-table th:last-child {
+  border-right: none;
+}
+
+.card-table td {
+  padding: 0.6mm 1mm;
+  border-bottom: 0.3pt solid #e0d8c7;
+  border-right: 0.3pt solid #e0d8c7;
+  vertical-align: top;
+  color: #111111;
+}
+
+.card-table td:last-child {
+  border-right: none;
+}
+
+.card-table tbody tr:last-child td {
+  border-bottom: none;
+}
+
+.card-table tbody tr:nth-child(even) {
+  background: rgba(201, 168, 76, 0.06);
+}
+
+.card-table strong {
+  color: #0e0e12;
+}
+
+.card-table em {
+  color: #444444;
+}
+
+/* Centered Subtle Background Watermark */
+.card-watermark {
+  position: absolute;
+  top: 52%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 38mm;
+  height: 44mm;
+  opacity: 0.14;
+  pointer-events: none;
+  z-index: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.card-watermark svg {
+  width: 100%;
+  height: 100%;
+  display: block;
+}
+
+/* "На больших уровнях" subsection */
+.card-higher-levels-block {
+  margin-top: 0.8mm;
+  padding-top: 0.6mm;
+  border-top: 0.3pt solid #d8d2c4;
+  position: relative;
+  z-index: 1;
+}
+
+.card-higher-title {
+  font-size: 4.8pt;
+  font-style: italic;
+  font-weight: 600;
+  color: #555555;
+  margin-bottom: 0.3mm;
+}
+
+.card-higher-text {
+  font-size: 5.4pt;
+  line-height: 1.25;
+  color: #111111;
+}
+
+/* Footer of Card */
+.card-footer-row {
+  margin-top: auto;
+  padding-top: 1mm;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  font-size: 5pt;
+  color: #666666;
+}
+
+.card-footer__classes {
+  display: flex;
+  gap: 1.5mm;
+  font-size: 6pt;
+}
+
+.card-footer__en-name {
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  font-size: 4.8pt;
+  color: #333333;
+}
+
+/* Blank card placeholder for printing */
+.spell-card--blank {
+  background: #ffffff;
+  opacity: 0.25;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: 'Cinzel', serif;
+  font-size: 7pt;
+  color: #888888;
+}
+
+/* ============================================
+   MODAL WINDOW: CUSTOM CARD SIZE
+   ============================================ */
+.modal-backdrop {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.75);
+  backdrop-filter: blur(4px);
+  z-index: 1000;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity var(--transition-base);
+}
+
+.modal-backdrop.open {
+  opacity: 1;
+  pointer-events: auto;
+}
+
+.custom-size-modal {
+  background: var(--color-bg-card);
+  border: 2px solid var(--color-gold-dim);
+  border-radius: var(--radius-lg);
+  padding: var(--space-xl);
+  width: min(440px, 92vw);
+  box-shadow: var(--shadow-card-hover);
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-md);
+  transform: translateY(-20px);
+  transition: transform var(--transition-base);
+}
+
+.modal-backdrop.open .custom-size-modal {
+  transform: translateY(0);
+}
+
+.modal-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  border-block-end: 1px solid rgba(201, 168, 76, 0.2);
+  padding-block-end: var(--space-xs);
+}
+
+.modal-header h3 {
+  font-family: var(--font-heading);
+  font-size: var(--fs-md);
+  color: var(--color-gold);
+  margin: 0;
+}
+
+.modal-close {
+  background: transparent;
+  border: none;
+  color: var(--color-text-muted);
+  font-size: 1.4rem;
+  cursor: pointer;
+}
+
+.modal-close:hover {
+  color: var(--color-gold-bright);
+}
+
+.modal-hint {
+  font-size: var(--fs-xs);
+  color: var(--color-text-muted);
+  line-height: 1.4;
+  background: rgba(201, 168, 76, 0.08);
+  border-left: 3px solid var(--color-gold);
+  padding: 6px 10px;
+  border-radius: 2px;
+}
+
+.modal-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: var(--space-sm);
+  margin-top: var(--space-sm);
+}
+
+/* ============================================
+   CARD ZOOM LIGHTBOX MODAL
+   ============================================ */
+.zoom-modal-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  position: relative;
+  max-width: 95vw;
+  max-height: 95vh;
+}
+
+.zoom-modal-switch {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  margin-bottom: 12px;
+  background: rgba(13, 13, 26, 0.9);
+  border: 1px solid var(--color-gold-dim);
+  border-radius: 20px;
+  padding: 4px;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.6);
+  z-index: 10;
+}
+
+.zoom-switch-btn {
+  background: transparent;
+  border: none;
+  color: var(--color-text-muted);
+  font-family: var(--font-heading);
+  font-size: 0.82rem;
+  font-weight: 600;
+  padding: 6px 16px;
+  border-radius: 16px;
+  cursor: pointer;
+  transition: all var(--transition-fast);
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  user-select: none;
+}
+
+.zoom-switch-btn:hover {
+  color: var(--color-gold-bright);
+}
+
+.zoom-switch-btn.active {
+  background: var(--color-gold);
+  color: #07070f;
+  box-shadow: 0 0 12px rgba(201, 168, 76, 0.55);
+  font-weight: 700;
+}
+
+.zoom-modal-container .spell-card {
+  width: 340px !important;
+  height: 485px !important;
+  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.9), 0 0 30px rgba(201, 168, 76, 0.4) !important;
+  border: 1.5px solid var(--color-gold) !important;
+  border-radius: 8px !important;
+  cursor: default !important;
+  transform: none !important;
+  background-size: 8mm 8mm !important;
+}
+
+.zoom-modal-container .card-ribbon__level-num {
+  font-size: 24pt !important;
+}
+
+.zoom-modal-container .card-ribbon__quick-icons {
+  font-size: 10pt !important;
+  gap: 2.5mm !important;
+}
+
+.zoom-modal-container .card-ribbon__glyph {
+  font-size: 13pt !important;
+}
+
+.zoom-modal-container .card-ribbon__ornament {
+  max-height: 35mm !important;
+}
+
+.zoom-modal-container .ribbon-ornament {
+  max-height: 32mm !important;
+}
+
+.zoom-modal-container .card-ribbon__school {
+  font-size: 8.5pt !important;
+  letter-spacing: 0.22em !important;
+}
+
+.zoom-modal-container .card-main {
+  padding: 3.5mm 4mm 2.5mm 4mm !important;
+}
+
+.zoom-modal-container .card-title {
+  font-size: 13.5pt !important;
+  margin-bottom: 2mm !important;
+}
+
+.zoom-modal-container .card-badges {
+  gap: 1.5mm !important;
+  margin-bottom: 2mm !important;
+}
+
+.zoom-modal-container .card-badge {
+  font-size: 7pt !important;
+  padding: 1.2px 5px !important;
+  border-radius: 2mm !important;
+}
+
+.zoom-modal-container .card-combat-bar {
+  font-size: 7.5pt !important;
+  padding: 1.5px 6px !important;
+  margin-bottom: 2mm !important;
+}
+
+.zoom-modal-container .card-material {
+  font-size: 6.5pt !important;
+  margin-bottom: 1.8mm !important;
+}
+
+.zoom-modal-container .card-body-text {
+  font-size: 8.5pt !important;
+  line-height: 1.42 !important;
+  display: block !important;
+  -webkit-line-clamp: unset !important;
+  overflow-y: auto !important;
+  max-height: 240px !important;
+  padding-right: 2mm !important;
+}
+
+.zoom-modal-container .card-p {
+  margin-bottom: 1.5mm !important;
+}
+
+.zoom-modal-container .card-list {
+  padding-left: 4mm !important;
+  margin-bottom: 1.5mm !important;
+}
+
+.zoom-modal-container .card-combat-bar {
+  display: flex !important;
+}
+
+.zoom-modal-container .card-higher-levels-block {
+  margin-top: 1.5mm !important;
+  padding-top: 1mm !important;
+}
+
+.zoom-modal-container .card-higher-title {
+  font-size: 6.8pt !important;
+}
+
+.zoom-modal-container .card-higher-text {
+  font-size: 7.5pt !important;
+}
+
+.zoom-modal-container .card-watermark {
+  top: 52% !important;
+  left: 50% !important;
+  transform: translate(-50%, -50%) !important;
+  right: auto !important;
+  bottom: auto !important;
+  width: 65mm !important;
+  height: 75mm !important;
+  opacity: 0.11 !important;
+}
+
+.zoom-modal-container .card-footer-row {
+  font-size: 7pt !important;
+  padding-top: 1.5mm !important;
+}
+
+.zoom-modal-container .card-footer__classes {
+  font-size: 8.5pt !important;
+}
+
+.zoom-modal-container .card-footer__en-name {
+  font-size: 7pt !important;
+}
+
+/* Card Back in Zoom Lightbox */
+.zoom-modal-container .card-back {
+  width: 340px !important;
+  height: 485px !important;
+  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.9), 0 0 30px rgba(201, 168, 76, 0.4) !important;
+  border: 1.5px solid var(--color-gold) !important;
+  border-radius: 8px !important;
+  cursor: default !important;
+  transform: none !important;
+  padding: 16px !important;
+  box-sizing: border-box !important;
+}
+
+.zoom-modal-container .card-back__inner-frame {
+  inset: 12px !important;
+  border-width: 1.5px !important;
+}
+
+.zoom-modal-container .card-back__inner-frame::after {
+  inset: 5px !important;
+  border-width: 1px !important;
+}
+
+.zoom-modal-container .card-back__corner {
+  width: 24px !important;
+  height: 24px !important;
+  border-width: 2px !important;
+}
+.zoom-modal-container .card-back__corner--tl { top: 14px !important; left: 14px !important; border-width: 2px 0 0 2px !important; }
+.zoom-modal-container .card-back__corner--tr { top: 14px !important; right: 14px !important; border-width: 2px 2px 0 0 !important; }
+.zoom-modal-container .card-back__corner--bl { bottom: 14px !important; left: 14px !important; border-width: 0 0 2px 2px !important; }
+.zoom-modal-container .card-back__corner--br { bottom: 14px !important; right: 14px !important; border-width: 0 2px 2px 0 !important; }
+
+.zoom-modal-container .card-back__d20,
+.zoom-modal-container .card-back__magic-circle,
+.zoom-modal-container .card-back__artifact-emblem {
+  width: 90px !important;
+  height: 90px !important;
+}
+
+.zoom-modal-container .card-back__title {
+  font-size: 13pt !important;
+  margin-top: 12px !important;
+}
+
+.zoom-modal-container .card-back__signature {
+  font-size: 10.5pt !important;
+  margin-top: 6px !important;
+}
+
+/* Card Back with continuation text in Zoom Modal */
+.zoom-modal-container .card-back--with-text {
+  padding: 12px !important;
+}
+
+.zoom-modal-container .card-back__continuation-block {
+  padding: 12px 14px !important;
+  border-radius: 6px !important;
+  margin-bottom: 8px !important;
+  max-height: 400px !important;
+  display: flex !important;
+  flex-direction: column !important;
+}
+
+.zoom-modal-container .card-back__cont-header {
+  padding-bottom: 6px !important;
+  margin-bottom: 8px !important;
+}
+
+.zoom-modal-container .card-back__cont-title {
+  font-size: 12pt !important;
+}
+
+.zoom-modal-container .card-back__cont-subtitle {
+  font-size: 7pt !important;
+}
+
+.zoom-modal-container .card-back__cont-badge {
+  font-size: 7.5pt !important;
+  padding: 2px 8px !important;
+}
+
+.zoom-modal-container .card-back__cont-text {
+  font-size: 8.5pt !important;
+  line-height: 1.4 !important;
+  overflow-y: auto !important;
+  max-height: 310px !important;
+  padding-right: 4px !important;
+}
+
+.zoom-modal-container .card-back__cont-text .card-p {
+  margin-bottom: 1.5mm !important;
+}
+
+.zoom-modal-container .card-back__cont-text .card-list {
+  padding-left: 4mm !important;
+  margin-bottom: 1.5mm !important;
+}
+
+.zoom-modal-container .card-back--with-text .card-back__d20 {
+  width: 32px !important;
+  height: 32px !important;
+}
+
+.zoom-modal-container .card-back--with-text .card-back__signature {
+  font-size: 9pt !important;
+}
+
+/* Zoom Modal Table Styling (Matches screenshot 1) */
+.zoom-modal-container .card-table {
+  font-size: 8.5pt !important;
+  line-height: 1.35 !important;
+  margin: 10px 0 !important;
+  border: 1.5px solid var(--color-gold) !important;
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.4) !important;
+  border-radius: 4px !important;
+}
+
+.zoom-modal-container .card-table caption {
+  font-size: 11pt !important;
+  padding: 6px 0 8px 0 !important;
+  color: #1a1c2e !important;
+}
+
+.zoom-modal-container .card-table thead tr {
+  background: #181930 !important;
+}
+
+.zoom-modal-container .card-table th {
+  padding: 6px 10px !important;
+  font-size: 9pt !important;
+  color: #e6c875 !important;
+  border-right: 1px solid rgba(201, 168, 76, 0.3) !important;
+}
+
+.zoom-modal-container .card-table td {
+  padding: 6px 10px !important;
+  border-bottom: 1px solid #d8d2c4 !important;
+  border-right: 1px solid #d8d2c4 !important;
+  font-size: 8.5pt !important;
+  line-height: 1.35 !important;
+}
+
+.zoom-modal-close-btn {
+  position: absolute;
+  top: -36px;
+  right: -5px;
+  background: rgba(13, 13, 26, 0.85);
+  border: 1px solid var(--color-gold);
+  color: var(--color-gold-bright);
+  font-size: 1.2rem;
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all var(--transition-fast);
+}
+
+.zoom-modal-close-btn:hover {
+  background: var(--color-gold);
+  color: #07070f;
+  transform: scale(1.1);
+}
+
+.zoom-modal-hint {
+  margin-top: 10px;
+  font-family: var(--font-heading);
+  font-size: 0.8rem;
+  color: var(--color-text-light);
+  text-shadow: 0 2px 4px rgba(0,0,0,0.9);
+}
+
+/* ============================================
+   CARD BACKS (РУБАШКИ КАРТ: d20 By Shiz)
+   ============================================ */
+.card-back {
+  width: var(--card-width);
+  height: var(--card-height);
+  position: relative;
+  box-sizing: border-box;
+  background: radial-gradient(circle at 50% 45%, #181930 0%, #0d0d1a 70%, #070710 100%);
+  border: 0.8pt solid #c9a84c;
+  border-radius: var(--card-radius, 2.5mm);
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 3mm;
+  color: #fdfcf9;
+  user-select: none;
+  cursor: pointer;
+  transition: transform var(--transition-fast), box-shadow var(--transition-fast);
+}
+
+.card-back:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.5), 0 0 8px rgba(201, 168, 76, 0.3);
+}
+
+/* Inner gold ornamental frame */
+.card-back__inner-frame {
+  position: absolute;
+  inset: 2mm;
+  border: 0.5pt solid rgba(201, 168, 76, 0.45);
+  border-radius: calc(var(--card-radius, 2.5mm) * 0.6);
+  pointer-events: none;
+}
+
+.card-back__inner-frame::after {
+  content: "";
+  position: absolute;
+  inset: 1mm;
+  border: 0.3pt dashed rgba(201, 168, 76, 0.25);
+  border-radius: calc(var(--card-radius, 2.5mm) * 0.4);
+}
+
+/* Corner flourishes */
+.card-back__corner {
+  position: absolute;
+  width: 5mm;
+  height: 5mm;
+  border-color: #c9a84c;
+  border-style: solid;
+  pointer-events: none;
+  opacity: 0.8;
+}
+.card-back__corner--tl { top: 2.5mm; left: 2.5mm; border-width: 1pt 0 0 1pt; }
+.card-back__corner--tr { top: 2.5mm; right: 2.5mm; border-width: 1pt 1pt 0 0; }
+.card-back__corner--bl { bottom: 2.5mm; left: 2.5mm; border-width: 0 0 1pt 1pt; }
+.card-back__corner--br { bottom: 2.5mm; right: 2.5mm; border-width: 0 1pt 1pt 0; }
+
+/* Center Emblem Container */
+.card-back__emblem {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+  z-index: 2;
+  margin: auto;
+}
+
+.card-back__d20 {
+  width: 28mm;
+  height: 28mm;
+  filter: drop-shadow(0 0 8px rgba(201, 168, 76, 0.35));
+}
+
+.card-back__magic-circle,
+.card-back__artifact-emblem,
+.card-back__relic-svg {
+  width: 38mm;
+  height: 38mm;
+  max-width: 90%;
+  display: block;
+  transition: transform var(--transition-base);
+}
+
+.card-back__magic-circle--compact,
+.card-back__artifact-emblem--compact,
+.card-back__relic-svg--compact {
+  width: 13mm;
+  height: 13mm;
+}
+
+.card-back__title {
+  font-family: 'Cinzel', Georgia, serif;
+  font-size: 8pt;
+  font-weight: 700;
+  color: #e6c875;
+  letter-spacing: 0.25em;
+  text-transform: uppercase;
+  margin-top: 2.5mm;
+  text-shadow: 0 0 6px rgba(201, 168, 76, 0.4);
+}
+
+.card-back__signature {
+  font-family: 'Cinzel', 'MedievalSharp', Georgia, serif;
+  font-size: 6.5pt;
+  font-weight: 600;
+  color: #c9a84c;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  margin-top: 1.5mm;
+  display: flex;
+  align-items: center;
+  gap: 1.5mm;
+}
+
+.card-back__signature::before,
+.card-back__signature::after {
+  content: "•";
+  font-size: 5pt;
+  color: #947a26;
+}
+
+/* Card Back With Continued Text (for long spells) */
+.card-back--with-text {
+  justify-content: space-between;
+  padding: 2.5mm;
+  background: radial-gradient(circle at 50% 85%, #181930 0%, #0d0d1a 80%);
+}
+
+.card-back__continuation-block {
+  width: 100%;
+  flex-grow: 1;
+  background: #fdfcf9;
+  background-image: radial-gradient(#ece7dc 0.65px, transparent 0.65px);
+  background-size: 5mm 5mm;
+  border: 0.6pt solid #c9a84c;
+  border-radius: calc(var(--card-radius, 2.5mm) * 0.72);
+  padding: 2mm 2.5mm;
+  box-sizing: border-box;
+  color: #111111;
+  position: relative;
+  z-index: 2;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  margin-bottom: 2mm;
+}
+
+.card-back__cont-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  border-bottom: 0.5pt solid #d8d2c4;
+  padding-bottom: 0.6mm;
+  margin-bottom: 1mm;
+  gap: 1.5mm;
+}
+
+.card-back__cont-title-wrap {
+  min-width: 0;
+  flex-grow: 1;
+  text-align: left;
+}
+
+.card-back__cont-title {
+  font-family: 'Cinzel', Georgia, serif;
+  font-size: 6.8pt;
+  font-weight: 800;
+  color: #0e0e12;
+  text-transform: uppercase;
+  letter-spacing: 0.03em;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  line-height: 1.15;
+}
+
+.card-back__cont-subtitle {
+  font-size: 4.4pt;
+  font-weight: 600;
+  color: #666666;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  margin-top: 0.2mm;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.card-back__cont-badge {
+  font-size: 4.5pt;
+  font-weight: 700;
+  color: #947a26;
+  background: rgba(201, 168, 76, 0.15);
+  border: 0.3pt solid #c9a84c;
+  padding: 0.2mm 1.4mm;
+  border-radius: 1mm;
+  white-space: nowrap;
+  flex-shrink: 0;
+}
+
+.card-back__cont-text {
+  flex-grow: 1;
+  font-size: 5.0pt;
+  line-height: 1.22;
+  color: #111111;
+  overflow: hidden;
+}
+
+/* Card Back Font Auto-Scaling (Maximizes text fill & readability) */
+.card-back--large .card-back__cont-text {
+  font-size: 6.2pt;
+  line-height: 1.34;
+}
+.card-back--large .card-p {
+  margin-bottom: 1.2mm;
+}
+
+.card-back--medium .card-back__cont-text {
+  font-size: 5.5pt;
+  line-height: 1.28;
+}
+.card-back--medium .card-p {
+  margin-bottom: 1mm;
+}
+
+.card-back--regular .card-back__cont-text {
+  font-size: 5.0pt;
+  line-height: 1.22;
+}
+.card-back--regular .card-p {
+  margin-bottom: 0.8mm;
+}
+
+.card-back--dense .card-back__cont-text {
+  font-size: 4.4pt;
+  line-height: 1.15;
+}
+.card-back--dense .card-p {
+  margin-bottom: 0.6mm;
+}
+
+.card-back--micro .card-back__cont-text {
+  font-size: 3.85pt;
+  line-height: 1.09;
+}
+.card-back--micro .card-p {
+  margin-bottom: 0.4mm;
+}
+
+.card-back--with-text .card-back__emblem {
+  margin: 0;
+  flex-direction: row;
+  gap: 2mm;
+  padding-top: 0.5mm;
+}
+
+.card-back--with-text .card-back__d20,
+.card-back--with-text .card-back__artifact-emblem {
+  width: 9mm;
+  height: 9mm;
+}
+
+.card-back--with-text .card-back__title {
+  display: none;
+}
+
+.card-back--with-text .card-back__signature {
+  font-size: 5.5pt;
+  margin: 0;
+}
+
+/* ============================================
+   BLACK & WHITE / INK-SAVER PRINT MODE
+   ============================================ */
+.theme--bw .spell-card {
+  background-color: #ffffff !important;
+  background-image: none !important;
+  border: 0.8pt solid #000000 !important;
+  border-radius: var(--card-radius, 2.5mm) !important;
+  box-shadow: none !important;
+}
+
+.theme--bw .card-ribbon {
+  background: #f0f0f0 !important;
+  border-right: 0.6pt solid #222222 !important;
+  color: #000000 !important;
+}
+
+.theme--bw .card-ribbon__crest {
+  background: #222222 !important;
+  color: #ffffff !important;
+  border-bottom: 0.6pt solid #000000 !important;
+}
+
+.theme--bw .card-ribbon__school {
+  color: #222222 !important;
+}
+
+.theme--bw .card-ribbon__ornament svg path,
+.theme--bw .card-ribbon__ornament svg polygon {
+  fill: #444444 !important;
+}
+
+.theme--bw .card-watermark {
+  opacity: 0.06 !important;
+  filter: grayscale(100%) contrast(150%) !important;
+}
+
+.theme--bw .card-badges .card-badge {
+  background: #f4f4f4 !important;
+  border: 0.4pt solid #555555 !important;
+  color: #000000 !important;
+}
+
+.theme--bw .card-combat-bar {
+  background: #f8f8f8 !important;
+  border: 0.4pt solid #555555 !important;
+  color: #000000 !important;
+}
+
+.theme--bw .card-title {
+  color: #000000 !important;
+}
+
+.theme--bw .card-body-text {
+  color: #000000 !important;
+}
+
+/* B&W Card Back (Engraving style on white paper) */
+.theme--bw .card-back {
+  background: #ffffff !important;
+  color: #000000 !important;
+  border: 0.8pt solid #000000 !important;
+  border-radius: var(--card-radius, 2.5mm) !important;
+}
+
+.theme--bw .card-back__inner-frame {
+  border-color: #000000 !important;
+}
+
+.theme--bw .card-back__inner-frame::after {
+  border-color: #444444 !important;
+}
+
+.theme--bw .card-back__corner {
+  border-color: #000000 !important;
+}
+
+.theme--bw .card-back__d20 {
+  filter: none !important;
+}
+
+.theme--bw .card-back__d20 polygon {
+  fill: #ffffff !important;
+  stroke: #000000 !important;
+  stroke-width: 1.5 !important;
+}
+
+.theme--bw .card-back__d20 text {
+  fill: #000000 !important;
+}
+
+.theme--bw .card-back__title {
+  color: #000000 !important;
+  text-shadow: none !important;
+}
+
+.theme--bw .card-back__signature {
+  color: #000000 !important;
+}
+
+.theme--bw .card-back__signature::before,
+.theme--bw .card-back__signature::after {
+  color: #000000 !important;
+}
+
+.theme--bw .card-back__continuation-block {
+  background: #ffffff !important;
+  background-image: none !important;
+  border-color: #000000 !important;
+  border-radius: calc(var(--card-radius, 2.5mm) * 0.72) !important;
+}
+
+.theme--bw .card-back__cont-badge {
+  background: #f0f0f0 !important;
+  color: #000000 !important;
+  border-color: #000000 !important;
+}
+
+.theme--bw .card-table {
+  background: #ffffff !important;
+  border: 0.6pt solid #000000 !important;
+}
+
+.theme--bw .card-table caption {
+  color: #000000 !important;
+}
+
+.theme--bw .card-table thead tr {
+  background: #222222 !important;
+  color: #ffffff !important;
+  border-bottom: 0.8pt solid #000000 !important;
+}
+
+.theme--bw .card-table th {
+  border-right: 0.4pt solid #666666 !important;
+}
+
+.theme--bw .card-table td {
+  border-bottom: 0.3pt solid #888888 !important;
+  border-right: 0.3pt solid #888888 !important;
+  color: #000000 !important;
+}
+
+.theme--bw .card-table tbody tr:nth-child(even) {
+  background: #f4f4f4 !important;
+}
+
+/* ============================================
+   STRICT PRINT STYLES (@media print)
+   Flawless A4 layout, zero lag, exact sheet count
+   ============================================ */
+@media print {
+  @page {
+    size: A4 portrait;
+    margin: 0 !important;
+  }
+
+  /* 1. COMPLETELY ELIMINATE THEME DARK BACKGROUNDS & FIXED PSEUDO-ELEMENTS */
+  body::before,
+  body::after,
+  html::before,
+  html::after {
+    display: none !important;
+    content: none !important;
+    background: none !important;
+    visibility: hidden !important;
+  }
+
+  /* 2. REMOVE ALL RENDERING BOTTLENECKS (NO SHADOWS, FILTERS, OR ANIMATIONS) */
+  *, *::before, *::after {
+    -webkit-print-color-adjust: exact !important;
+    print-color-adjust: exact !important;
+    box-shadow: none !important;
+    text-shadow: none !important;
+    filter: none !important;
+    transition: none !important;
+    animation: none !important;
+  }
+
+  /* Remove heavy micro-radial gradients that freeze PDF rasterizer */
+  .card-main,
+  .card-back__continuation-block,
+  .card-back__cont-text {
+    background-image: none !important;
+  }
+
+  /* 3. RESET HTML & BODY TO CLEAN A4 FLOW WITHOUT RESTRICTIVE HEIGHT */
+  html, body {
+    margin: 0 !important;
+    padding: 0 !important;
+    width: 210mm !important;
+    min-width: 210mm !important;
+    max-width: 210mm !important;
+    height: auto !important;
+    min-height: auto !important;
+    background: #ffffff !important;
+    color: #000000 !important;
+    overflow: visible !important;
+  }
+
+  /* 4. HIDE ALL NON-PRINT UI CONTROLS */
+  .app-header,
+  .npc-nav,
+  .sidebar,
+  .preview-toolbar,
+  .toast-container,
+  .modal-backdrop,
+  header,
+  footer,
+  #custom-size-modal,
+  #card-zoom-modal,
+  #custom-spell-modal {
+    display: none !important;
+  }
+
+  /* 5. STRIP ALL OUTER WRAPPERS OF ANY PADDING, MARGIN, OR MAX-WIDTH CONSTRAINTS */
+  .container {
+    width: 210mm !important;
+    max-width: 210mm !important;
+    min-width: 210mm !important;
+    margin: 0 !important;
+    padding: 0 !important;
+    border: none !important;
+    background: #ffffff !important;
+    box-shadow: none !important;
+  }
+
+  .spell-app,
+  .preview-area,
+  .sheets-container {
+    display: block !important;
+    width: 210mm !important;
+    max-width: 210mm !important;
+    min-width: 210mm !important;
+    margin: 0 !important;
+    padding: 0 !important;
+    border: none !important;
+    background: #ffffff !important;
+    box-shadow: none !important;
+    gap: 0 !important;
+  }
+
+  /* 6. EXACT A4 PRINT SHEET: STRICT 210mm x 296.5mm (PREVENTS SUB-PIXEL PAGE SPILL) */
+  .print-sheet {
+    width: 210mm !important;
+    max-width: 210mm !important;
+    min-width: 210mm !important;
+    height: 296.5mm !important;
+    max-height: 296.5mm !important;
+    min-height: 296.5mm !important;
+    box-sizing: border-box !important;
+    margin: 0 !important;
+    padding: 0 !important;
+    background: #ffffff !important;
+    border: none !important;
+    box-shadow: none !important;
+    overflow: hidden !important;
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    scale: 1 !important;
+    transform: none !important;
+    page-break-inside: avoid !important;
+    break-inside: avoid !important;
+  }
+
+  /* Page break ONLY between sheets — NEVER after the last sheet! */
+  .print-sheet:not(:last-child) {
+    page-break-after: always !important;
+    break-after: page !important;
+  }
+
+  .print-sheet:last-child {
+    page-break-after: avoid !important;
+    break-after: avoid !important;
+  }
+
+  /* 7. MATHEMATICALLY CENTERED 3x3 CARDS GRID ON A4 */
+  .cards-grid {
+    display: grid !important;
+    grid-template-columns: repeat(3, var(--card-width)) !important;
+    grid-template-rows: repeat(3, var(--card-height)) !important;
+    gap: var(--card-gap, 0mm) !important;
+    width: calc(3 * var(--card-width) + 2 * var(--card-gap, 0mm)) !important;
+    height: calc(3 * var(--card-height) + 2 * var(--card-gap, 0mm)) !important;
+    margin: auto !important;
+    box-sizing: border-box !important;
+  }
+
+  .spell-card, .card-back {
+    page-break-inside: avoid !important;
+    break-inside: avoid !important;
+    border-radius: var(--card-radius, 2.5mm) !important;
+    overflow: hidden !important;
+  }
+
+  .spell-card {
+    border: 0.8pt solid var(--school-color, #c9a84c) !important;
+  }
+
+  .theme--bw .spell-card {
+    border: 0.8pt solid #000000 !important;
+  }
+
+  .card-back {
+    border: 0.8pt solid #c9a84c !important;
+  }
+
+  .theme--bw .card-back {
+    border: 0.8pt solid #000000 !important;
+  }
+}
+
+/* Screen scale on smaller monitors */
+@media screen and (max-width: 1280px) {
+  .spell-app {
+    grid-template-columns: 1fr;
+  }
+
+  .sidebar {
+    position: static;
+    max-height: none;
+  }
+
+  .print-sheet {
+    transform-origin: top center;
+    scale: 0.85;
+    margin-bottom: -40mm;
+  }
+}
+
+@media screen and (max-width: 768px) {
+  .print-sheet {
+    scale: 0.55;
+    margin-bottom: -130mm;
+  }
+}
+
+/* ============================================
+   SMART SLOT FILLER BUTTON & MODAL
+   ============================================ */
+.btn-slot-filler {
+  background: linear-gradient(135deg, rgba(168, 85, 247, 0.3), rgba(201, 168, 76, 0.3));
+  border: 1px solid var(--color-gold);
+  color: var(--color-gold-bright);
+  border-radius: var(--radius-md);
+  padding: 8px 14px;
+  font-family: var(--font-heading);
+  font-size: var(--fs-xs);
+  font-weight: 700;
+  cursor: pointer;
+  animation: pulseSlotFiller 2.2s infinite ease-in-out;
+  transition: all var(--transition-fast);
+}
+
+.btn-slot-filler:hover {
+  background: var(--color-gold);
+  color: #0d0d1a;
+  transform: scale(1.03);
+}
+
+@keyframes pulseSlotFiller {
+  0%, 100% { box-shadow: 0 0 4px rgba(201, 168, 76, 0.4); }
+  50% { box-shadow: 0 0 14px rgba(201, 168, 76, 0.8), 0 0 20px rgba(168, 85, 247, 0.4); }
+}
+
+.slot-filler-modal-content {
+  background: var(--color-surface);
+  border: 1px solid var(--color-gold);
+  border-radius: var(--radius-lg);
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.8), 0 0 20px rgba(201, 168, 76, 0.25);
+  max-width: 600px;
+  width: 100%;
+  max-height: 90vh;
+  overflow-y: auto;
+  padding: var(--space-lg);
+  box-sizing: border-box;
+}
+
+.slot-filler-options {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-sm);
+  margin-top: var(--space-sm);
+}
+
+.slot-option-card {
+  display: flex;
+  align-items: center;
+  gap: var(--space-md);
+  background: rgba(26, 26, 46, 0.7);
+  border: 1px solid rgba(201, 168, 76, 0.25);
+  border-radius: var(--radius-md);
+  padding: var(--space-sm) var(--space-md);
+  transition: all var(--transition-fast);
+}
+
+.slot-option-card:hover {
+  background: rgba(201, 168, 76, 0.12);
+  border-color: var(--color-gold);
+}
+
+.slot-option-icon {
+  font-size: 2rem;
+  line-height: 1;
+  flex-shrink: 0;
+}
+
+.slot-option-body {
+  flex: 1;
+}
+
+.slot-option-body h4 {
+  font-family: var(--font-heading);
+  font-size: var(--fs-sm);
+  color: var(--color-gold-bright);
+  margin: 0 0 2px 0;
+}
+
+.slot-option-body p {
+  font-size: var(--fs-xs);
+  color: var(--color-text-light);
+  margin: 0;
+  line-height: 1.35;
+}
+
+.btn-slot-action {
+  background: linear-gradient(135deg, rgba(201, 168, 76, 0.25), rgba(168, 85, 247, 0.25));
+  border: 1px solid var(--color-gold);
+  color: var(--color-gold-bright);
+  border-radius: var(--radius-sm);
+  padding: 6px 12px;
+  font-family: var(--font-heading);
+  font-size: var(--fs-xs);
+  font-weight: 600;
+  cursor: pointer;
+  white-space: nowrap;
+  transition: all var(--transition-fast);
+}
+
+.btn-slot-action:hover {
+  background: var(--color-gold);
+  color: #0d0d1a;
+  transform: translateY(-1px);
+}
+
+/* Mixed Item Card Embedded in Spell Sheets */
+.spell-card--item {
+  border-color: var(--item-rarity-color, #c9a84c) !important;
+}
+

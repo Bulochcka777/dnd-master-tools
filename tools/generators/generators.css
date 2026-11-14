@@ -1,0 +1,722 @@
+/* ============================================
+   DnD Master Tools — Random Forge (Кузница Случайностей)
+   Styles & Layout — Dark Fantasy (NPC-Generator Style)
+   ============================================ */
+
+/* --- Top Navigation --- */
+.forge-nav {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding-block: var(--space-md);
+  border-bottom: 1px solid rgba(201, 168, 76, 0.2);
+  margin-bottom: var(--space-xl);
+  flex-wrap: wrap;
+  gap: var(--space-md);
+}
+
+.forge-nav__left {
+  display: flex;
+  align-items: center;
+  gap: var(--space-lg);
+}
+
+.forge-nav__back {
+  font-family: var(--font-heading);
+  font-size: var(--fs-sm);
+  color: var(--color-gold);
+  text-decoration: none;
+  transition: color var(--transition-fast), transform var(--transition-fast);
+  display: flex;
+  align-items: center;
+  gap: var(--space-xs);
+}
+
+.forge-nav__back:hover {
+  color: var(--color-gold-bright);
+  transform: translateX(-3px);
+}
+
+.forge-nav__title {
+  font-family: var(--font-heading);
+  font-size: var(--fs-lg);
+  font-weight: 700;
+  color: var(--color-gold);
+  margin: 0;
+  display: flex;
+  align-items: center;
+  gap: var(--space-sm);
+  text-shadow: var(--glow-text-gold);
+}
+
+/* --- Bidirectional Navigation Bar (when result is active) --- */
+.forge-nav-bar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  background: rgba(22, 22, 43, 0.95);
+  border: 1px solid var(--color-gold);
+  border-radius: var(--radius-md);
+  padding: 10px 18px;
+  margin-bottom: var(--space-xl);
+  box-shadow: 0 0 20px rgba(201, 168, 76, 0.2), inset 0 0 10px rgba(201, 168, 76, 0.05);
+  animation: fadeIn 0.3s ease both;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+
+.forge-nav-bar__text {
+  font-size: var(--fs-sm);
+  color: var(--color-text-parchment);
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.btn-goto-result {
+  font-family: var(--font-heading);
+  font-size: var(--fs-xs);
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  color: var(--color-gold-bright);
+  background: rgba(201, 168, 76, 0.15);
+  border: 1px solid var(--color-gold);
+  padding: 6px 14px;
+  border-radius: var(--radius-sm);
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  transition: all var(--transition-fast);
+}
+
+.btn-goto-result:hover {
+  background: var(--color-gold);
+  color: #07070f;
+  transform: translateX(3px);
+  box-shadow: 0 0 12px rgba(201, 168, 76, 0.4);
+}
+
+/* --- Hero Banner: Quick Scene Generator --- */
+.forge-hero {
+  background: linear-gradient(135deg, rgba(30, 20, 45, 0.9) 0%, rgba(20, 15, 30, 0.95) 50%, rgba(35, 25, 20, 0.9) 100%);
+  border: 1.5px solid var(--color-gold);
+  border-radius: var(--radius-lg);
+  padding: var(--space-xl);
+  margin-bottom: var(--space-2xl);
+  box-shadow: 0 0 30px rgba(201, 168, 76, 0.2), inset 0 0 20px rgba(201, 168, 76, 0.05);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: var(--space-lg);
+  position: relative;
+  overflow: hidden;
+}
+
+.forge-hero::before {
+  content: '';
+  position: absolute;
+  top: -50%;
+  left: -20%;
+  width: 140%;
+  height: 200%;
+  background: radial-gradient(circle at 40% 40%, rgba(245, 200, 66, 0.08), transparent 60%);
+  pointer-events: none;
+}
+
+.forge-hero__content {
+  max-width: 650px;
+}
+
+.forge-hero__title {
+  font-family: var(--font-heading);
+  font-size: var(--fs-md);
+  font-weight: 700;
+  color: var(--color-gold-bright);
+  margin-bottom: var(--space-xs);
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.forge-hero__desc {
+  font-size: var(--fs-sm);
+  color: var(--color-text-light);
+  line-height: 1.6;
+  margin: 0;
+}
+
+.btn-forge-master {
+  font-family: var(--font-heading);
+  font-size: var(--fs-sm);
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  padding: 0.75rem 1.6rem;
+  background: linear-gradient(135deg, #c9a84c 0%, #f5c842 50%, #8a7230 100%);
+  color: #121010;
+  border: none;
+  border-radius: var(--radius-md);
+  cursor: pointer;
+  box-shadow: 0 4px 15px rgba(245, 200, 66, 0.35);
+  transition: transform var(--transition-fast), box-shadow var(--transition-fast), filter var(--transition-fast);
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  white-space: nowrap;
+}
+
+.btn-forge-master:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 25px rgba(245, 200, 66, 0.55);
+  filter: brightness(1.1);
+}
+
+.btn-forge-master:active {
+  transform: translateY(1px);
+}
+
+/* --- Category Pills / Tabs --- */
+.forge-tabs {
+  display: flex;
+  gap: 8px;
+  overflow-x: auto;
+  padding-bottom: var(--space-sm);
+  margin-bottom: var(--space-xl);
+  scrollbar-width: thin;
+}
+
+.forge-tab {
+  font-family: var(--font-heading);
+  font-size: var(--fs-xs);
+  padding: 6px 14px;
+  border-radius: 20px;
+  background: rgba(22, 22, 43, 0.8);
+  border: 1px solid rgba(201, 168, 76, 0.3);
+  color: var(--color-text-light);
+  cursor: pointer;
+  transition: all var(--transition-fast);
+  white-space: nowrap;
+}
+
+.forge-tab:hover {
+  border-color: var(--color-gold);
+  color: var(--color-gold-bright);
+}
+
+.forge-tab.active {
+  background: var(--color-gold);
+  color: #07070f;
+  font-weight: 700;
+  border-color: var(--color-gold-bright);
+  box-shadow: 0 0 10px rgba(201, 168, 76, 0.4);
+}
+
+/* --- Generators Grid --- */
+.forge-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(360px, 1fr));
+  gap: var(--space-xl);
+  margin-bottom: var(--space-3xl);
+}
+
+/* --- Generator Card --- */
+.gen-card {
+  background: var(--color-bg-card);
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--radius-md);
+  padding: var(--space-lg);
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-md);
+  box-shadow: var(--shadow-card);
+  transition: border-color var(--transition-base), box-shadow var(--transition-base);
+  position: relative;
+}
+
+.gen-card:hover {
+  border-color: rgba(201, 168, 76, 0.4);
+  box-shadow: 0 8px 30px rgba(0, 0, 0, 0.6), 0 0 15px rgba(201, 168, 76, 0.1);
+}
+
+.gen-card__header {
+  display: flex;
+  align-items: flex-start;
+  gap: var(--space-md);
+}
+
+.gen-card__icon {
+  font-size: 2rem;
+  line-height: 1;
+  filter: drop-shadow(0 0 8px rgba(201, 168, 76, 0.3));
+}
+
+.gen-card__title-group {
+  flex-grow: 1;
+}
+
+.gen-card__title {
+  font-family: var(--font-heading);
+  font-size: var(--fs-md);
+  font-weight: 700;
+  color: var(--color-gold);
+  margin: 0 0 4px 0;
+}
+
+.gen-card__desc {
+  font-size: var(--fs-xs);
+  color: var(--color-text-muted);
+  line-height: 1.4;
+  margin: 0;
+}
+
+/* --- Controls inside Card --- */
+.gen-card__controls {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(130px, 1fr));
+  gap: var(--space-sm);
+}
+
+.gen-control-group {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.gen-control-group label {
+  font-size: 0.72rem;
+  font-family: var(--font-heading);
+  color: var(--color-text-muted);
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+.gen-select {
+  background: var(--color-bg-deepest);
+  border: 1px solid rgba(201, 168, 76, 0.25);
+  color: var(--color-text-parchment);
+  border-radius: var(--radius-sm);
+  padding: 6px 8px;
+  font-size: var(--fs-xs);
+  outline: none;
+  cursor: pointer;
+  transition: border-color var(--transition-fast);
+}
+
+.gen-select:focus {
+  border-color: var(--color-gold);
+  box-shadow: 0 0 8px rgba(201, 168, 76, 0.3);
+}
+
+/* --- Button: Roll --- */
+.btn-gen-roll {
+  font-family: var(--font-heading);
+  font-size: var(--fs-xs);
+  font-weight: 600;
+  letter-spacing: 0.05em;
+  padding: 8px 16px;
+  background: rgba(201, 168, 76, 0.15);
+  border: 1px solid var(--color-gold);
+  color: var(--color-gold-bright);
+  border-radius: var(--radius-sm);
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  transition: all var(--transition-fast);
+}
+
+.btn-gen-roll:hover {
+  background: var(--color-gold);
+  color: #07070f;
+  box-shadow: 0 0 15px rgba(201, 168, 76, 0.4);
+}
+
+.btn-gen-roll:active {
+  transform: scale(0.98);
+}
+
+/* --- Result Container inside Card (Dark Fantasy Styled) --- */
+.gen-result {
+  background: rgba(10, 10, 22, 0.75);
+  color: var(--color-text-parchment);
+  border-radius: var(--radius-sm);
+  padding: var(--space-md);
+  border: 1px solid rgba(201, 168, 76, 0.25);
+  box-shadow: inset 0 1px 4px rgba(0, 0, 0, 0.6), 0 4px 12px rgba(0, 0, 0, 0.4);
+  position: relative;
+  font-family: var(--font-body);
+  min-height: 90px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  animation: fadeIn 0.3s ease both;
+}
+
+.gen-result__placeholder {
+  color: var(--color-text-muted);
+  font-style: italic;
+  text-align: center;
+  font-size: var(--fs-sm);
+}
+
+.gen-result__header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 6px;
+  border-bottom: 1px dashed rgba(201, 168, 76, 0.25);
+  padding-bottom: 4px;
+}
+
+.gen-result__tag {
+  font-family: var(--font-heading);
+  font-size: 0.7rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: var(--color-gold);
+}
+
+.btn-copy-result {
+  background: rgba(201, 168, 76, 0.1);
+  border: 1px solid rgba(201, 168, 76, 0.25);
+  cursor: pointer;
+  font-size: 0.75rem;
+  color: var(--color-gold-bright);
+  font-family: var(--font-heading);
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  padding: 3px 8px;
+  border-radius: 3px;
+  transition: all var(--transition-fast);
+}
+
+.btn-copy-result:hover {
+  background: var(--color-gold);
+  color: #07070f;
+  box-shadow: 0 0 10px rgba(201, 168, 76, 0.4);
+}
+
+.gen-result__main-text {
+  font-size: 1.15rem;
+  font-weight: 700;
+  color: var(--color-gold-bright);
+  margin-bottom: 4px;
+  line-height: 1.3;
+}
+
+.gen-result__meta {
+  font-size: 0.88rem;
+  color: var(--color-text-light);
+  line-height: 1.5;
+}
+
+.gen-result__meta-item {
+  margin-top: 5px;
+}
+
+.gen-result__meta-item strong {
+  color: var(--color-gold);
+  font-family: var(--font-heading);
+  font-size: 0.78rem;
+  text-transform: uppercase;
+  letter-spacing: 0.03em;
+}
+
+/* Name list layout for batch generation */
+.gen-names-list {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(130px, 1fr));
+  gap: 6px;
+  margin-top: 6px;
+}
+
+.gen-name-item {
+  background: rgba(201, 168, 76, 0.08);
+  border: 1px solid rgba(201, 168, 76, 0.2);
+  border-radius: 3px;
+  padding: 5px 8px;
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: var(--color-text-parchment);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.gen-name-item:hover {
+  background: rgba(201, 168, 76, 0.16);
+  border-color: var(--color-gold);
+}
+
+/* Truth Badge for Rumors */
+.truth-badge {
+  display: inline-block;
+  padding: 2px 8px;
+  border-radius: 3px;
+  font-size: 0.72rem;
+  font-weight: 700;
+  font-family: var(--font-heading);
+  letter-spacing: 0.04em;
+  margin-top: 6px;
+}
+
+.truth-badge--truth {
+  background: rgba(46, 204, 113, 0.15);
+  color: #4ade80;
+  border: 1px solid rgba(46, 204, 113, 0.4);
+}
+
+.truth-badge--half {
+  background: rgba(245, 200, 66, 0.15);
+  color: var(--color-gold-bright);
+  border: 1px solid rgba(245, 200, 66, 0.4);
+}
+
+.truth-badge--lie {
+  background: rgba(231, 76, 60, 0.15);
+  color: #f87171;
+  border: 1px solid rgba(231, 76, 60, 0.4);
+}
+
+/* ============================================
+   FULL SCREEN RESULT VIEW (NPC-Sheet Style)
+   ============================================ */
+.forge-view-result {
+  animation: cardAppear 0.4s cubic-bezier(0.16, 1, 0.3, 1) both;
+}
+
+@keyframes cardAppear {
+  0% {
+    opacity: 0;
+    transform: translateY(16px) scale(0.99);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+.result-action-bar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: var(--space-lg);
+  flex-wrap: wrap;
+  gap: var(--space-sm);
+}
+
+.btn-forge-back {
+  font-family: var(--font-heading);
+  font-size: var(--fs-sm);
+  font-weight: 600;
+  letter-spacing: 0.04em;
+  padding: 0.6rem 1.2rem;
+  background: rgba(201, 168, 76, 0.12);
+  border: 1px solid var(--color-gold);
+  color: var(--color-gold-bright);
+  border-radius: var(--radius-sm);
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  transition: all var(--transition-fast);
+}
+
+.btn-forge-back:hover {
+  background: var(--color-gold);
+  color: #07070f;
+  box-shadow: 0 0 15px rgba(201, 168, 76, 0.4);
+  transform: translateX(-3px);
+}
+
+.result-action-bar__right {
+  display: flex;
+  align-items: center;
+  gap: var(--space-sm);
+}
+
+/* The Grand Sheet Container */
+.forge-sheet {
+  background: var(--color-bg-card);
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--radius-lg);
+  padding: var(--space-2xl);
+  box-shadow: var(--shadow-card-hover), inset 0 0 30px rgba(0, 0, 0, 0.8);
+  position: relative;
+  overflow: hidden;
+  margin-bottom: var(--space-3xl);
+}
+
+.forge-sheet::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 4px;
+  background: linear-gradient(90deg, transparent, var(--color-gold), transparent);
+}
+
+/* Ornate Corner Accents */
+.forge-sheet__ornament-tl,
+.forge-sheet__ornament-tr,
+.forge-sheet__ornament-bl,
+.forge-sheet__ornament-br {
+  position: absolute;
+  width: 24px;
+  height: 24px;
+  border: 2px solid var(--color-gold-dim);
+  pointer-events: none;
+  opacity: 0.6;
+}
+.forge-sheet__ornament-tl { top: 8px; left: 8px; border-right: none; border-bottom: none; }
+.forge-sheet__ornament-tr { top: 8px; right: 8px; border-left: none; border-bottom: none; }
+.forge-sheet__ornament-bl { bottom: 8px; left: 8px; border-right: none; border-top: none; }
+.forge-sheet__ornament-br { bottom: 8px; right: 8px; border-left: none; border-top: none; }
+
+.forge-sheet__header {
+  border-bottom: 2px solid rgba(201, 168, 76, 0.3);
+  padding-bottom: var(--space-lg);
+  margin-bottom: var(--space-xl);
+}
+
+.forge-sheet__tag {
+  display: inline-block;
+  font-family: var(--font-heading);
+  font-size: var(--fs-xs);
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--color-gold);
+  background: rgba(201, 168, 76, 0.12);
+  border: 1px solid rgba(201, 168, 76, 0.3);
+  padding: 3px 10px;
+  border-radius: var(--radius-sm);
+  margin-bottom: var(--space-xs);
+}
+
+.forge-sheet__title {
+  font-family: var(--font-heading);
+  font-size: var(--fs-xl);
+  font-weight: 700;
+  color: var(--color-gold-bright);
+  text-shadow: var(--glow-text-gold);
+  margin: var(--space-xs) 0;
+  line-height: 1.2;
+}
+
+.forge-sheet__subtitle {
+  font-family: var(--font-body);
+  font-size: var(--fs-base);
+  color: var(--color-text-light);
+  font-style: italic;
+  margin: 0;
+}
+
+.forge-sheet__section {
+  background: rgba(7, 7, 15, 0.6);
+  border: 1px solid rgba(201, 168, 76, 0.2);
+  border-radius: var(--radius-md);
+  padding: var(--space-lg);
+  margin-bottom: var(--space-lg);
+}
+
+.forge-sheet__section-title {
+  font-family: var(--font-heading);
+  font-size: var(--fs-sm);
+  font-weight: 700;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  color: var(--color-gold);
+  margin: 0 0 var(--space-sm) 0;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.forge-sheet__content {
+  font-size: var(--fs-base);
+  color: var(--color-text-parchment);
+  line-height: 1.7;
+}
+
+.forge-sheet__content p {
+  margin-bottom: var(--space-sm);
+}
+.forge-sheet__content p:last-child {
+  margin-bottom: 0;
+}
+
+.forge-sheet__grid-2 {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: var(--space-md);
+  margin-bottom: var(--space-lg);
+}
+
+/* Modal for Express Scene (Dark Fantasy Styled) */
+.forge-modal-content {
+  max-width: 720px;
+  max-height: 85vh;
+  overflow-y: auto;
+  background: var(--color-bg-card);
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--radius-lg);
+}
+
+.scene-block {
+  background: rgba(10, 10, 22, 0.75);
+  color: var(--color-text-parchment);
+  border-radius: var(--radius-md);
+  padding: 14px 18px;
+  border: 1px solid rgba(201, 168, 76, 0.25);
+  margin-bottom: 14px;
+  box-shadow: inset 0 1px 4px rgba(0, 0, 0, 0.5);
+}
+
+.scene-block__title {
+  font-family: var(--font-heading);
+  font-size: 0.9rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: var(--color-gold-bright);
+  margin-bottom: 8px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+/* Dice roll animation */
+@keyframes diceSpin {
+  0% { transform: rotate(0deg) scale(1); }
+  50% { transform: rotate(180deg) scale(1.25); }
+  100% { transform: rotate(360deg) scale(1); }
+}
+
+.dice-spinning {
+  display: inline-block;
+  animation: diceSpin 0.35s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+}
+
+/* Responsive */
+@media (max-width: 640px) {
+  .forge-grid {
+    grid-template-columns: 1fr;
+  }
+  .forge-hero {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+  .btn-forge-master {
+    width: 100%;
+    justify-content: center;
+  }
+  .forge-sheet {
+    padding: var(--space-lg);
+  }
+}

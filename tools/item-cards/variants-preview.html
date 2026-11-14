@@ -1,0 +1,2275 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>5 вариантов дизайна карт предметов — DnD Master Tools</title>
+  <link rel="stylesheet" href="../../css/theme.css">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@500;600;700;800;900&family=MedievalSharp&family=Lora:ital,wght@0,400;0,500;0,600;0,700;1,400;1,600&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --card-width: 64mm;
+      --card-height: 91mm;
+      --preview-card-w: 260px;
+      --preview-card-h: 370px;
+      --color-gold: #c9a84c;
+      --color-gold-bright: #f5c842;
+      --color-gold-dim: #947a26;
+      --color-surface-card: rgba(22, 22, 38, 0.95);
+    }
+
+    * { box-sizing: border-box; }
+
+    body {
+      background-color: #0b0c16;
+      background-image: 
+        radial-gradient(circle at 50% 10%, rgba(36, 32, 70, 0.7) 0%, transparent 65%),
+        radial-gradient(circle at 85% 85%, rgba(201, 168, 76, 0.06) 0%, transparent 50%),
+        radial-gradient(circle at 15% 75%, rgba(123, 45, 139, 0.08) 0%, transparent 50%);
+      color: var(--color-text-main, #f0e6d0);
+      font-family: var(--font-body, 'Lora', Georgia, serif);
+      margin: 0;
+      padding: 0;
+      min-height: 100vh;
+    }
+
+    /* ===== Sticky Header & Toolbar ===== */
+    .preview-header {
+      background: rgba(13, 13, 26, 0.96);
+      border-bottom: 1px solid rgba(201, 168, 76, 0.3);
+      padding: 16px 24px;
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      backdrop-filter: blur(12px);
+      box-shadow: 0 4px 25px rgba(0,0,0,0.8);
+    }
+
+    .header-inner {
+      max-width: 1440px;
+      margin: 0 auto;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 12px;
+      text-align: center;
+    }
+
+    .nav-back-row {
+      width: 100%;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      font-size: 0.85rem;
+    }
+
+    .nav-back-link {
+      color: #c9a84c;
+      text-decoration: none;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      font-family: 'Cinzel', serif;
+      transition: color 0.2s;
+    }
+    .nav-back-link:hover { color: #f5c842; }
+
+    .preview-header h1 {
+      font-family: var(--font-heading, 'Cinzel', serif);
+      color: #f5c842;
+      font-size: 1.6rem;
+      margin: 0;
+      letter-spacing: 0.04em;
+      text-shadow: 0 0 16px rgba(201, 168, 76, 0.4);
+    }
+
+    .preview-header p {
+      color: #c5bdae;
+      margin: 0;
+      font-size: 0.88rem;
+      max-width: 780px;
+    }
+
+    /* Toolbar Controls */
+    .toolbar-panel {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 12px;
+      flex-wrap: wrap;
+      background: rgba(22, 22, 40, 0.85);
+      border: 1px solid rgba(201, 168, 76, 0.25);
+      border-radius: 30px;
+      padding: 6px 14px;
+    }
+
+    .toolbar-group {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      font-size: 0.8rem;
+    }
+
+    .toolbar-label {
+      color: #bfa872;
+      font-family: 'Cinzel', serif;
+      font-size: 0.75rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.03em;
+    }
+
+    .btn-tool {
+      background: rgba(13, 13, 26, 0.85);
+      border: 1px solid rgba(201, 168, 76, 0.3);
+      color: #f0e6d0;
+      padding: 5px 12px;
+      border-radius: 16px;
+      font-family: 'Cinzel', serif;
+      font-size: 0.75rem;
+      font-weight: 600;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 5px;
+      transition: all 0.15s ease;
+    }
+
+    .btn-tool:hover {
+      border-color: #f5c842;
+      color: #f5c842;
+      transform: translateY(-1px);
+    }
+
+    .btn-tool.active {
+      background: #c9a84c;
+      color: #0d0d1a;
+      border-color: #f5c842;
+      font-weight: 700;
+      box-shadow: 0 0 10px rgba(245, 200, 66, 0.4);
+    }
+
+    .file-upload-btn {
+      position: relative;
+      overflow: hidden;
+      cursor: pointer;
+    }
+    .file-upload-btn input[type="file"] {
+      position: absolute;
+      left: 0;
+      top: 0;
+      opacity: 0;
+      cursor: pointer;
+      width: 100%;
+      height: 100%;
+    }
+
+    /* ===== Main Gallery Grid ===== */
+    .gallery-container {
+      max-width: 1480px;
+      margin: 28px auto 60px auto;
+      padding: 0 20px;
+    }
+
+    .gallery-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+      gap: 26px;
+      justify-content: center;
+      align-items: start;
+    }
+
+    .variant-card-box {
+      background: var(--color-surface-card);
+      border: 1px solid rgba(201, 168, 76, 0.25);
+      border-radius: 14px;
+      padding: 20px 16px 18px 16px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      position: relative;
+      transition: transform 0.25s ease, border-color 0.25s ease, box-shadow 0.25s ease;
+    }
+
+    .variant-card-box:hover {
+      border-color: #f5c842;
+      box-shadow: 0 8px 30px rgba(0,0,0,0.8), 0 0 20px rgba(201, 168, 76, 0.25);
+      transform: translateY(-4px);
+    }
+
+    .variant-number-badge {
+      position: absolute;
+      top: -12px;
+      left: 20px;
+      background: #141428;
+      border: 1.5px solid #c9a84c;
+      color: #f5c842;
+      font-family: 'Cinzel', serif;
+      font-size: 0.78rem;
+      font-weight: 700;
+      padding: 2px 12px;
+      border-radius: 12px;
+      letter-spacing: 0.04em;
+    }
+
+    .variant-preview-holder {
+      width: var(--preview-card-w);
+      height: var(--preview-card-h);
+      margin-top: 10px;
+      position: relative;
+      cursor: pointer;
+      transition: transform 0.2s ease;
+    }
+
+    .variant-preview-holder:hover {
+      transform: scale(1.02);
+    }
+
+    .variant-details {
+      width: 100%;
+      text-align: center;
+      margin-top: 16px;
+    }
+
+    .variant-title {
+      font-family: 'Cinzel', serif;
+      font-size: 1.15rem;
+      font-weight: 700;
+      color: #f5c842;
+      margin: 0 0 6px 0;
+    }
+
+    .variant-subtitle {
+      font-size: 0.78rem;
+      color: #c9a84c;
+      font-style: italic;
+      margin-bottom: 8px;
+    }
+
+    .variant-tags {
+      display: flex;
+      justify-content: center;
+      gap: 5px;
+      flex-wrap: wrap;
+      margin-bottom: 10px;
+    }
+
+    .variant-tag {
+      background: rgba(201, 168, 76, 0.12);
+      border: 0.5px solid rgba(201, 168, 76, 0.35);
+      color: #e6c875;
+      font-size: 0.68rem;
+      font-family: 'Cinzel', serif;
+      padding: 2px 7px;
+      border-radius: 4px;
+    }
+
+    .variant-desc {
+      color: #c5bdae;
+      font-size: 0.82rem;
+      line-height: 1.45;
+      margin: 0 0 14px 0;
+      text-align: left;
+      background: rgba(10, 10, 20, 0.6);
+      padding: 10px 12px;
+      border-radius: 8px;
+      border-left: 2px solid #c9a84c;
+    }
+
+    .btn-choose-variant {
+      width: 100%;
+      background: linear-gradient(135deg, rgba(201, 168, 76, 0.25) 0%, rgba(123, 45, 139, 0.2) 100%);
+      border: 1px solid #c9a84c;
+      color: #f5c842;
+      padding: 8px 16px;
+      border-radius: 8px;
+      font-family: 'Cinzel', serif;
+      font-size: 0.85rem;
+      font-weight: 700;
+      cursor: pointer;
+      transition: all 0.2s ease;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 6px;
+    }
+
+    .btn-choose-variant:hover {
+      background: #c9a84c;
+      color: #0b0c16;
+      box-shadow: 0 0 14px rgba(245, 200, 66, 0.5);
+    }
+
+    /* ==========================================================================
+       CARD STYLES (UNIVERSAL CARD GEOMETRY: 260px x 370px ~ 64x91mm)
+       ========================================================================== */
+    .demo-card {
+      width: 100%;
+      height: 100%;
+      border-radius: 6px;
+      position: relative;
+      overflow: hidden;
+      box-sizing: border-box;
+      box-shadow: 0 6px 18px rgba(0, 0, 0, 0.7);
+      user-select: none;
+      display: flex;
+      flex-direction: column;
+      background-color: #faf7ee;
+      color: #1a1612;
+      font-family: 'Lora', Georgia, serif;
+    }
+
+    /* Common Card Components */
+    .card-art-img-wrap {
+      width: 100%;
+      height: 100%;
+      position: relative;
+      overflow: hidden;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: #f0ebe0;
+    }
+
+    .card-art-img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      object-position: center;
+      display: block;
+    }
+
+    .card-art-fallback {
+      width: 100%;
+      height: 100%;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      position: relative;
+      background: radial-gradient(circle at 50% 50%, #ffffff 0%, #edf1f5 100%);
+    }
+
+    .fallback-svg-icon {
+      width: 65%;
+      height: 65%;
+      filter: drop-shadow(0 4px 8px rgba(0,0,0,0.15));
+      transition: transform 0.2s;
+    }
+
+    /* --------------------------------------------------------------------------
+       VARIANT 1: «АРКАННЫЙ РИББОН» (Spellbook Sibling / Сестра заклинаний)
+       -------------------------------------------------------------------------- */
+    .card--variant-1 {
+      display: flex;
+      flex-direction: row;
+      border: 1px solid #2b4c7e;
+    }
+
+    .v1-ribbon {
+      width: 44px;
+      background: linear-gradient(180deg, #2b4c7e 0%, #172c4c 100%);
+      color: #ffffff;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: space-between;
+      padding: 6px 0;
+      border-right: 1px solid rgba(0, 0, 0, 0.25);
+      flex-shrink: 0;
+      position: relative;
+      z-index: 2;
+    }
+
+    .v1-ribbon__crest {
+      width: 32px;
+      height: 32px;
+      border-radius: 50%;
+      background: rgba(0, 0, 0, 0.35);
+      border: 1.5px solid #c9a84c;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1rem;
+    }
+
+    .v1-ribbon__quick-stats {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 4px;
+      font-size: 0.65rem;
+      font-weight: 700;
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      text-shadow: 0 1px 2px rgba(0,0,0,0.8);
+    }
+
+    .v1-ribbon__stat-badge {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      line-height: 1;
+    }
+    .v1-ribbon__stat-badge span:first-child { font-size: 0.75rem; }
+    .v1-ribbon__stat-badge span:last-child { font-size: 0.55rem; color: #f5c842; }
+
+    .v1-ribbon__ornament {
+      flex: 1;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      opacity: 0.7;
+      max-height: 60px;
+    }
+
+    .v1-ribbon__category {
+      writing-mode: vertical-rl;
+      transform: rotate(180deg);
+      font-family: 'Cinzel', serif;
+      font-size: 0.65rem;
+      font-weight: 700;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+      color: #f5c842;
+      text-shadow: 0 1px 2px rgba(0,0,0,0.8);
+      margin-top: 4px;
+    }
+
+    .v1-main {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      padding: 6px 8px 6px 8px;
+      overflow: hidden;
+    }
+
+    .v1-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: baseline;
+      border-bottom: 1px solid #d4cca9;
+      padding-bottom: 2px;
+      margin-bottom: 4px;
+    }
+
+    .v1-title {
+      font-family: 'Cinzel', serif;
+      font-size: 0.85rem;
+      font-weight: 700;
+      color: #1e3a5f;
+      margin: 0;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    .v1-rarity {
+      font-family: 'Cinzel', serif;
+      font-size: 0.62rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      color: #2b4c7e;
+    }
+
+    .v1-art-slot {
+      height: 105px;
+      border-radius: 4px;
+      border: 1px solid #b5c7d8;
+      overflow: hidden;
+      margin-bottom: 5px;
+      position: relative;
+      flex-shrink: 0;
+    }
+
+    .v1-combat-bar {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      background: rgba(43, 76, 126, 0.1);
+      border: 1px solid rgba(43, 76, 126, 0.25);
+      border-radius: 3px;
+      padding: 2px 6px;
+      font-size: 0.62rem;
+      font-weight: 700;
+      color: #1e3a5f;
+      margin-bottom: 4px;
+      flex-shrink: 0;
+    }
+
+    .v1-body-text {
+      font-size: 0.62rem;
+      line-height: 1.25;
+      color: #1a1612;
+      flex: 1;
+      overflow: hidden;
+    }
+    .v1-body-text p { margin: 0 0 3px 0; }
+    .v1-body-text strong { color: #5c1809; }
+
+    .v1-lore {
+      font-style: italic;
+      color: #635746;
+      font-size: 0.58rem;
+      border-top: 1px solid #dcd4be;
+      padding-top: 2px;
+      margin-top: 2px;
+      line-height: 1.15;
+    }
+
+    .v1-footer {
+      display: flex;
+      justify-content: space-between;
+      font-size: 0.55rem;
+      color: #8c8270;
+      border-top: 1px solid #c9a84c;
+      padding-top: 2px;
+      margin-top: 2px;
+    }
+
+    /* --------------------------------------------------------------------------
+       VARIANT 2: «КЛАССИЧЕСКИЙ ГРИМУАР / TCG MTG» (Трейдинг кард гейм)
+       -------------------------------------------------------------------------- */
+    .card--variant-2 {
+      border: 1.5px solid #c9a84c;
+      padding: 7px;
+      background: #faf6ec;
+    }
+
+    .v2-inner-frame {
+      border: 1px solid #332b22;
+      border-radius: 4px;
+      height: 100%;
+      display: flex;
+      flex-direction: column;
+      overflow: hidden;
+      background: #ffffff;
+      box-shadow: inset 0 0 6px rgba(0,0,0,0.06);
+    }
+
+    .v2-header-bar {
+      background: linear-gradient(180deg, #2b251d 0%, #1a1612 100%);
+      color: #f5c842;
+      padding: 4px 8px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      border-bottom: 1.5px solid #c9a84c;
+    }
+
+    .v2-title {
+      font-family: 'Cinzel', serif;
+      font-size: 0.82rem;
+      font-weight: 700;
+      margin: 0;
+      letter-spacing: 0.03em;
+    }
+
+    .v2-header-badges {
+      display: flex;
+      gap: 5px;
+      font-size: 0.62rem;
+      color: #d4c5a0;
+    }
+
+    .v2-art-window {
+      height: 125px;
+      margin: 5px;
+      border: 1.5px solid #2b251d;
+      border-radius: 2px;
+      position: relative;
+      overflow: hidden;
+      box-shadow: inset 0 2px 5px rgba(0,0,0,0.3);
+      flex-shrink: 0;
+    }
+
+    .v2-rarity-gem {
+      position: absolute;
+      bottom: 4px;
+      right: 5px;
+      width: 14px;
+      height: 14px;
+      border-radius: 50%;
+      background: radial-gradient(circle at 35% 35%, #93c5fd 0%, #2563eb 60%, #1e3a8a 100%);
+      border: 1px solid #ffffff;
+      box-shadow: 0 1px 4px rgba(0,0,0,0.5);
+    }
+
+    .v2-type-ribbon {
+      background: linear-gradient(90deg, #ede6d5 0%, #e2d8c0 100%);
+      border-top: 1px solid #c9a84c;
+      border-bottom: 1px solid #c9a84c;
+      padding: 2px 8px;
+      font-family: 'Cinzel', serif;
+      font-size: 0.65rem;
+      font-weight: 700;
+      color: #4a3c28;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .v2-textbox {
+      flex: 1;
+      padding: 5px 8px;
+      background: #faf7ef;
+      overflow: hidden;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+    }
+
+    .v2-combat-pills {
+      display: flex;
+      gap: 6px;
+      margin-bottom: 3px;
+      font-size: 0.62rem;
+      font-weight: 700;
+      color: #6b2d18;
+    }
+
+    .v2-rules-text {
+      font-size: 0.63rem;
+      line-height: 1.25;
+      color: #1a1612;
+      flex: 1;
+      overflow: hidden;
+    }
+    .v2-rules-text p { margin: 0 0 3px 0; }
+    .v2-rules-text strong { color: #6b2d18; }
+
+    .v2-divider {
+      height: 1px;
+      background: linear-gradient(90deg, transparent, #c9a84c, transparent);
+      margin: 3px 0;
+    }
+
+    .v2-lore {
+      font-style: italic;
+      color: #635746;
+      font-size: 0.58rem;
+      line-height: 1.15;
+    }
+
+    .v2-footer {
+      padding: 2px 8px;
+      background: #1a1612;
+      color: #9c9284;
+      font-size: 0.52rem;
+      display: flex;
+      justify-content: space-between;
+    }
+
+    /* --------------------------------------------------------------------------
+       VARIANT 3: «СВЯЩЕННЫЙ РЕЛИКВАРИЙ» (Gothic Vault / Арочный портал)
+       -------------------------------------------------------------------------- */
+    .card--variant-3 {
+      border: 1.5px solid #c9a84c;
+      background: #f6f1e3;
+      padding: 8px 6px 6px 6px;
+    }
+
+    .v3-gothic-arch-wrap {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 6px;
+      margin-bottom: 4px;
+    }
+
+    .v3-pillar {
+      width: 28px;
+      height: 125px;
+      background: linear-gradient(180deg, #2c2538 0%, #15121e 100%);
+      border: 1px solid #c9a84c;
+      border-radius: 3px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: space-around;
+      padding: 4px 0;
+      color: #f5c842;
+      font-size: 0.65rem;
+      flex-shrink: 0;
+      box-shadow: 0 2px 6px rgba(0,0,0,0.3);
+    }
+    .v3-pillar-glyph {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      font-size: 0.72rem;
+      line-height: 1;
+    }
+    .v3-pillar-glyph span:last-child {
+      font-size: 0.5rem;
+      color: #e6c875;
+      font-family: -apple-system, sans-serif;
+      margin-top: 1px;
+    }
+
+    .v3-arch-window {
+      flex: 1;
+      height: 130px;
+      border-radius: 55px 55px 4px 4px;
+      border: 2px solid #c9a84c;
+      overflow: hidden;
+      position: relative;
+      background: #ffffff;
+      box-shadow: 0 3px 10px rgba(0,0,0,0.25);
+    }
+
+    .v3-banner-scroll {
+      background: linear-gradient(180deg, #2a2233 0%, #191420 100%);
+      border: 1px solid #c9a84c;
+      border-radius: 14px;
+      padding: 3px 8px;
+      text-align: center;
+      margin-bottom: 5px;
+      box-shadow: 0 2px 6px rgba(0,0,0,0.35);
+    }
+
+    .v3-banner-title {
+      font-family: 'Cinzel', serif;
+      font-size: 0.85rem;
+      font-weight: 700;
+      color: #f5c842;
+      margin: 0;
+      letter-spacing: 0.04em;
+    }
+    .v3-banner-sub {
+      font-size: 0.58rem;
+      color: #c4b5fd;
+      font-style: italic;
+    }
+
+    .v3-relic-body {
+      background: #faf8f2;
+      border: 1px solid #d4cca9;
+      border-radius: 4px;
+      padding: 5px 7px;
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      overflow: hidden;
+    }
+
+    .v3-combat-bar {
+      display: flex;
+      justify-content: space-between;
+      background: rgba(201, 168, 76, 0.15);
+      border-radius: 3px;
+      padding: 2px 6px;
+      font-size: 0.62rem;
+      font-weight: 700;
+      color: #4b1f14;
+      margin-bottom: 3px;
+    }
+
+    .v3-rules-text {
+      font-size: 0.62rem;
+      line-height: 1.25;
+      color: #1a1612;
+      flex: 1;
+      overflow: hidden;
+    }
+    .v3-rules-text p { margin: 0 0 2px 0; }
+
+    .v3-lore {
+      font-style: italic;
+      color: #635746;
+      font-size: 0.56rem;
+      border-top: 1px dashed #dcd4be;
+      padding-top: 2px;
+      margin-top: 2px;
+      line-height: 1.15;
+    }
+
+    .v3-footer {
+      display: flex;
+      justify-content: space-between;
+      font-size: 0.52rem;
+      color: #8c8270;
+      border-top: 1px solid #c9a84c;
+      padding-top: 2px;
+      margin-top: 3px;
+    }
+
+    /* --------------------------------------------------------------------------
+       VARIANT 4: «БОЕВОЙ АРСЕНАЛ» (Tactical Combat HUD / Боевой фокус)
+       -------------------------------------------------------------------------- */
+    .card--variant-4 {
+      border: 2px solid #2d3748;
+      background: #f7fafc;
+      padding: 6px;
+    }
+
+    .v4-hud-top {
+      display: flex;
+      gap: 6px;
+      margin-bottom: 5px;
+    }
+
+    .v4-square-art {
+      width: 108px;
+      height: 108px;
+      border: 2px solid #4a5568;
+      border-radius: 4px;
+      overflow: hidden;
+      flex-shrink: 0;
+      position: relative;
+      background: #ffffff;
+    }
+
+    .v4-stat-block {
+      flex: 1;
+      background: linear-gradient(135deg, #1a202c 0%, #2d3748 100%);
+      border: 1.5px solid #c9a84c;
+      border-radius: 4px;
+      padding: 6px;
+      color: #ffffff;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      box-shadow: 0 2px 6px rgba(0,0,0,0.3);
+    }
+
+    .v4-stat-heading {
+      font-size: 0.58rem;
+      color: #a0aec0;
+      text-transform: uppercase;
+      font-weight: 700;
+    }
+
+    .v4-stat-huge {
+      font-family: 'Cinzel', serif;
+      font-size: 1.45rem;
+      font-weight: 900;
+      color: #f6e05e;
+      line-height: 1;
+      text-shadow: 0 2px 4px rgba(0,0,0,0.8);
+      margin: 2px 0;
+    }
+
+    .v4-stat-tag {
+      font-size: 0.62rem;
+      color: #e2e8f0;
+      font-weight: 600;
+      display: flex;
+      align-items: center;
+      gap: 3px;
+    }
+
+    .v4-stat-properties {
+      font-size: 0.56rem;
+      color: #cbd5e0;
+      border-top: 1px solid rgba(255,255,255,0.15);
+      padding-top: 2px;
+      margin-top: 2px;
+    }
+
+    .v4-title-bar {
+      background: #2b4c7e;
+      color: #ffffff;
+      padding: 3px 6px;
+      border-radius: 3px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 4px;
+    }
+    .v4-title {
+      font-family: 'Cinzel', serif;
+      font-size: 0.78rem;
+      font-weight: 700;
+      color: #fff;
+      margin: 0;
+    }
+    .v4-rarity {
+      font-size: 0.58rem;
+      text-transform: uppercase;
+      font-weight: 700;
+      color: #93c5fd;
+    }
+
+    .v4-charges-hud {
+      background: #edf2f7;
+      border: 1px solid #cbd5e0;
+      border-radius: 3px;
+      padding: 2px 6px;
+      font-size: 0.6rem;
+      font-weight: 700;
+      color: #2d3748;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 4px;
+    }
+    .v4-pips { color: #d69e2e; font-size: 0.75rem; letter-spacing: 1px; }
+
+    .v4-rules-card {
+      background: #ffffff;
+      border: 1px solid #e2e8f0;
+      border-radius: 3px;
+      padding: 5px 6px;
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      overflow: hidden;
+    }
+
+    .v4-rules-text {
+      font-size: 0.62rem;
+      line-height: 1.25;
+      color: #1a202c;
+      flex: 1;
+      overflow: hidden;
+    }
+    .v4-rules-text p { margin: 0 0 3px 0; }
+    .v4-rules-text strong { color: #2b4c7e; }
+
+    .v4-footer {
+      display: flex;
+      justify-content: space-between;
+      font-size: 0.52rem;
+      color: #718096;
+      border-top: 1px solid #e2e8f0;
+      padding-top: 2px;
+      margin-top: 2px;
+    }
+
+    /* --------------------------------------------------------------------------
+       VARIANT 5: «ПОЛНЫЙ АРТВОРК / FULL-ART SHOWCASE» (Коллекционный без полей)
+       -------------------------------------------------------------------------- */
+    .card--variant-5 {
+      border: 1.5px solid #c9a84c;
+      background: #0d0d1a;
+      position: relative;
+    }
+
+    .v5-full-art-bg {
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 60%;
+      overflow: hidden;
+      z-index: 1;
+    }
+
+    .v5-art-gradient {
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(180deg, rgba(0,0,0,0.15) 0%, rgba(13,13,26,0.3) 50%, #0d0d1a 100%);
+      z-index: 2;
+    }
+
+    .v5-floating-header {
+      position: relative;
+      z-index: 5;
+      margin: 8px 8px 0 8px;
+      background: rgba(13, 13, 26, 0.75);
+      border: 1px solid #c9a84c;
+      border-radius: 20px;
+      padding: 3px 10px;
+      backdrop-filter: blur(8px);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.6);
+    }
+    .v5-title {
+      font-family: 'Cinzel', serif;
+      font-size: 0.8rem;
+      font-weight: 700;
+      color: #f5c842;
+      margin: 0;
+    }
+    .v5-rarity-pill {
+      font-size: 0.58rem;
+      font-family: 'Cinzel', serif;
+      color: #93c5fd;
+      font-weight: 700;
+      text-transform: uppercase;
+    }
+
+    .v5-acrylic-plate {
+      position: relative;
+      z-index: 5;
+      margin-top: auto;
+      height: 52%;
+      background: rgba(26, 26, 46, 0.94);
+      border-top: 1.5px solid #c9a84c;
+      padding: 6px 8px;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      color: #f0e6d0;
+      backdrop-filter: blur(10px);
+    }
+
+    .v5-combat-bar {
+      display: flex;
+      justify-content: space-between;
+      background: rgba(201, 168, 76, 0.15);
+      border-radius: 3px;
+      padding: 2px 6px;
+      font-size: 0.62rem;
+      font-weight: 700;
+      color: #f5c842;
+      margin-bottom: 3px;
+    }
+
+    .v5-rules-text {
+      font-size: 0.62rem;
+      line-height: 1.25;
+      color: #e2d8c0;
+      flex: 1;
+      overflow: hidden;
+    }
+    .v5-rules-text p { margin: 0 0 2px 0; }
+    .v5-rules-text strong { color: #f5c842; }
+
+    .v5-lore {
+      font-style: italic;
+      color: #a89f91;
+      font-size: 0.56rem;
+      border-top: 1px solid rgba(201,168,76,0.3);
+      padding-top: 2px;
+      margin-top: 2px;
+      line-height: 1.15;
+    }
+
+    .v5-footer {
+      display: flex;
+      justify-content: space-between;
+      font-size: 0.52rem;
+      color: #8c8270;
+      border-top: 1px solid rgba(201,168,76,0.4);
+      padding-top: 2px;
+      margin-top: 2px;
+    }
+
+    /* --------------------------------------------------------------------------
+       VARIANT 5B: «FULL-ART БЕЛЫЙ МАНУСКРИПТ» (Light Clean Print Edition)
+       -------------------------------------------------------------------------- */
+    .card--variant-5b {
+      border: 1.5px solid #2d3748;
+      background: #faf7ee;
+      position: relative;
+    }
+    .card--variant-5b .v5-floating-header {
+      background: rgba(255, 255, 255, 0.94);
+      border: 1.2px solid #8c733e;
+      color: #1a1612;
+      box-shadow: 0 3px 8px rgba(0,0,0,0.2);
+    }
+    .card--variant-5b .v5-title {
+      color: #1e293b;
+    }
+    .card--variant-5b .v5-rarity-pill {
+      color: #3b82f6;
+      font-weight: 700;
+    }
+    .card--variant-5b .v5-art-gradient {
+      background: linear-gradient(180deg, rgba(255,255,255,0.05) 0%, rgba(250,247,238,0.5) 60%, #faf7ee 100%);
+    }
+    .card--variant-5b .v5-acrylic-plate {
+      background: rgba(255, 255, 255, 0.96);
+      border-top: 1.5px solid #c9a84c;
+      color: #1a1612;
+      box-shadow: 0 -2px 10px rgba(0,0,0,0.05);
+    }
+    .card--variant-5b .v5-combat-bar {
+      background: #f1f5f9;
+      border: 1px solid #cbd5e1;
+      color: #0f172a;
+    }
+    .card--variant-5b .v5-rules-text {
+      color: #1e293b;
+    }
+    .card--variant-5b .v5-rules-text strong {
+      color: #0f172a;
+    }
+    .card--variant-5b .v5-lore {
+      color: #64748b;
+      border-top: 1px dashed #cbd5e1;
+    }
+    .card--variant-5b .v5-footer {
+      color: #94a3b8;
+      border-top: 1px solid #e2e8f0;
+    }
+
+    /* --------------------------------------------------------------------------
+       VARIANT 5C: «FULL-ART ТАКТИЧЕСКИЙ ГИБРИД» (Tactical Collector HUD)
+       -------------------------------------------------------------------------- */
+    .card--variant-5c {
+      border: 1.5px solid #c9a84c;
+      background: #0d0d1a;
+      position: relative;
+    }
+    .v5c-tactical-row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      background: linear-gradient(90deg, rgba(201,168,76,0.25) 0%, rgba(22,22,40,0.7) 100%);
+      border: 1px solid rgba(201, 168, 76, 0.45);
+      border-radius: 4px;
+      padding: 3px 6px;
+      margin-bottom: 3px;
+    }
+    .v5c-damage-badge {
+      font-family: 'Cinzel', serif;
+      font-size: 0.82rem;
+      font-weight: 900;
+      color: #f5c842;
+      display: flex;
+      align-items: center;
+      gap: 4px;
+      line-height: 1;
+    }
+    .v5c-charges-pips {
+      display: flex;
+      align-items: center;
+      gap: 4px;
+      font-size: 0.58rem;
+      color: #cbd5e1;
+      font-family: 'Cinzel', serif;
+    }
+    .v5c-pips-icons {
+      color: #f5c842;
+      font-size: 0.72rem;
+      letter-spacing: 1px;
+    }
+
+    /* Quick Filter Tab Buttons */
+    .btn-filter-tab {
+      background: rgba(22, 22, 40, 0.8);
+      border: 1px solid rgba(201, 168, 76, 0.3);
+      color: #c5bdae;
+      padding: 5px 14px;
+      border-radius: 20px;
+      font-family: 'Cinzel', serif;
+      font-size: 0.75rem;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.2s ease;
+    }
+    .btn-filter-tab:hover {
+      border-color: #f5c842;
+      color: #f5c842;
+    }
+    .btn-filter-tab.active {
+      background: #c9a84c;
+      color: #0b0c16;
+      border-color: #f5c842;
+      font-weight: 700;
+      box-shadow: 0 0 10px rgba(245, 200, 66, 0.35);
+    }
+
+    /* ==========================================================================
+       TRUE 100% BLACK & WHITE / MONOCHROME PRINT ENGINES
+       ========================================================================== */
+
+    /* 1. Global Zero-Chroma Rule: strips 100% of color from entire card, SVGs, images */
+    body.theme--bw .demo-card,
+    body.theme--bw-dark .demo-card {
+      filter: grayscale(100%) !important;
+    }
+
+    body.theme--bw .card-art-img-wrap,
+    body.theme--bw .card-art-img-wrap svg,
+    body.theme--bw .card-art-img,
+    body.theme--bw .v5-full-art-bg,
+    body.theme--bw .v5-full-art-bg svg,
+    body.theme--bw-dark .card-art-img-wrap,
+    body.theme--bw-dark .card-art-img-wrap svg,
+    body.theme--bw-dark .card-art-img,
+    body.theme--bw-dark .v5-full-art-bg,
+    body.theme--bw-dark .v5-full-art-bg svg {
+      filter: grayscale(100%) contrast(125%) !important;
+    }
+
+    /* 2. Theme: Light B&W Print (Белая бумага / Экономичные чёрные чернила) */
+    body.theme--bw .demo-card {
+      background: #ffffff !important;
+      color: #000000 !important;
+      border: 1.5px solid #111111 !important;
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15) !important;
+    }
+
+    /* Variant 1 in B&W Light */
+    body.theme--bw .card--variant-1 { border: 1.5px solid #111111 !important; }
+    body.theme--bw .v1-ribbon {
+      background: #f4f4f5 !important;
+      color: #000000 !important;
+      border-right: 1.5px solid #111111 !important;
+    }
+    body.theme--bw .v1-ribbon__crest {
+      background: #ffffff !important;
+      border-color: #111111 !important;
+      color: #000000 !important;
+    }
+    body.theme--bw .v1-ribbon__category {
+      color: #000000 !important;
+      text-shadow: none !important;
+    }
+    body.theme--bw .v1-ribbon__stat-badge span:last-child { color: #333333 !important; }
+    body.theme--bw .v1-title { color: #000000 !important; }
+    body.theme--bw .v1-rarity { color: #444444 !important; }
+    body.theme--bw .v1-art-slot { border-color: #222222 !important; }
+    body.theme--bw .v1-combat-bar {
+      background: #f0f0f0 !important;
+      border-color: #111111 !important;
+      color: #000000 !important;
+    }
+
+    /* Variant 2 in B&W Light */
+    body.theme--bw .card--variant-2 { background: #ffffff !important; border-color: #111111 !important; }
+    body.theme--bw .v2-inner-frame { border-color: #111111 !important; }
+    body.theme--bw .v2-header-bar {
+      background: #f0f0f0 !important;
+      border-color: #111111 !important;
+      color: #000000 !important;
+    }
+    body.theme--bw .v2-title { color: #000000 !important; }
+    body.theme--bw .v2-rarity-gem {
+      background: #ffffff !important;
+      border-color: #111111 !important;
+      color: #111111 !important;
+    }
+    body.theme--bw .v2-art-box { border-color: #111111 !important; }
+    body.theme--bw .v2-type-ribbon {
+      background: #f0f0f0 !important;
+      border-color: #111111 !important;
+      color: #000000 !important;
+    }
+    body.theme--bw .v2-combat-pills span {
+      background: #ffffff !important;
+      border-color: #333333 !important;
+      color: #000000 !important;
+    }
+    body.theme--bw .v2-textbox {
+      background: #ffffff !important;
+      border-color: #111111 !important;
+      color: #111111 !important;
+    }
+
+    /* Variant 3 in B&W Light */
+    body.theme--bw .card--variant-3 { background: #ffffff !important; border-color: #111111 !important; }
+    body.theme--bw .v3-gothic-arch-wrap { border-color: #111111 !important; }
+    body.theme--bw .v3-pillar {
+      background: #f0f0f0 !important;
+      border-color: #111111 !important;
+      color: #000000 !important;
+    }
+    body.theme--bw .v3-banner-scroll {
+      background: #ffffff !important;
+      border-color: #111111 !important;
+      color: #000000 !important;
+    }
+    body.theme--bw .v3-banner-title { color: #000000 !important; }
+    body.theme--bw .v3-banner-sub { color: #444444 !important; }
+    body.theme--bw .v3-combat-bar { background: #f0f0f0 !important; color: #000000 !important; }
+    body.theme--bw .v3-relic-body {
+      background: #ffffff !important;
+      border-color: #111111 !important;
+      color: #111111 !important;
+    }
+
+    /* Variant 4 in B&W Light */
+    body.theme--bw .card--variant-4 { background: #ffffff !important; border-color: #111111 !important; }
+    body.theme--bw .v4-stat-block {
+      background: #ffffff !important;
+      border: 1.5px solid #111111 !important;
+      color: #000000 !important;
+      box-shadow: none !important;
+    }
+    body.theme--bw .v4-stat-heading { color: #444444 !important; }
+    body.theme--bw .v4-stat-huge { color: #000000 !important; text-shadow: none !important; }
+    body.theme--bw .v4-stat-tag { color: #111111 !important; }
+    body.theme--bw .v4-stat-properties { color: #444444 !important; border-top-color: #111111 !important; }
+    body.theme--bw .v4-title-bar {
+      background: #f0f0f0 !important;
+      color: #000000 !important;
+      border: 1px solid #111111 !important;
+    }
+    body.theme--bw .v4-title { color: #000000 !important; }
+    body.theme--bw .v4-rarity { color: #333333 !important; }
+    body.theme--bw .v4-charges-hud {
+      background: #ffffff !important;
+      border-color: #111111 !important;
+      color: #000000 !important;
+    }
+    body.theme--bw .v4-pips { color: #000000 !important; }
+    body.theme--bw .v4-rules-card { border-color: #111111 !important; }
+    body.theme--bw .v4-rules-text strong { color: #000000 !important; }
+
+    /* Variant 5 Family (5A, 5B, 5C) in B&W Light */
+    body.theme--bw .card--variant-5,
+    body.theme--bw .card--variant-5b,
+    body.theme--bw .card--variant-5c {
+      background: #ffffff !important;
+      border: 1.5px solid #111111 !important;
+    }
+    body.theme--bw .v5-art-gradient {
+      background: linear-gradient(180deg, rgba(255,255,255,0.05) 0%, rgba(255,255,255,0.4) 60%, #ffffff 100%) !important;
+    }
+    body.theme--bw .v5-floating-header {
+      background: #ffffff !important;
+      border: 1.5px solid #111111 !important;
+      color: #000000 !important;
+      box-shadow: 0 2px 6px rgba(0,0,0,0.15) !important;
+    }
+    body.theme--bw .v5-title { color: #000000 !important; }
+    body.theme--bw .v5-rarity-pill { color: #333333 !important; }
+    body.theme--bw .v5-acrylic-plate {
+      background: #ffffff !important;
+      border-top: 1.5px solid #111111 !important;
+      color: #000000 !important;
+    }
+    body.theme--bw .v5-combat-bar {
+      background: #f0f0f0 !important;
+      border: 1px solid #111111 !important;
+      color: #000000 !important;
+    }
+    body.theme--bw .v5-rules-text { color: #111111 !important; }
+    body.theme--bw .v5-rules-text strong { color: #000000 !important; }
+    body.theme--bw .v5-lore { color: #444444 !important; border-top-color: #222222 !important; }
+    body.theme--bw .v5-footer { color: #555555 !important; border-top-color: #111111 !important; }
+    body.theme--bw .v5c-tactical-row {
+      background: #f0f0f0 !important;
+      border: 1px solid #111111 !important;
+      color: #000000 !important;
+    }
+    body.theme--bw .v5c-damage-badge { color: #000000 !important; }
+    body.theme--bw .v5c-charges-pips { color: #333333 !important; }
+    body.theme--bw .v5c-pips-icons { color: #000000 !important; }
+
+    /* 3. Theme: Dark Noir B&W (Тёмный нуар / Инверсный монохром) */
+    body.theme--bw-dark .demo-card {
+      background: #0d0d0d !important;
+      color: #f0f0f0 !important;
+      border: 1.5px solid #e0e0e0 !important;
+    }
+    body.theme--bw-dark .v1-ribbon {
+      background: #1a1a1a !important;
+      border-right-color: #555555 !important;
+      color: #ffffff !important;
+    }
+    body.theme--bw-dark .v1-ribbon__crest {
+      background: #111111 !important;
+      border-color: #ffffff !important;
+      color: #ffffff !important;
+    }
+    body.theme--bw-dark .v1-ribbon__category { color: #ffffff !important; text-shadow: none !important; }
+    body.theme--bw-dark .v1-title,
+    body.theme--bw-dark .v2-title,
+    body.theme--bw-dark .v3-banner-title,
+    body.theme--bw-dark .v4-title,
+    body.theme--bw-dark .v5-title {
+      color: #ffffff !important;
+    }
+    body.theme--bw-dark .v5-acrylic-plate {
+      background: #141414 !important;
+      border-top-color: #ffffff !important;
+      color: #e0e0e0 !important;
+    }
+    body.theme--bw-dark .v5-combat-bar {
+      background: #222222 !important;
+      border: 1px solid #555555 !important;
+      color: #ffffff !important;
+    }
+    body.theme--bw-dark .v5-floating-header {
+      background: #111111 !important;
+      border-color: #ffffff !important;
+      color: #ffffff !important;
+    }
+    body.theme--bw-dark .v5-rarity-pill { color: #cccccc !important; }
+    body.theme--bw-dark .v5-rules-text strong { color: #ffffff !important; }
+    body.theme--bw-dark .v5c-tactical-row {
+      background: #1e1e1e !important;
+      border-color: #777777 !important;
+      color: #ffffff !important;
+    }
+    body.theme--bw-dark .v5c-damage-badge { color: #ffffff !important; }
+    body.theme--bw-dark .v5c-pips-icons { color: #ffffff !important; }
+
+    /* Modal Zoom */
+    .zoom-overlay {
+      position: fixed;
+      inset: 0;
+      background: rgba(0,0,0,0.85);
+      z-index: 1000;
+      display: none;
+      align-items: center;
+      justify-content: center;
+      padding: 20px;
+      backdrop-filter: blur(8px);
+    }
+    .zoom-overlay.active { display: flex; }
+    .zoom-inner {
+      width: 380px;
+      height: 540px;
+      position: relative;
+    }
+    .zoom-close {
+      position: absolute;
+      top: -40px;
+      right: 0;
+      background: none;
+      border: none;
+      color: #f5c842;
+      font-size: 1.8rem;
+      cursor: pointer;
+    }
+  </style>
+</head>
+<body>
+
+  <!-- ===== Header & Controls ===== -->
+  <header class="preview-header">
+    <div class="header-inner">
+      <div class="nav-back-row">
+        <a href="../card-workshop/index.html" class="nav-back-link">← Вернуться в Верстак картодела</a>
+        <span style="color: #947a26;">D&amp;D 5e • Magic Items Art Studio</span>
+      </div>
+
+      <h1>🎨 Дизайн карт предметов и артефактов (D&amp;D 5e)</h1>
+      <p>
+        Сравнение компоновок карт со слотом под собственный арт или силуэт категории. Включает <strong>100% чёрно-белый режим</strong> (экономичная печать на белой бумаге или инверсный нуар) и <strong>расширенную серию 5-го варианта (Full-Art 5A, 5B, 5C)</strong>.
+      </p>
+
+      <!-- Live Toolbar -->
+      <div class="toolbar-panel">
+        <div class="toolbar-group">
+          <span class="toolbar-label">Картинка:</span>
+          <button type="button" class="btn-tool active" data-img-sample="ice-sword">❄️ Ледяной клинок</button>
+          <button type="button" class="btn-tool" data-img-sample="flame-sword">🔥 Пламенеющий меч</button>
+          <button type="button" class="btn-tool" data-img-sample="ring">💍 Кольцо защиты</button>
+          <button type="button" class="btn-tool" data-img-sample="potion">🧪 Зелье лечения</button>
+          <button type="button" class="btn-tool" data-img-sample="shield">🛡️ Драконий щит</button>
+          <button type="button" class="btn-tool" data-img-sample="fallback">✖ Без картинки (Фолбек)</button>
+          <label class="btn-tool file-upload-btn" title="Загрузить свой файл картинки">
+            📁 Загрузить свою...
+            <input type="file" id="upload-image-input" accept="image/*">
+          </label>
+        </div>
+
+        <div style="width: 1px; height: 20px; background: rgba(201,168,76,0.3);"></div>
+
+        <div class="toolbar-group">
+          <span class="toolbar-label">Режим печати:</span>
+          <button type="button" class="btn-tool active" id="btn-theme-color" title="Полный цвет (Dark Fantasy)">🎨 Полный цвет</button>
+          <button type="button" class="btn-tool" id="btn-theme-bw" title="Чистый белый лист, чёрные чернила (Идеально для домашнего принтера, экономит краску)">📄 Ч/Б (Белая печать)</button>
+          <button type="button" class="btn-tool" id="btn-theme-bw-dark" title="Тёмный инверсный монохром (Чёрный фон, белые линии, 0% цвета)">🖤 Ч/Б (Тёмный нуар)</button>
+        </div>
+      </div>
+
+      <!-- Quick Filter Category Tabs -->
+      <div style="display: flex; gap: 8px; justify-content: center; margin-top: 12px; flex-wrap: wrap;">
+        <button type="button" class="btn-filter-tab active" data-filter="all">🔘 Все варианты (7)</button>
+        <button type="button" class="btn-filter-tab" data-filter="v5-series">⭐ Серия 5-го варианта (5A, 5B, 5C)</button>
+        <button type="button" class="btn-filter-tab" data-filter="classic">📜 Базовые концепты (1–4)</button>
+      </div>
+    </div>
+  </header>
+
+  <!-- ===== Main Gallery ===== -->
+  <main class="gallery-container">
+    <div class="gallery-grid">
+
+      <!-- ====================================================================
+           VARIANT 1: «АРКАННЫЙ РИББОН»
+           ==================================================================== -->
+      <div class="variant-card-box" data-category="classic">
+        <div class="variant-number-badge">Вариант 1</div>
+        <div class="variant-preview-holder" data-variant="1" title="Нажмите, чтобы приблизить">
+          
+          <div class="demo-card card--variant-1">
+            <!-- Left Ribbon -->
+            <aside class="v1-ribbon">
+              <div class="v1-ribbon__crest">⚔️</div>
+              <div class="v1-ribbon__quick-stats">
+                <div class="v1-ribbon__stat-badge"><span>🔮</span><span>НАСТР</span></div>
+                <div class="v1-ribbon__stat-badge"><span>⚖️</span><span>1.5кг</span></div>
+                <div class="v1-ribbon__stat-badge"><span>💰</span><span>5000</span></div>
+              </div>
+              <div class="v1-ribbon__ornament">
+                <svg width="20" height="50" viewBox="0 0 20 50" fill="none">
+                  <path d="M10 2 C6 14, 14 26, 10 38 C6 44, 14 48, 10 50" stroke="#f5c842" stroke-width="1.2"/>
+                  <circle cx="10" cy="25" r="2" fill="#f5c842"/>
+                </svg>
+              </div>
+              <div class="v1-ribbon__category">ОРУЖИЕ</div>
+            </aside>
+
+            <!-- Main Body -->
+            <main class="v1-main">
+              <div class="v1-header">
+                <h3 class="v1-title item-title-val" id="v1-name">Ледяной меч</h3>
+                <span class="v1-rarity item-rarity-val" id="v1-rarity">Очень редкий</span>
+              </div>
+
+              <!-- Art Slot -->
+              <div class="v1-art-slot art-slot-target" id="v1-art-target">
+                <!-- Injected dynamically via JS -->
+              </div>
+
+              <div class="v1-combat-bar">
+                <span>🗡️ 1к8(1к10) рубящий</span>
+                <span>❄️ +1к8 холодом</span>
+              </div>
+
+              <div class="v1-body-text">
+                <p><strong>Изящный эльфийский клинок.</strong> При попадании наносит доп. урон холодом 1к8. Держа клинок, вы получаете <strong>сопротивление огню</strong>.</p>
+                <p>При морозе клинок излучает свет на 3 м. Действием гасит огонь в радиусе 9 м.</p>
+                <div class="v1-lore">«Выкован из нестающего льда горных пиков древними оружейниками.»</div>
+              </div>
+
+              <footer class="v1-footer">
+                <span>D&amp;D 5e • Длинный меч</span>
+                <span>By Shiz</span>
+              </footer>
+            </main>
+          </div>
+
+        </div>
+
+        <div class="variant-details">
+          <h2 class="variant-title">1. Арканный Риббон</h2>
+          <div class="variant-subtitle">Сестра карт заклинаний (Spellbook Sibling)</div>
+          <div class="variant-tags">
+            <span class="variant-tag">Единый стиль с заклинаниями</span>
+            <span class="variant-tag">Вертикальный корешок</span>
+            <span class="variant-tag">Компактный арт</span>
+          </div>
+          <div class="variant-desc">
+            Использует ту же фирменную геометрию, что и наши карты заклинаний: левый цветной риббон со значками веса/настройки и категории, прямоугольный арт-слот сверху и богатая боевая плашка. В колоде карты заклинаний и предметов смотрятся как единый монолитный комплект.
+          </div>
+          <button type="button" class="btn-choose-variant" data-vote="1">★ Выбрать Вариант 1</button>
+        </div>
+      </div>
+
+      <!-- ====================================================================
+           VARIANT 2: «КЛАССИЧЕСКИЙ ГРИМУАР / TCG MTG»
+           ==================================================================== -->
+      <div class="variant-card-box" data-category="classic">
+        <div class="variant-number-badge">Вариант 2</div>
+        <div class="variant-preview-holder" data-variant="2" title="Нажмите, чтобы приблизить">
+
+          <div class="demo-card card--variant-2">
+            <div class="v2-inner-frame">
+              <!-- Top Header -->
+              <div class="v2-header-bar">
+                <span class="v2-title item-title-val" id="v2-name">Ледяной меч</span>
+                <div class="v2-header-badges">
+                  <span>🔮 Настройка</span>
+                  <span>💰 5 000 зм</span>
+                </div>
+              </div>
+
+              <!-- Dedicated Art Frame -->
+              <div class="v2-art-window art-slot-target" id="v2-art-target">
+                <!-- Injected dynamically -->
+              </div>
+
+              <!-- Type Line Ribbon -->
+              <div class="v2-type-ribbon">
+                <span class="item-type-val">Оружие (длинный меч)</span>
+                <span class="item-rarity-val" style="color: #1e40af;">★ Очень редкий</span>
+              </div>
+
+              <!-- Text Box -->
+              <div class="v2-textbox">
+                <div class="v2-combat-pills">
+                  <span class="item-combat-val">🗡️ 1к8(1к10) рубящий</span>
+                  <span class="item-extra-val">❄️ +1к8 урона холодом</span>
+                  <span>⚖️ 1.5 кг</span>
+                </div>
+
+                <div class="v2-rules-text">
+                  <p><strong>Изящный клинок эльфийской работы.</strong> При попадании наносит доп. 1к8 урона холодом. Держа обнажённый меч, вы получаете <strong>сопротивление урону огнём</strong>.</p>
+                  <p>При отрицательной температуре клинок излучает свет на 3 м. Действием гасит огонь в радиусе 9 м.</p>
+                  <div class="v2-divider"></div>
+                  <div class="v2-lore">«Выкован из нестающего льда горных пиков древними оружейниками Севера.»</div>
+                </div>
+
+                <div class="v2-footer">
+                  <span>D&amp;D 5e • Magic Item</span>
+                  <span>By Shiz</span>
+                </div>
+              </div>
+            </div>
+          </div>
+
+        </div>
+
+        <div class="variant-details">
+          <h2 class="variant-title">2. Классический Гримуар</h2>
+          <div class="variant-subtitle">Традиционный TCG / MTG-стандарт</div>
+          <div class="variant-tags">
+            <span class="variant-tag">Крупное окно арта</span>
+            <span class="variant-tag">Классика Magic</span>
+            <span class="variant-tag">Гравированная рамка</span>
+          </div>
+          <div class="variant-desc">
+            Проверенная десятилетиями компоновка карточных игр (Magic, Hearthstone): золоченая шапка названия, широкое окно арта (4:3) с фасками и кристаллом редкости, четкая полоса типа предмета и пергаментный текстовый блок с боевыми плашками.
+          </div>
+          <button type="button" class="btn-choose-variant" data-vote="2">★ Выбрать Вариант 2</button>
+        </div>
+      </div>
+
+      <!-- ====================================================================
+           VARIANT 3: «СВЯЩЕННЫЙ РЕЛИКВАРИЙ»
+           ==================================================================== -->
+      <div class="variant-card-box" data-category="classic">
+        <div class="variant-number-badge">Вариант 3</div>
+        <div class="variant-preview-holder" data-variant="3" title="Нажмите, чтобы приблизить">
+
+          <div class="demo-card card--variant-3">
+            <!-- Gothic Arch with Flanking Pillars -->
+            <div class="v3-gothic-arch-wrap">
+              <div class="v3-pillar">
+                <div class="v3-pillar-glyph"><span>🔮</span><span>НАСТР</span></div>
+                <div class="v3-pillar-glyph"><span>⚖️</span><span>1.5кг</span></div>
+              </div>
+
+              <div class="v3-arch-window art-slot-target" id="v3-art-target">
+                <!-- Injected dynamically -->
+              </div>
+
+              <div class="v3-pillar">
+                <div class="v3-pillar-glyph"><span>💎</span><span>РЕДК</span></div>
+                <div class="v3-pillar-glyph"><span>💰</span><span>5 000</span></div>
+              </div>
+            </div>
+
+            <!-- Scroll Banner -->
+            <div class="v3-banner-scroll">
+              <h3 class="v3-banner-title item-title-val" id="v3-name">Ледяной меч</h3>
+              <div class="v3-banner-sub item-sub-val">Оружие (длинный меч) • Очень редкий</div>
+            </div>
+
+            <!-- Relic Rules Body -->
+            <div class="v3-relic-body">
+              <div class="v3-combat-bar">
+                <span class="item-combat-val">🗡️ 1к8(1к10) рубящий</span>
+                <span class="item-extra-val">❄️ +1к8 урона холодом</span>
+              </div>
+
+              <div class="v3-rules-text">
+                <p><strong>Изящный клинок эльфийской работы.</strong> При попадании наносит доп. урон холодом 1к8. Дарует <strong>сопротивление урону огнём</strong>.</p>
+                <p>В мороз клинок излучает свет на 3 м. Действием гасит все источники огня в радиусе 9 м.</p>
+                <div class="v3-lore">«Священная реликвия зимних эльфов, прошедшая сотни битв на ледяных пустошах.»</div>
+              </div>
+
+              <div class="v3-footer">
+                <span>D&amp;D 5e • Сокровищница</span>
+                <span>By Shiz</span>
+              </div>
+            </div>
+          </div>
+
+        </div>
+
+        <div class="variant-details">
+          <h2 class="variant-title">3. Священный Реликварий</h2>
+          <div class="variant-subtitle">Gothic Vault / Арочный портал артефакта</div>
+          <div class="variant-tags">
+            <span class="variant-tag">Готическая арка</span>
+            <span class="variant-tag">Витые колонны статов</span>
+            <span class="variant-tag">Свиток-баннер</span>
+          </div>
+          <div class="variant-desc">
+            Атмосфера королевской сокровищницы и средневекового манускрипта: стрельчатая арка для изображения предмета, две резные колонны с быстрым доступом к характеристикам и витой геральдический свиток с именем клинка.
+          </div>
+          <button type="button" class="btn-choose-variant" data-vote="3">★ Выбрать Вариант 3</button>
+        </div>
+      </div>
+
+      <!-- ====================================================================
+           VARIANT 4: «БОЕВОЙ АРСЕНАЛ»
+           ==================================================================== -->
+      <div class="variant-card-box" data-category="classic">
+        <div class="variant-number-badge">Вариант 4</div>
+        <div class="variant-preview-holder" data-variant="4" title="Нажмите, чтобы приблизить">
+
+          <div class="demo-card card--variant-4">
+            <!-- Top Split: Square Art + Huge Stat HUD -->
+            <div class="v4-hud-top">
+              <div class="v4-square-art art-slot-target" id="v4-art-target">
+                <!-- Injected dynamically -->
+              </div>
+
+              <div class="v4-stat-block">
+                <div class="v4-stat-heading">Боевой урон</div>
+                <div class="v4-stat-huge">1к8+3</div>
+                <div class="v4-stat-tag">❄️ +1к8 холодом</div>
+                <div class="v4-stat-properties">
+                  Рубящий • Фехтовальное • 1.5 кг
+                </div>
+              </div>
+            </div>
+
+            <!-- Title Strip -->
+            <div class="v4-title-bar">
+              <h3 class="v4-title" id="v4-name">Ледяной меч</h3>
+              <span class="v4-rarity">Очень редкий</span>
+            </div>
+
+            <!-- Charges Tracker -->
+            <div class="v4-charges-hud">
+              <span>Заряды [Восст. на рассвете]:</span>
+              <span class="v4-pips">● ● ● ○ ○</span>
+            </div>
+
+            <!-- Rules Box -->
+            <div class="v4-rules-card">
+              <div class="v4-rules-text">
+                <p><strong>Эльфийский клинок.</strong> Цель получает +1к8 урона холодом. Носитель получает <strong>сопротивление огню</strong>.</p>
+                <p>В темноте и при отрицательной температуре светится на 3 м. Действием гасит все источники огня в радиусе 9 м.</p>
+              </div>
+
+              <div class="v4-footer">
+                <span>D&amp;D 5e • Длинный меч • Настройка</span>
+                <span>By Shiz</span>
+              </div>
+            </div>
+          </div>
+
+        </div>
+
+        <div class="variant-details">
+          <h2 class="variant-title">4. Боевой Арсенал</h2>
+          <div class="variant-subtitle">Tactical Combat HUD / Фокус на боевых статах</div>
+          <div class="variant-tags">
+            <span class="variant-tag">Огромные цифры урона</span>
+            <span class="variant-tag">Квадратный арт</span>
+            <span class="variant-tag">Мгновенное считывание</span>
+          </div>
+          <div class="variant-desc">
+            Идеален для динамичного боя: верх разделен пополам между квадратным слотом арта и огромным бейджем урона (1к8+3 / холод), который виден с любого конца стола. Чекбоксы зарядов увеличены для отметок стираемым маркером.
+          </div>
+          <button type="button" class="btn-choose-variant" data-vote="4">★ Выбрать Вариант 4</button>
+        </div>
+      </div>
+
+      <!-- ====================================================================
+           VARIANT 5A: «FULL-ART ТЁМНЫЙ ОБСИДИАН» (Obsidian Showcase)
+           ==================================================================== -->
+      <div class="variant-card-box" data-category="v5-series">
+        <div class="variant-number-badge">Вариант 5A</div>
+        <div class="variant-preview-holder" data-variant="5A" title="Нажмите, чтобы приблизить">
+
+          <div class="demo-card card--variant-5">
+            <!-- Full Height Background Art -->
+            <div class="v5-full-art-bg art-slot-target" id="v5a-art-target">
+              <!-- Injected dynamically -->
+            </div>
+            <div class="v5-art-gradient"></div>
+
+            <!-- Floating Gilded Header -->
+            <div class="v5-floating-header">
+              <h3 class="v5-title item-title-val" id="v5-name">Ледяной меч</h3>
+              <span class="v5-rarity-pill item-rarity-val">Очень редкий</span>
+            </div>
+
+            <!-- Acrylic Translucent Rules Plate -->
+            <div class="v5-acrylic-plate">
+              <div class="v5-combat-bar">
+                <span class="item-type-val">🗡️ Длинный меч</span>
+                <span class="item-combat-val">💥 1к8+СИЛ</span>
+                <span class="item-extra-val">❄️ +1к8 холодом</span>
+                <span>🔮 Настр.</span>
+              </div>
+
+              <div class="v5-rules-text">
+                <p><strong>Изящный клинок эльфийской работы.</strong> Наносит дополнительный 1к8 урона холодом при попадании.</p>
+                <p>Дарует <strong>сопротивление огню</strong>. При отрицательной температуре светится на 3 м. Действием гасит пламя в 9 м.</p>
+                <div class="v5-lore">«Оружие морозных великанов и эльфийских стражей зимы.»</div>
+              </div>
+
+              <div class="v5-footer">
+                <span>D&amp;D 5e • Оружие</span>
+                <span>By Shiz</span>
+              </div>
+            </div>
+          </div>
+
+        </div>
+
+        <div class="variant-details">
+          <h2 class="variant-title">5A. Тёмный Обсидиан</h2>
+          <div class="variant-subtitle">Obsidian Showcase / Тёмный акрил и золото</div>
+          <div class="variant-tags">
+            <span class="variant-tag">Арт на 60%</span>
+            <span class="variant-tag">Парящая шапка</span>
+            <span class="variant-tag">Тёмный акрил</span>
+          </div>
+          <div class="variant-desc">
+            Иллюстрация занимает верхние 60% карты без полей. Внизу расположена глубокая обсидиановая панель с золотыми акцентами. В Ч/Б превращается в стильный графический нуар.
+          </div>
+          <button type="button" class="btn-choose-variant" data-vote="5A">★ Выбрать Вариант 5A</button>
+        </div>
+      </div>
+
+      <!-- ====================================================================
+           VARIANT 5B: «FULL-ART БЕЛЫЙ МАНУСКРИПТ» (Light Manuscript / Clean Print)
+           ==================================================================== -->
+      <div class="variant-card-box" data-category="v5-series">
+        <div class="variant-number-badge" style="background:#20283e; border-color:#93c5fd; color:#93c5fd;">Вариант 5B</div>
+        <div class="variant-preview-holder" data-variant="5B" title="Нажмите, чтобы приблизить">
+
+          <div class="demo-card card--variant-5b">
+            <!-- Full Height Background Art -->
+            <div class="v5-full-art-bg art-slot-target" id="v5b-art-target">
+              <!-- Injected dynamically -->
+            </div>
+            <div class="v5-art-gradient v5-art-gradient--light"></div>
+
+            <!-- Floating Gilded Header (Light Paper) -->
+            <div class="v5-floating-header">
+              <h3 class="v5-title item-title-val">Ледяной меч</h3>
+              <span class="v5-rarity-pill item-rarity-val">Очень редкий</span>
+            </div>
+
+            <!-- Clean Parchment Rules Plate (Saves Ink on Print) -->
+            <div class="v5-acrylic-plate">
+              <div class="v5-combat-bar">
+                <span class="item-type-val">🗡️ Длинный меч</span>
+                <span class="item-combat-val">💥 1к8+СИЛ</span>
+                <span class="item-extra-val">❄️ +1к8 холодом</span>
+                <span>🔮 Настр.</span>
+              </div>
+
+              <div class="v5-rules-text">
+                <p><strong>Изящный клинок эльфийской работы.</strong> Наносит дополнительный 1к8 урона холодом при попадании.</p>
+                <p>Дарует <strong>сопротивление огню</strong>. При отрицательной температуре светится на 3 м. Действием гасит пламя в 9 м.</p>
+                <div class="v5-lore">«Оружие морозных великанов и эльфийских стражей зимы.»</div>
+              </div>
+
+              <div class="v5-footer">
+                <span>D&amp;D 5e • Оружие</span>
+                <span>Чистая печать</span>
+              </div>
+            </div>
+          </div>
+
+        </div>
+
+        <div class="variant-details">
+          <h2 class="variant-title">5B. Белый Манускрипт</h2>
+          <div class="variant-subtitle">Light Print / Специально для чистой печати</div>
+          <div class="variant-tags">
+            <span class="variant-tag">Идеально для Ч/Б</span>
+            <span class="variant-tag">Экономия чернил</span>
+            <span class="variant-tag">Высокая чёткость</span>
+          </div>
+          <div class="variant-desc">
+            Тот же большой арт во всю ширину, но нижняя плашка правил выполнена на <strong>чистом белом фоне с чёрным текстом</strong>. При печати на обычном принтере это <strong>не заливает бумагу чернилами</strong> и экономит картридж!
+          </div>
+          <button type="button" class="btn-choose-variant" data-vote="5B">★ Выбрать Вариант 5B</button>
+        </div>
+      </div>
+
+      <!-- ====================================================================
+           VARIANT 5C: «FULL-ART ТАКТИЧЕСКИЙ ГИБРИД» (Tactical Collector HUD)
+           ==================================================================== -->
+      <div class="variant-card-box" data-category="v5-series">
+        <div class="variant-number-badge" style="background:#1e293b; border-color:#f59e0b; color:#fbbf24;">Вариант 5C</div>
+        <div class="variant-preview-holder" data-variant="5C" title="Нажмите, чтобы приблизить">
+
+          <div class="demo-card card--variant-5c">
+            <!-- Full Height Background Art -->
+            <div class="v5-full-art-bg art-slot-target" id="v5c-art-target">
+              <!-- Injected dynamically -->
+            </div>
+            <div class="v5-art-gradient"></div>
+
+            <!-- Floating Gilded Header -->
+            <div class="v5-floating-header">
+              <h3 class="v5-title item-title-val">Ледяной меч</h3>
+              <span class="v5-rarity-pill item-rarity-val">Очень редкий</span>
+            </div>
+
+            <!-- Tactical Acrylic Rules Plate -->
+            <div class="v5-acrylic-plate">
+              <!-- Big Combat Stat Bar -->
+              <div class="v5c-tactical-row">
+                <div class="v5c-damage-badge"><span class="item-combat-val">💥 1к8+3</span> <span style="font-size:0.6rem; color:#cbd5e1; font-weight:normal;">(1к10)</span></div>
+                <div class="v5c-charges-pips">
+                  <span>Заряды:</span>
+                  <span class="v5c-pips-icons">●●●○○</span>
+                </div>
+              </div>
+
+              <div class="v5-combat-bar" style="margin-bottom: 2px;">
+                <span class="item-type-val">🗡️ Рубящий</span>
+                <span class="item-extra-val">❄️ +1к8 холодом</span>
+                <span>🔮 Настройка</span>
+              </div>
+
+              <div class="v5-rules-text">
+                <p><strong>Эльфийский клинок.</strong> +1к8 урона холодом. Дарует <strong>сопротивление огню</strong>. При морозе светится на 3 м. Действием гасит огонь в 9 м.</p>
+                <div class="v5-lore">«Оружие стражей зимы.»</div>
+              </div>
+            </div>
+          </div>
+
+        </div>
+
+        <div class="variant-details">
+          <h2 class="variant-title">5C. Тактический Full-Art</h2>
+          <div class="variant-subtitle">Tactical Collector HUD / Арт + Боевой фокус</div>
+          <div class="variant-tags">
+            <span class="variant-tag">Огромный арт</span>
+            <span class="variant-tag">Крупный урон</span>
+            <span class="variant-tag">Трекер зарядов</span>
+          </div>
+          <div class="variant-desc">
+            Гибрид красоты 5-го варианта и практичности 4-го: большой арт во всю ширину, а внизу — крупный блок урона и трекер зарядов с точками-чекбоксами для отметок маркером прямо в игре.
+          </div>
+          <button type="button" class="btn-choose-variant" data-vote="5C">★ Выбрать Вариант 5C</button>
+        </div>
+      </div>
+
+    </div>
+  </main>
+
+  <!-- Zoom Modal -->
+  <div class="zoom-overlay" id="zoom-modal">
+    <div class="zoom-inner">
+      <button class="zoom-close" id="zoom-close-btn" title="Закрыть (Esc)">✕</button>
+      <div id="zoom-target-card" style="width: 100%; height: 100%;"></div>
+    </div>
+  </div>
+
+  <!-- JavaScript to drive all 5 variants interactively -->
+  <script>
+    // Sample illustrations & item presets data
+    const SAMPLE_IMAGES = {
+      'ice-sword': {
+        name: 'Ледяной меч',
+        rarity: 'Очень редкий',
+        type: 'Оружие (длинный меч)',
+        combat: '🗡️ 1к8(1к10) рубящий',
+        extra: '❄️ +1к8 холодом',
+        svg: `
+          <svg viewBox="0 0 200 200" width="100%" height="100%">
+            <defs>
+              <radialGradient id="iceGlow" cx="50%" cy="50%" r="50%">
+                <stop offset="0%" stop-color="rgba(165, 230, 226, 0.7)"/>
+                <stop offset="60%" stop-color="rgba(125, 211, 230, 0.25)"/>
+                <stop offset="100%" stop-color="transparent"/>
+              </radialGradient>
+            </defs>
+            <circle cx="100" cy="100" r="85" fill="url(#iceGlow)"/>
+            <g transform="translate(100, 100) rotate(-35) translate(-22, -80)">
+              <path d="M 16 28 C 16 28, 26 62, 23 98 C 20 134, 7 165, 7 165 C 7 165, 28 140, 33 104 C 37 70, 28 28, 28 28 Z" fill="#e0f2fe" stroke="#1e293b" stroke-width="1.6"/>
+              <path d="M 22 28 C 22 28, 29 72, 26 102 C 23 128, 7 165, 7 165" fill="none" stroke="#7dd3fc" stroke-width="1.3"/>
+              <path d="M 19 32 L 23 92 L 13 145" fill="none" stroke="#ffffff" stroke-width="1.2" opacity="0.95"/>
+              <path d="M 12 28 C 8 26, 6 22, 10 18 C 16 16, 28 16, 34 18 C 38 22, 36 26, 32 28 Z" fill="#c9a84c" stroke="#1e293b" stroke-width="1.4"/>
+              <circle cx="22" cy="22" r="2.5" fill="#0284c7"/>
+              <path d="M 18 18 C 17 12, 18 6, 21 0 C 24 6, 25 12, 24 18 Z" fill="#1e3a5f" stroke="#1e293b" stroke-width="1.3"/>
+              <line x1="18" y1="14" x2="24" y2="12" stroke="#c9a84c" stroke-width="1"/>
+              <line x1="19" y1="8" x2="23" y2="6" stroke="#c9a84c" stroke-width="1"/>
+              <path d="M 21 0 C 18 -4, 15 -7, 12 -5 C 10 -3, 11 1, 14 2 Z" fill="#1e3a5f" stroke="#1e293b" stroke-width="1.2"/>
+              <circle cx="14" cy="-3" r="1" fill="#38bdf8"/>
+            </g>
+          </svg>
+        `
+      },
+      'flame-sword': {
+        name: 'Пламенеющий клинок',
+        rarity: 'Редкий',
+        type: 'Оружие (длинный меч)',
+        combat: '🗡️ 1к8(1к10) рубящий',
+        extra: '🔥 +2к6 огнем',
+        svg: `
+          <svg viewBox="0 0 200 200" width="100%" height="100%">
+            <defs>
+              <radialGradient id="fireGlow" cx="50%" cy="50%" r="50%">
+                <stop offset="0%" stop-color="rgba(254, 202, 202, 0.8)"/>
+                <stop offset="50%" stop-color="rgba(253, 230, 138, 0.35)"/>
+                <stop offset="100%" stop-color="transparent"/>
+              </radialGradient>
+            </defs>
+            <circle cx="100" cy="100" r="85" fill="url(#fireGlow)"/>
+            <g transform="translate(100, 100) rotate(-32) translate(-22, -80)">
+              <path d="M 14 30 Q 8 60 12 85 Q 6 115 14 135 Q 22 155 20 160 Q 28 135 26 110 Q 34 80 28 50 Z" fill="rgba(239, 68, 68, 0.5)" stroke="#ea580c" stroke-width="1.4"/>
+              <path d="M 18 30 L 22 155 L 26 30 Z" fill="#fff" stroke="#1e293b" stroke-width="1.5"/>
+              <line x1="22" y1="30" x2="22" y2="145" stroke="#ef4444" stroke-width="1.4"/>
+              <path d="M 8 30 Q 22 24 36 30 L 22 34 Z" fill="#c9a84c" stroke="#1e293b" stroke-width="1.3"/>
+              <rect x="20" y="8" width="4" height="16" rx="1" fill="#7f1d1d" stroke="#1e293b" stroke-width="1.2"/>
+              <circle cx="22" cy="6" r="3.5" fill="#c9a84c" stroke="#1e293b" stroke-width="1.2"/>
+            </g>
+          </svg>
+        `
+      },
+      'ring': {
+        name: 'Кольцо защиты',
+        rarity: 'Редкий',
+        type: 'Кольцо • Настройка',
+        combat: '🛡️ +1 к КД и спасброскам',
+        extra: '🔮 Защитное поле',
+        svg: `
+          <svg viewBox="0 0 200 200" width="100%" height="100%">
+            <defs>
+              <radialGradient id="ringGlow" cx="50%" cy="50%" r="50%">
+                <stop offset="0%" stop-color="rgba(254, 243, 199, 0.75)"/>
+                <stop offset="100%" stop-color="transparent"/>
+              </radialGradient>
+            </defs>
+            <circle cx="100" cy="100" r="85" fill="url(#ringGlow)"/>
+            <g transform="translate(100, 100)">
+              <ellipse cx="0" cy="15" rx="55" ry="32" fill="none" stroke="#c9a84c" stroke-width="10"/>
+              <ellipse cx="0" cy="15" rx="55" ry="32" fill="none" stroke="#f5c842" stroke-width="3"/>
+              <path d="M -18 -8 L 0 -28 L 18 -8 L 12 5 L -12 5 Z" fill="#1e40af" stroke="#f5c842" stroke-width="2"/>
+              <polygon points="0,-28 14,-10 0,2 -14,-10" fill="#3b82f6"/>
+              <polygon points="0,-28 0,2 14,-10" fill="#60a5fa" opacity="0.6"/>
+              <circle cx="-2" cy="-14" r="3" fill="#ffffff" opacity="0.9"/>
+            </g>
+          </svg>
+        `
+      },
+      'potion': {
+        name: 'Зелье лечения',
+        rarity: 'Обычный',
+        type: 'Зелье • Расходуемое',
+        combat: '❤️ Восст. 2к4+2 ОЗ',
+        extra: '⏱️ 1 действие',
+        svg: `
+          <svg viewBox="0 0 200 200" width="100%" height="100%">
+            <defs>
+              <radialGradient id="potionGlow" cx="50%" cy="50%" r="50%">
+                <stop offset="0%" stop-color="rgba(254, 202, 202, 0.7)"/>
+                <stop offset="100%" stop-color="transparent"/>
+              </radialGradient>
+            </defs>
+            <circle cx="100" cy="100" r="85" fill="url(#potionGlow)"/>
+            <g transform="translate(68, 45)">
+              <path d="M 24 16 L 24 28 C 10 44, 6 68, 17 84 C 27 96, 45 96, 55 84 C 66 68, 62 44, 48 28 L 48 16 Z"
+                fill="rgba(255,255,255,0.75)" stroke="#1e293b" stroke-width="2.5"/>
+              <path d="M 14 55 Q 36 46 58 55 C 64 68, 56 86, 48 90 C 36 94, 24 90, 16 80 Z"
+                fill="#dc2626" opacity="0.85"/>
+              <circle cx="30" cy="68" r="3.5" fill="#ffffff" opacity="0.8"/>
+              <circle cx="44" cy="76" r="2.2" fill="#ffffff" opacity="0.8"/>
+              <rect x="22" y="7" width="28" height="10" rx="2" fill="#c9a84c" stroke="#1e293b" stroke-width="1.8"/>
+            </g>
+          </svg>
+        `
+      },
+      'shield': {
+        name: 'Драконий щит',
+        rarity: 'Очень редкий',
+        type: 'Доспех (щит) • Настройка',
+        combat: '🛡️ +2 к КД (спас +2)',
+        extra: '🔥 Защита от пламени',
+        svg: `
+          <svg viewBox="0 0 200 200" width="100%" height="100%">
+            <defs>
+              <radialGradient id="shieldGlow" cx="50%" cy="50%" r="50%">
+                <stop offset="0%" stop-color="rgba(226, 232, 240, 0.8)"/>
+                <stop offset="100%" stop-color="transparent"/>
+              </radialGradient>
+            </defs>
+            <circle cx="100" cy="100" r="85" fill="url(#shieldGlow)"/>
+            <g transform="translate(100, 100)">
+              <path d="M 0 -70 C 45 -70, 55 -60, 55 -10 C 55 45, 0 75, 0 75 C 0 75, -55 45, -55 -10 C -55 -60, -45 -70, 0 -70 Z"
+                fill="#334155" stroke="#c9a84c" stroke-width="4"/>
+              <path d="M 0 -62 C 38 -62, 46 -52, 46 -8 C 46 38, 0 64, 0 64 C 0 64, -46 38, -46 -8 C -46 -52, -38 -62, 0 -62 Z"
+                fill="#1e293b" stroke="#f5c842" stroke-width="1.5"/>
+              <polygon points="0,-45 10,-10 40,-10 15,10 25,45 0,25 -25,45 -15,10 -40,-10 -10,-10" fill="#f5c842"/>
+              <circle cx="0" cy="0" r="6" fill="#dc2626"/>
+            </g>
+          </svg>
+        `
+      },
+      'fallback': {
+        name: 'Стальной клинок',
+        rarity: 'Обычный',
+        type: 'Оружие (длинный меч)',
+        combat: '🗡️ 1к8 рубящий',
+        extra: '⚖️ 1.5 кг',
+        isFallback: true
+      }
+    };
+
+    let currentSample = 'ice-sword';
+    let customImageSrc = null;
+
+    function updateCardLabels(sampleKey) {
+      const data = SAMPLE_IMAGES[sampleKey] || SAMPLE_IMAGES['ice-sword'];
+      document.querySelectorAll('.item-title-val').forEach(el => el.textContent = data.name);
+      document.querySelectorAll('.item-rarity-val').forEach(el => el.textContent = data.rarity);
+      document.querySelectorAll('.item-type-val').forEach(el => el.textContent = data.type);
+      document.querySelectorAll('.item-combat-val').forEach(el => el.textContent = data.combat);
+      document.querySelectorAll('.item-extra-val').forEach(el => el.textContent = data.extra);
+    }
+
+    function renderAllArtSlots() {
+      // Find all designated art target containers across all 7 cards
+      const targets = document.querySelectorAll('.art-slot-target');
+
+      let contentHtml = '';
+
+      if (customImageSrc) {
+        // User uploaded custom image
+        contentHtml = `
+          <div class="card-art-img-wrap">
+            <img src="${customImageSrc}" class="card-art-img" alt="Custom Art">
+          </div>
+        `;
+      } else if (currentSample === 'fallback') {
+        // Fallback Category Icon (Clean vector weapon silhouette)
+        contentHtml = `
+          <div class="card-art-fallback">
+            <svg class="fallback-svg-icon" viewBox="0 0 100 100" fill="none">
+              <circle cx="50" cy="50" r="42" fill="rgba(201, 168, 76, 0.12)" stroke="#c9a84c" stroke-width="1.2" stroke-dasharray="3 2"/>
+              <g transform="translate(50, 50) rotate(-45) translate(-15, -45)">
+                <path d="M 12 15 L 15 75 L 18 15 Z" fill="#94a3b8" stroke="#1e293b" stroke-width="1.5"/>
+                <line x1="15" y1="15" x2="15" y2="70" stroke="#cbd5e1" stroke-width="1"/>
+                <rect x="7" y="14" width="16" height="3" rx="1" fill="#c9a84c" stroke="#1e293b" stroke-width="1.2"/>
+                <rect x="13.5" y="4" width="3" height="10" rx="0.5" fill="#334155" stroke="#1e293b" stroke-width="1"/>
+                <circle cx="15" cy="2" r="2.5" fill="#c9a84c"/>
+              </g>
+            </svg>
+            <div style="font-family:'Cinzel',serif; font-size: 0.55rem; color: #8c8270; margin-top: 2px;">[ Категория: Оружие ]</div>
+          </div>
+        `;
+      } else {
+        const data = SAMPLE_IMAGES[currentSample];
+        contentHtml = `
+          <div class="card-art-img-wrap">
+            ${data.svg}
+          </div>
+        `;
+      }
+
+      targets.forEach(el => {
+        if (el) el.innerHTML = contentHtml;
+      });
+
+      if (!customImageSrc) {
+        updateCardLabels(currentSample);
+      }
+    }
+
+    // Initialize samples buttons
+    document.querySelectorAll('[data-img-sample]').forEach(btn => {
+      btn.addEventListener('click', (e) => {
+        document.querySelectorAll('[data-img-sample]').forEach(b => b.classList.remove('active'));
+        btn.classList.add('active');
+        customImageSrc = null;
+        currentSample = btn.dataset.imgSample;
+        renderAllArtSlots();
+      });
+    });
+
+    // Custom Image File Upload
+    const uploadInput = document.getElementById('upload-image-input');
+    if (uploadInput) {
+      uploadInput.addEventListener('change', (e) => {
+        const file = e.target.files[0];
+        if (!file) return;
+        const reader = new FileReader();
+        reader.onload = (evt) => {
+          customImageSrc = evt.target.result;
+          document.querySelectorAll('[data-img-sample]').forEach(b => b.classList.remove('active'));
+          renderAllArtSlots();
+        };
+        reader.readAsDataURL(file);
+      });
+    }
+
+    // =========================================================================
+    // COLOR & B&W MODES SWITCHER (Full Color, Light Ink B&W, Dark Noir B&W)
+    // =========================================================================
+    const btnColor = document.getElementById('btn-theme-color');
+    const btnBw = document.getElementById('btn-theme-bw');
+    const btnBwDark = document.getElementById('btn-theme-bw-dark');
+
+    function setActivePrintButton(activeBtn) {
+      [btnColor, btnBw, btnBwDark].forEach(btn => {
+        if (btn) btn.classList.remove('active');
+      });
+      if (activeBtn) activeBtn.classList.add('active');
+    }
+
+    btnColor?.addEventListener('click', () => {
+      document.body.classList.remove('theme--bw', 'theme--bw-dark');
+      setActivePrintButton(btnColor);
+    });
+
+    btnBw?.addEventListener('click', () => {
+      document.body.classList.remove('theme--bw-dark');
+      document.body.classList.add('theme--bw');
+      setActivePrintButton(btnBw);
+    });
+
+    btnBwDark?.addEventListener('click', () => {
+      document.body.classList.remove('theme--bw');
+      document.body.classList.add('theme--bw-dark');
+      setActivePrintButton(btnBwDark);
+    });
+
+    // =========================================================================
+    // QUICK CATEGORY FILTER (All 7, Focus on Variant 5 Family, Classic 1-4)
+    // =========================================================================
+    document.querySelectorAll('.btn-filter-tab').forEach(tab => {
+      tab.addEventListener('click', () => {
+        document.querySelectorAll('.btn-filter-tab').forEach(t => t.classList.remove('active'));
+        tab.classList.add('active');
+        const filter = tab.dataset.filter;
+
+        document.querySelectorAll('.variant-card-box').forEach(box => {
+          const category = box.dataset.category;
+          if (filter === 'all') {
+            box.style.display = 'flex';
+          } else if (filter === 'v5-series') {
+            box.style.display = (category === 'v5-series') ? 'flex' : 'none';
+          } else if (filter === 'classic') {
+            box.style.display = (category === 'classic') ? 'flex' : 'none';
+          }
+        });
+      });
+    });
+
+    // Zoom Lightbox
+    const modal = document.getElementById('zoom-modal');
+    const zoomTarget = document.getElementById('zoom-target-card');
+    const closeBtn = document.getElementById('zoom-close-btn');
+
+    document.querySelectorAll('.variant-preview-holder').forEach(holder => {
+      holder.addEventListener('click', () => {
+        const clone = holder.querySelector('.demo-card').cloneNode(true);
+        zoomTarget.innerHTML = '';
+        zoomTarget.appendChild(clone);
+        modal.classList.add('active');
+      });
+    });
+
+    closeBtn?.addEventListener('click', () => modal.classList.remove('active'));
+    modal?.addEventListener('click', (e) => {
+      if (e.target === modal) modal.classList.remove('active');
+    });
+    document.addEventListener('keydown', (e) => {
+      if (e.key === 'Escape') modal.classList.remove('active');
+    });
+
+    // Voting action
+    document.querySelectorAll('.btn-choose-variant').forEach(btn => {
+      btn.addEventListener('click', () => {
+        const v = btn.dataset.vote;
+        alert(`Вы выбрали Вариант ${v}! Напишите мне в чате: «Мне нравится вариант ${v}», и я немедленно применю его к Верстаку картодела.`);
+      });
+    });
+
+    // Initial render
+    renderAllArtSlots();
+  </script>
+</body>
+</html>

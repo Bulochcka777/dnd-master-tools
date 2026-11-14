@@ -1,0 +1,658 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Верстак картодела D&D 5e: Заклинания, Магические предметы и Артефакты. Сетка 3×3 (9 карт на лист А4), дуплексная печать, кастомизация рубашек.">
+  <title>Верстак картодела (Печать 9 на А4) — DnD Master Tools</title>
+
+  <link rel="stylesheet" href="../../css/theme.css">
+  <link rel="stylesheet" href="../spell-cards/spells.css">
+  <link rel="stylesheet" href="../item-cards/items.css">
+  <link rel="stylesheet" href="workshop.css">
+</head>
+<body>
+
+  <!-- ===== Header ===== -->
+  <header class="app-header">
+    <a href="../../index.html" class="app-back-link">← На главную</a>
+    <div class="app-title-block">
+      <h1 class="app-title"><span class="app-title-icon">🛠️</span>ВЕРСТАК КАРТОДЕЛА</h1>
+    </div>
+  </header>
+
+  <div class="container" style="max-width: 1440px; margin-top: var(--space-lg); padding-bottom: var(--space-3xl);">
+
+    <!-- ===== Two-Column Layout ===== -->
+    <div class="workshop-app">
+
+      <!-- ===== LEFT COLUMN: Controls & Deck ===== -->
+      <aside class="sidebar" aria-label="Каталог и колода">
+
+        <!-- 1. Size & Print Settings -->
+        <section class="panel">
+          <h2 class="panel__title">
+            <span>📏 Настройки печати</span>
+            <button id="btn-open-custom-size" class="btn-secondary" style="font-size: 0.7rem; padding: 2px 8px;" title="Задать точные миллиметры">
+              ⚙ Свой размер
+            </button>
+          </h2>
+
+          <div class="field-group">
+            <label for="select-size-preset">Формат карт</label>
+            <select id="select-size-preset" class="field-select">
+              <option value="a4-gap" selected>Лист А4 с зазором 2.5 мм (64 × 91 мм) — Удобно резать</option>
+              <option value="a4-max">Максимум А4 без зазора (66 × 94 мм) — Крупный</option>
+              <option value="mtg">Классический покер / MTG с зазором 3 мм (63.5 × 88.9 мм)</option>
+              <option value="bridge">Европейский Bridge с зазором 4 мм (57 × 89 мм)</option>
+              <option value="custom">✏️ Свой точный размер и зазор...</option>
+            </select>
+          </div>
+
+          <div class="field-group" style="margin-top: var(--space-xs);">
+            <label class="checkbox-label" style="display: flex; align-items: center; gap: 8px; cursor: pointer; user-select: none;">
+              <input type="checkbox" id="toggle-print-backs" checked style="accent-color: var(--color-gold); width: 16px; height: 16px; cursor: pointer;">
+              <span style="font-weight: 600; font-size: var(--fs-xs); color: var(--color-text-parchment);">🎴 Печатать рубашки</span>
+            </label>
+            <div style="font-size: 0.7rem; color: var(--color-text-muted); margin-top: 3px; line-height: 1.25;">
+              Листы чередуются (Лицо → Рубашка). Колонки зеркалятся для дуплексной печати.
+            </div>
+          </div>
+
+          <div class="field-group" style="margin-top: var(--space-xs);">
+            <label for="select-color-mode">Цветовая схема</label>
+            <select id="select-color-mode" class="field-select">
+              <option value="color" selected>🎨 Полный цвет (Dark Fantasy)</option>
+              <option value="bw">⬛ Чёрно-белая (Экономичная гравюра для ч/б)</option>
+            </select>
+          </div>
+
+          <div class="field-group" style="margin-top: var(--space-xs);">
+            <label for="select-corner-style">Форма углов карт</label>
+            <select id="select-corner-style" class="field-select">
+              <option value="rounded" selected>✂️ Скруглённые углы (2.5 мм)</option>
+              <option value="sharp">📐 Прямые углы (для резки по линейке)</option>
+            </select>
+          </div>
+        </section>
+
+        <!-- 2. Catalog Switcher Tabs -->
+        <div class="catalog-mode-tabs" role="tablist">
+          <button id="tab-spells" class="tab-btn active" role="tab" aria-selected="true" data-mode="spells">
+            <span class="tab-icon">📜</span> Заклинания
+          </button>
+          <button id="tab-items" class="tab-btn" role="tab" aria-selected="false" data-mode="items">
+            <span class="tab-icon">🗡️</span> Предметы и Артефакты
+          </button>
+        </div>
+
+        <!-- 3A. Spells Catalog Panel -->
+        <section id="panel-spells-catalog" class="panel catalog-panel">
+          <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: var(--space-xs);">
+            <h2 class="panel__title" style="margin: 0; border: none; padding: 0;">
+              <span>📖 Каталог заклинаний</span>
+            </h2>
+            <button id="btn-open-create-spell" class="btn-create-spell" title="Создать способность пси-воина, маневр или своё заклинание">
+              ✨ Создать своё
+            </button>
+          </div>
+
+          <input type="text" id="search-spell" class="field-input search-box" placeholder="🔍 Поиск по названию (Терновый кнут, Шар...)">
+
+          <div class="catalog-filter-row">
+            <div class="field-group">
+              <label for="filter-catalog-class">Класс</label>
+              <select id="filter-catalog-class" class="field-select">
+                <option value="all">Все классы</option>
+                <option value="custom">✨ Мои способности</option>
+                <option value="wizard">📜 Волшебник</option>
+                <option value="sorcerer">🔮 Чародей</option>
+                <option value="warlock">👁️ Колдун</option>
+                <option value="cleric">☀️ Жрец</option>
+                <option value="druid">🍃 Друид</option>
+                <option value="bard">🎭 Бард</option>
+                <option value="paladin">🛡️ Паладин</option>
+                <option value="ranger">🏹 Следопыт</option>
+                <option value="artificer">⚙️ Изобретатель</option>
+                <option value="fighter">⚔️ Воин</option>
+                <option value="rogue">🗡️ Плут</option>
+                <option value="barbarian">🪓 Варвар</option>
+                <option value="monk">👊 Монах</option>
+              </select>
+            </div>
+            <div class="field-group">
+              <label for="filter-catalog-level">Круг</label>
+              <select id="filter-catalog-level" class="field-select">
+                <option value="all">Все круги</option>
+                <option value="0">0 (Заговоры)</option>
+                <option value="1">1 круг</option>
+                <option value="2">2 круг</option>
+                <option value="3">3 круг</option>
+                <option value="4">4 круг</option>
+                <option value="5">5 круг</option>
+                <option value="6">6 круг</option>
+                <option value="7">7 круг</option>
+                <option value="8">8 круг</option>
+                <option value="9">9 круг</option>
+              </select>
+            </div>
+          </div>
+
+          <div id="catalog-spells-list" class="spell-catalog-list">
+            <!-- Injected by JS -->
+          </div>
+        </section>
+
+        <!-- 3B. Items Catalog Panel -->
+        <section id="panel-items-catalog" class="panel catalog-panel" style="display: none;">
+          <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: var(--space-xs);">
+            <h2 class="panel__title" style="margin: 0; border: none; padding: 0;">
+              <span>🗡️ Каталог предметов</span>
+            </h2>
+            <button id="btn-open-create-item" class="btn-create-item" title="Создать свой артефакт, меч или зелье">
+              ✨ Создать свой
+            </button>
+          </div>
+
+          <input type="text" id="search-item" class="field-input search-box" placeholder="🔍 Поиск по названию (Апокалипсис, Солнечный клинок...)">
+
+          <div class="catalog-filter-row">
+            <div class="field-group">
+              <label for="filter-catalog-category">Категория</label>
+              <select id="filter-catalog-category" class="field-select">
+                <option value="all">Все категории</option>
+                <option value="weapon">⚔️ Оружие</option>
+                <option value="armor">🛡️ Доспехи и щиты</option>
+                <option value="potion">🧪 Зелья и эликсиры</option>
+                <option value="scroll">📜 Свитки</option>
+                <option value="ring">💍 Кольца</option>
+                <option value="rod">🪄 Жезлы и скипетры</option>
+                <option value="staff">🦯 Посохи</option>
+                <option value="wondrous">🔮 Чудесные предметы</option>
+                <option value="artifact">👑 Артефакты</option>
+                <option value="custom">✨ Мои артефакты</option>
+              </select>
+            </div>
+            <div class="field-group">
+              <label for="filter-catalog-rarity">Редкость</label>
+              <select id="filter-catalog-rarity" class="field-select">
+                <option value="all">Любая редкость</option>
+                <option value="common">Обычный</option>
+                <option value="uncommon">Необычный</option>
+                <option value="rare">Редкий</option>
+                <option value="very_rare">Очень редкий</option>
+                <option value="legendary">Легендарный</option>
+                <option value="artifact">Артефакт</option>
+              </select>
+            </div>
+          </div>
+
+          <div id="catalog-items-list" class="item-catalog-list">
+            <!-- Injected by JS -->
+          </div>
+        </section>
+
+        <!-- 4. Unified Deck Panel -->
+        <section class="panel">
+          <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: var(--space-xs);">
+            <h2 class="panel__title" style="margin: 0; border: none; padding: 0;">
+              <span>🎴 Общая колода для печати</span>
+            </h2>
+            <button id="btn-clear-deck" class="btn-secondary" style="padding: 2px 8px; font-size: 0.72rem; color: var(--color-crimson-bright);" title="Очистить колоду">
+              Очистить
+            </button>
+          </div>
+
+          <div id="deck-summary-text" class="deck-summary">
+            Карт в колоде: 0 (0 листов А4)
+          </div>
+
+          <div id="deck-list" class="deck-list">
+            <!-- Injected by JS -->
+          </div>
+        </section>
+
+      </aside>
+
+      <!-- ===== RIGHT COLUMN: Live Sheet Preview ===== -->
+      <main class="preview-area" aria-label="Предпросмотр страниц печати">
+
+        <div class="preview-toolbar">
+          <div class="preview-toolbar__left">
+            <span style="font-family: var(--font-heading); color: var(--color-gold); font-weight: 700; font-size: var(--fs-sm);">
+              🖨️ Предпросмотр листа А4 (Сетка 3×3 = 9 карт)
+            </span>
+            <span style="font-size: 0.75rem; color: var(--color-text-muted);">
+              Масштаб при печати: <strong>100%</strong> · Поля: <strong>Минимум (0)</strong>
+            </span>
+          </div>
+          <div class="preview-toolbar__right" style="display: flex; align-items: center; gap: 8px; flex-wrap: wrap;">
+            <button id="btn-open-slot-filler" class="btn-slot-filler" style="display: none;" title="Добавить карты для заполнения листа без пустых мест">
+              ✨ Заполнить лист (+0)
+            </button>
+            <button id="btn-print" class="btn-print-large">
+              🖨️ Распечатать / Сохранить в PDF
+            </button>
+          </div>
+        </div>
+
+        <!-- Sheet Containers -->
+        <div id="sheets-container" class="sheets-container">
+          <!-- Injected by JavaScript -->
+        </div>
+
+      </main>
+
+    </div>
+
+  </div>
+
+  <!-- ===== Modal: Custom Card Size ===== -->
+  <div id="custom-size-modal" class="modal-backdrop" aria-hidden="true">
+    <div class="custom-size-modal" role="dialog" aria-labelledby="modal-title">
+      <div class="modal-header">
+        <h3 id="modal-title">📏 Настройка своего размера карты</h3>
+        <button id="modal-close" class="modal-close" aria-label="Закрыть окно">✕</button>
+      </div>
+
+      <p class="modal-hint">
+        Задайте точные физические размеры одной карточки в миллиметрах. На листе формата А4 (210 × 297 мм) в сетке 3×3 максимальный размер составляет около <strong>67 × 95 мм</strong>.
+      </p>
+
+      <div style="display: grid; grid-template-columns: 1fr 1fr 1fr; gap: var(--space-sm);">
+        <div class="field-group">
+          <label for="modal-input-width">Ширина (мм)</label>
+          <input type="number" id="modal-input-width" class="field-input" step="0.5" min="30" max="80" value="64">
+        </div>
+
+        <div class="field-group">
+          <label for="modal-input-height">Высота (мм)</label>
+          <input type="number" id="modal-input-height" class="field-input" step="0.5" min="40" max="120" value="91">
+        </div>
+
+        <div class="field-group">
+          <label for="modal-input-gap">Зазор реза (мм)</label>
+          <input type="number" id="modal-input-gap" class="field-input" step="0.5" min="0" max="15" value="2.5">
+        </div>
+      </div>
+
+      <div class="modal-actions">
+        <button id="modal-btn-cancel" class="btn-secondary">Отмена</button>
+        <button id="modal-btn-save" class="btn-print-large" style="padding: 0.5rem 1.2rem; font-size: var(--fs-xs);">
+          Применить размер
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ===== Modal: Create / Edit Custom Spell or Ability ===== -->
+  <div id="custom-spell-modal" class="modal-backdrop" aria-hidden="true">
+    <div class="custom-spell-modal-content" role="dialog" aria-labelledby="custom-spell-title">
+      <div class="modal-header">
+        <h3 id="custom-spell-title">✨ Создать способность / заклинание</h3>
+        <button id="custom-spell-close" class="modal-close" aria-label="Закрыть окно">✕</button>
+      </div>
+
+      <p class="modal-hint">
+        Создайте заклинание или способность своего персонажа (например, пси-удар пси-воина, воинский манёвр или черту). Карточка автоматически появится в каталоге и будет готова к печати на листе А4.
+      </p>
+
+      <form id="custom-spell-form" onsubmit="return false;">
+        <input type="hidden" id="cs-id" value="">
+
+        <div style="display: grid; grid-template-columns: 2fr 1fr; gap: var(--space-sm); margin-bottom: var(--space-xs);">
+          <div class="field-group">
+            <label for="cs-name">Название способности *</label>
+            <input type="text" id="cs-name" class="field-input" placeholder="например, Псионический удар" required>
+          </div>
+          <div class="field-group">
+            <label for="cs-name-en">Англ. / Краткая подпись</label>
+            <input type="text" id="cs-name-en" class="field-input" placeholder="Psionic Strike">
+          </div>
+        </div>
+
+        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: var(--space-sm); margin-bottom: var(--space-xs);">
+          <div class="field-group">
+            <label for="cs-school">Тип способности / Школа магии *</label>
+            <select id="cs-school" class="field-select">
+              <optgroup label="Особые / Немагические">
+                <option value="Псионика" selected>🔮 Псионика (Пси-воин / Мистик)</option>
+                <option value="Воинское искусство">⚔️ Воинское искусство (Маневры / Приёмы)</option>
+              </optgroup>
+              <optgroup label="Магические школы D&D 5e">
+                <option value="Воплощение">🔥 Воплощение (Evocation)</option>
+                <option value="Ограждение">🛡️ Ограждение (Abjuration)</option>
+                <option value="Преобразование">🌿 Преобразование (Transmutation)</option>
+                <option value="Вызов">🌀 Вызов (Conjuration)</option>
+                <option value="Иллюзия">👁️ Иллюзия (Illusion)</option>
+                <option value="Очарование">💖 Очарование (Enchantment)</option>
+                <option value="Некромантия">💀 Некромантия (Necromancy)</option>
+                <option value="Прорицание">🔮 Прорицание (Divination)</option>
+              </optgroup>
+            </select>
+          </div>
+
+          <div class="field-group">
+            <label for="cs-level">Круг заклинания / Уровень *</label>
+            <select id="cs-level" class="field-select">
+              <option value="0">Заговор (0 круг)</option>
+              <option value="1">1 круг</option>
+              <option value="2">2 круг</option>
+              <option value="3" selected>3 круг</option>
+              <option value="4">4 круг</option>
+              <option value="5">5 круг</option>
+              <option value="6">6 круг</option>
+              <option value="7">7 круг</option>
+              <option value="8">8 круг</option>
+              <option value="9">9 круг</option>
+            </select>
+          </div>
+        </div>
+
+        <div style="display: grid; grid-template-columns: 1fr 1fr 1fr; gap: var(--space-sm); margin-bottom: var(--space-xs);">
+          <div class="field-group">
+            <label for="cs-casting-time">Время накладывания *</label>
+            <input type="text" id="cs-casting-time" class="field-input" placeholder="1 действие" value="1 действие" required>
+          </div>
+          <div class="field-group">
+            <label for="cs-range">Дистанция *</label>
+            <input type="text" id="cs-range" class="field-input" placeholder="На себя / 30 футов" value="На себя" required>
+          </div>
+          <div class="field-group">
+            <label for="cs-duration">Длительность *</label>
+            <input type="text" id="cs-duration" class="field-input" placeholder="Мгновенная / 1 минута" value="Мгновенная" required>
+          </div>
+        </div>
+
+        <div style="display: grid; grid-template-columns: 2fr 1fr 1fr; gap: var(--space-sm); align-items: center; margin-bottom: var(--space-xs);">
+          <div class="field-group">
+            <label for="cs-components">Компоненты</label>
+            <input type="text" id="cs-components" class="field-input" placeholder="В, С или —" value="—">
+          </div>
+          <div class="field-group" style="padding-top: 18px;">
+            <label class="checkbox-label" style="display: flex; align-items: center; gap: 6px; cursor: pointer;">
+              <input type="checkbox" id="cs-concentration" style="accent-color: var(--color-gold);">
+              <span style="font-size: var(--fs-xs);">Концентрация</span>
+            </label>
+          </div>
+          <div class="field-group" style="padding-top: 18px;">
+            <label class="checkbox-label" style="display: flex; align-items: center; gap: 6px; cursor: pointer;">
+              <input type="checkbox" id="cs-ritual" style="accent-color: var(--color-gold);">
+              <span style="font-size: var(--fs-xs);">Ритуал</span>
+            </label>
+          </div>
+        </div>
+
+        <div class="field-group" style="margin-bottom: var(--space-xs);">
+          <label>Классы / Владельцы (отметьте нужные)</label>
+          <div id="cs-classes-container" class="custom-classes-grid">
+            <!-- Injected by JS -->
+          </div>
+        </div>
+
+        <div class="field-group" style="margin-bottom: var(--space-xs);">
+          <label for="cs-description">Описание эффекта / Правила механики *</label>
+          <textarea id="cs-description" class="field-textarea" rows="4" placeholder="Опишите, как работает способность, сколько урона наносит, какие спасброски требуются..." required></textarea>
+        </div>
+
+        <div class="field-group" style="margin-bottom: var(--space-md);">
+          <label for="cs-higher-levels">На более высоких уровнях (если есть)</label>
+          <textarea id="cs-higher-levels" class="field-textarea" rows="2" placeholder="При использовании ячейки выше или трате дополнительных костей псионики..."></textarea>
+        </div>
+
+        <div class="modal-actions">
+          <button type="button" id="cs-btn-cancel" class="btn-secondary">Отмена</button>
+          <button type="button" id="cs-btn-save" class="btn-print-large" style="padding: 0.5rem 1.2rem; font-size: var(--fs-xs);">
+            💾 Сохранить в каталог
+          </button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- ===== Modal: Create / Edit Custom Artifact or Magic Item ===== -->
+  <div id="custom-item-modal" class="modal-backdrop" aria-hidden="true">
+    <div class="custom-item-modal-content" role="dialog" aria-labelledby="custom-item-title">
+      <div class="modal-header">
+        <h3 id="custom-item-title">👑 Создать свой магический артефакт</h3>
+        <button id="custom-item-close" class="modal-close" aria-label="Закрыть окно">✕</button>
+      </div>
+
+      <p class="modal-hint">
+        Создайте уникальный артефакт, зачарованное оружие, реликвию или зелье для вашей кампании. Карта будет красиво оформлена с рамкой редкости и готова к печати на листе А4.
+      </p>
+
+      <form id="custom-item-form" onsubmit="return false;">
+        <input type="hidden" id="ci-id" value="">
+
+        <div style="display: grid; grid-template-columns: 2fr 1fr; gap: var(--space-sm); margin-bottom: var(--space-xs);">
+          <div class="field-group">
+            <label for="ci-name">Название предмета / артефакта *</label>
+            <input type="text" id="ci-name" class="field-input" placeholder="например, Око Вечной Бури" required>
+          </div>
+          <div class="field-group">
+            <label for="ci-name-en">Англ. / Краткий титул</label>
+            <input type="text" id="ci-name-en" class="field-input" placeholder="Eye of Eternal Storm">
+          </div>
+        </div>
+
+        <div style="display: grid; grid-template-columns: 1fr 1fr 1fr; gap: var(--space-sm); margin-bottom: var(--space-xs);">
+          <div class="field-group">
+            <label for="ci-category">Категория предмета *</label>
+            <select id="ci-category" class="field-select">
+              <option value="weapon">⚔️ Оружие</option>
+              <option value="armor">🛡️ Доспехи и щиты</option>
+              <option value="potion">🧪 Зелья и эликсиры</option>
+              <option value="scroll">📜 Свитки</option>
+              <option value="ring">💍 Кольца</option>
+              <option value="rod">🪄 Жезлы и скипетры</option>
+              <option value="staff">🦯 Посохи</option>
+              <option value="wondrous" selected>🔮 Чудесные предметы</option>
+              <option value="artifact">👑 Великие артефакты</option>
+            </select>
+          </div>
+
+          <div class="field-group">
+            <label for="ci-rarity">Редкость предмета *</label>
+            <select id="ci-rarity" class="field-select">
+              <option value="common">Обычный (Серый)</option>
+              <option value="uncommon">Необычный (Зелёный)</option>
+              <option value="rare">Редкий (Синий)</option>
+              <option value="very_rare">Очень редкий (Фиолетовый)</option>
+              <option value="legendary">Легендарный (Оранжевый / Золотой)</option>
+              <option value="artifact" selected>Артефакт (Багровый / Золотой)</option>
+            </select>
+          </div>
+
+          <div class="field-group">
+            <label for="ci-icon">Иконка / Эмодзи</label>
+            <input type="text" id="ci-icon" class="field-input" placeholder="👑" value="👑" maxlength="4">
+          </div>
+        </div>
+
+        <div style="display: grid; grid-template-columns: 2fr 1fr 1fr; gap: var(--space-sm); margin-bottom: var(--space-xs);">
+          <div class="field-group">
+            <label for="ci-category-name">Точный тип (подзаголовок)</label>
+            <input type="text" id="ci-category-name" class="field-input" placeholder="Чудесный предмет (амулет) или Оружие (длинный меч)" value="Чудесный предмет">
+          </div>
+          <div class="field-group">
+            <label for="ci-weight">Вес</label>
+            <input type="text" id="ci-weight" class="field-input" placeholder="0.5 кг" value="—">
+          </div>
+          <div class="field-group">
+            <label for="ci-cost">Ориент. цена</label>
+            <input type="text" id="ci-cost" class="field-input" placeholder="Бесценно / 5 000 зм" value="Бесценно">
+          </div>
+        </div>
+
+        <div style="display: grid; grid-template-columns: 2fr 1fr; gap: var(--space-sm); margin-bottom: var(--space-xs);">
+          <div class="field-group">
+            <label for="ci-attunement">Требование настройки (attunement)</label>
+            <input type="text" id="ci-attunement" class="field-input" placeholder="Требуется настройка / заклинателем / оставьте пусто, если не нужно">
+          </div>
+          <div class="field-group">
+            <label for="ci-charges">Количество зарядов (0-20)</label>
+            <input type="number" id="ci-charges" class="field-input" min="0" max="25" value="0">
+          </div>
+        </div>
+
+        <div id="ci-charges-reset-wrap" class="field-group" style="display: none; margin-bottom: var(--space-xs);">
+          <label for="ci-charges-reset">Восстановление зарядов</label>
+          <input type="text" id="ci-charges-reset" class="field-input" placeholder="например: Восстанавливает 1к6+1 зарядов на рассвете">
+        </div>
+
+        <div class="field-group" style="margin-bottom: var(--space-xs);">
+          <label>Иллюстрация предмета (своя картинка или арт)</label>
+          <div style="display: flex; gap: 8px; align-items: center;">
+            <label class="btn-secondary" style="font-size: 0.75rem; padding: 5px 12px; cursor: pointer; display: inline-flex; align-items: center; gap: 5px;">
+              📁 Загрузить файл с ПК...
+              <input type="file" id="ci-image-file" accept="image/*" style="display: none;">
+            </label>
+            <input type="text" id="ci-image-url" class="field-input" placeholder="или вставьте ссылку (URL)" style="flex: 1; font-size: 0.78rem;">
+            <button type="button" id="ci-btn-remove-image" class="btn-secondary" style="font-size: 0.75rem; padding: 5px 8px; display: none; color: #ef4444;" title="Удалить картинку">✕</button>
+          </div>
+          <div id="ci-image-preview-wrap" style="display: none; margin-top: 6px; align-items: center; gap: 8px;">
+            <img id="ci-image-preview" src="" alt="Превью" style="width: 48px; height: 48px; object-fit: cover; border-radius: 4px; border: 1px solid var(--color-gold);">
+            <span style="font-size: 0.72rem; color: var(--color-text-muted);">Картинка прикреплена</span>
+          </div>
+          <div style="font-size: 0.68rem; color: var(--color-text-muted); margin-top: 3px;">
+            Если не загружено — будет автоматически использована атмосферная векторная иллюстрация категории.
+          </div>
+        </div>
+
+        <div class="field-group" style="margin-bottom: var(--space-xs); display: flex; align-items: center; gap: 8px;">
+          <input type="checkbox" id="ci-hide-art" style="accent-color: var(--color-gold); cursor: pointer; width: 16px; height: 16px;">
+          <label for="ci-hide-art" style="margin: 0; cursor: pointer; font-size: 0.78rem; color: var(--color-parchment);">
+            Только текст и иконка (без мини-картинки, крупный шрифт описания)
+          </label>
+        </div>
+
+        <div class="field-group" style="margin-bottom: var(--space-xs);">
+          <label for="ci-properties">Ключевые свойства / Бонусы (краткая плашка)</label>
+          <input type="text" id="ci-properties" class="field-input" placeholder="например: +2 к СЛ заклинаний, сопротивление электричеству, призыв молнии">
+        </div>
+
+        <div class="field-group" style="margin-bottom: var(--space-xs);">
+          <label for="ci-desc">Магические свойства и механика (Описание) *</label>
+          <textarea id="ci-desc" class="field-textarea" rows="4" placeholder="Опишите пассивные бонусы, действия для активации эффектов, урон, Спасброски и длительность..." required></textarea>
+        </div>
+
+        <div class="field-group" style="margin-bottom: var(--space-md);">
+          <label for="ci-lore">Художественная цитата / История (Lore quote)</label>
+          <textarea id="ci-lore" class="field-textarea" rows="2" placeholder="«Когда первый гром разорвал небеса, эта реликвия родилась из слёз древнего титана...»"></textarea>
+        </div>
+
+        <div class="modal-actions">
+          <button type="button" id="ci-btn-cancel" class="btn-secondary">Отмена</button>
+          <button type="button" id="ci-btn-save" class="btn-print-large" style="padding: 0.5rem 1.2rem; font-size: var(--fs-xs);">
+            💾 Сохранить артефакт
+          </button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- ===== Modal: Smart Slot Filler ("Без пустых мест на А4") ===== -->
+  <div id="slot-filler-modal" class="modal-backdrop" aria-hidden="true">
+    <div class="slot-filler-modal-content" role="dialog" aria-labelledby="slot-filler-title">
+      <div class="modal-header">
+        <h3 id="slot-filler-title">✨ Заполнить лист А4 без пустых мест</h3>
+        <button id="slot-filler-close" class="modal-close" aria-label="Закрыть окно">✕</button>
+      </div>
+
+      <p class="modal-hint">
+        На текущем листе осталось <strong id="slot-filler-needed-count" style="color: var(--color-gold);">0</strong> свободных мест из 9. Чтобы не тратить фотобумагу впустую, выберите, чем заполнить пустые ячейки:
+      </p>
+
+      <div class="slot-filler-options">
+        
+        <!-- Option 1: Useful Potions & Scrolls -->
+        <div class="slot-option-card" id="opt-fill-potions">
+          <div class="slot-option-icon">🧪</div>
+          <div class="slot-option-body">
+            <h4>Случайные зелья и свитки D&D 5e</h4>
+            <p>Заполнит лист зельями лечения, невидимости, полёта и свитками, которые всегда пригодятся на игре.</p>
+          </div>
+          <button type="button" class="btn-slot-action" id="btn-fill-potions">+ Заполнить зельями</button>
+        </div>
+
+        <!-- Option 2: Spells -->
+        <div class="slot-option-card" id="opt-fill-spells">
+          <div class="slot-option-icon">📜</div>
+          <div class="slot-option-body">
+            <h4>Популярные заклинания D&D 5e</h4>
+            <p>Добавит на этот же лист заклинания (Щит, Огненный шар, Лечение ран). Рубашка на обороте будет с магическим кругом!</p>
+          </div>
+          <button type="button" class="btn-slot-action" id="btn-fill-spells">+ Заполнить заклинаниями</button>
+        </div>
+
+        <!-- Option 3: Magic Items / Artifacts -->
+        <div class="slot-option-card" id="opt-fill-artifacts">
+          <div class="slot-option-icon">👑</div>
+          <div class="slot-option-body">
+            <h4>Случайные артефакты и реликвии</h4>
+            <p>Добавит редкие волшебные предметы, кольца и жезлы. Рубашка на обороте получит Сакральную Призму!</p>
+          </div>
+          <button type="button" class="btn-slot-action" id="btn-fill-artifacts">+ Заполнить артефактами</button>
+        </div>
+
+        <!-- Option 4: Duplicate Existing Deck Items -->
+        <div class="slot-option-card" id="opt-fill-duplicates">
+          <div class="slot-option-icon">🔄</div>
+          <div class="slot-option-body">
+            <h4>Продублировать выбранные карты</h4>
+            <p>Равномерно скопирует уже добавленные вами карты, чтобы напечатать дополнительные копии для партии.</p>
+          </div>
+          <button type="button" class="btn-slot-action" id="btn-fill-duplicates">+ Продублировать</button>
+        </div>
+
+        <!-- Option 5: DM Loot / Note Tracker Card -->
+        <div class="slot-option-card" id="opt-fill-notes">
+          <div class="slot-option-icon">📝</div>
+          <div class="slot-option-body">
+            <h4>Бланки трофеев и заметок Мастера</h4>
+            <p>Распечатает стильные карточки с разлинованными полями для записи найденного лута, золота или заметок от руки.</p>
+          </div>
+          <button type="button" class="btn-slot-action" id="btn-fill-notes">+ Бланки трофеев</button>
+        </div>
+
+      </div>
+
+      <div class="modal-actions" style="margin-top: var(--space-md); border-top: 1px solid rgba(201, 168, 76, 0.2); padding-top: var(--space-sm);">
+        <button type="button" id="slot-filler-btn-cancel" class="btn-secondary">Закрыть</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ===== Modal: Card Zoom Lightbox ===== -->
+  <div id="card-zoom-modal" class="modal-backdrop" aria-hidden="true">
+    <div class="zoom-modal-container">
+      <button id="zoom-modal-close" class="zoom-modal-close-btn" aria-label="Закрыть">✕</button>
+
+      <!-- Flip Front/Back Switcher -->
+      <div id="zoom-modal-switch" class="zoom-modal-switch">
+        <button type="button" id="zoom-btn-front" class="zoom-switch-btn active">
+          📄 Лицевая сторона
+        </button>
+        <button type="button" id="zoom-btn-back" class="zoom-switch-btn">
+          🎴 Рубашка карты
+        </button>
+      </div>
+
+      <div id="zoom-modal-card-target">
+        <!-- Injected dynamically on card click -->
+      </div>
+      <div class="zoom-modal-hint">Кликните «Перевернуть», нажмите Esc или кликните в пустое место для закрытия</div>
+    </div>
+  </div>
+
+  <!-- ===== Toast Notifications ===== -->
+  <div id="toast-container" class="toast-container" aria-live="polite"></div>
+
+  <!-- ===== Scripts ===== -->
+  <script src="../../js/utils.js"></script>
+  <script src="../spell-cards/spells-data.js"></script>
+  <script src="../item-cards/items-data.js"></script>
+  <script src="workshop.js"></script>
+</body>
+</html>

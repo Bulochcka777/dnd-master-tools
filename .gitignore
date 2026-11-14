@@ -1,0 +1,19 @@
+# OS generated files
+Thumbs.db
+desktop.ini
+.DS_Store
+
+# IDE & Editor files
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# Temporary files
+*.tmp
+*.bak
+*.log
+
+# Internal AI Assistant metadata
+GEMINI.md

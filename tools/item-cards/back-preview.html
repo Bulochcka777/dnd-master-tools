@@ -1,0 +1,948 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Галерея вариантов рубашек карт — DnD Master Tools</title>
+  <link rel="stylesheet" href="../../css/theme.css">
+  <link rel="stylesheet" href="items.css">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@500;600;700;900&family=MedievalSharp&family=Lora:ital,wght@0,400;0,600;1,400&display=swap" rel="stylesheet">
+  <style>
+    body {
+      background-color: #0b0c16;
+      background-image: 
+        radial-gradient(circle at 50% 15%, rgba(30, 27, 60, 0.6) 0%, transparent 70%),
+        radial-gradient(circle at 80% 80%, rgba(201, 168, 76, 0.05) 0%, transparent 50%);
+      color: var(--color-text-main, #f0e6d0);
+      font-family: var(--font-body, 'Lora', Georgia, serif);
+      margin: 0;
+      padding: 0;
+      min-height: 100vh;
+    }
+
+    .preview-header {
+      background: rgba(13, 13, 26, 0.95);
+      border-bottom: 1px solid rgba(201, 168, 76, 0.3);
+      padding: 20px 30px;
+      text-align: center;
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      backdrop-filter: blur(10px);
+      box-shadow: 0 4px 25px rgba(0,0,0,0.7);
+    }
+
+    .preview-header h1 {
+      font-family: var(--font-heading, 'Cinzel', serif);
+      color: #f5c842;
+      font-size: 1.8rem;
+      margin: 0 0 6px 0;
+      letter-spacing: 0.05em;
+      text-shadow: 0 0 12px rgba(201, 168, 76, 0.4);
+    }
+
+    .preview-header p {
+      color: #b8b09f;
+      margin: 0;
+      font-size: 0.95rem;
+    }
+
+    .preview-toolbar {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      gap: 16px;
+      margin-top: 14px;
+      flex-wrap: wrap;
+    }
+
+    .toggle-btn {
+      background: rgba(26, 26, 46, 0.85);
+      border: 1px solid var(--color-gold-dim, #947a26);
+      color: #f0e6d0;
+      padding: 8px 18px;
+      border-radius: 20px;
+      cursor: pointer;
+      font-family: var(--font-heading, 'Cinzel', serif);
+      font-size: 0.85rem;
+      font-weight: 600;
+      transition: all 0.2s ease;
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .toggle-btn:hover {
+      border-color: #f5c842;
+      color: #f5c842;
+      transform: translateY(-1px);
+    }
+
+    .toggle-btn.active {
+      background: #c9a84c;
+      color: #070710;
+      border-color: #f5c842;
+      font-weight: 700;
+      box-shadow: 0 0 12px rgba(245, 200, 66, 0.4);
+    }
+
+    .gallery-container {
+      max-width: 1440px;
+      margin: 30px auto 60px auto;
+      padding: 0 24px;
+    }
+
+    .section-title {
+      font-family: var(--font-heading, 'Cinzel', serif);
+      font-size: 1.3rem;
+      color: #e6c875;
+      border-bottom: 1px solid rgba(201, 168, 76, 0.25);
+      padding-bottom: 8px;
+      margin: 40px 0 20px 0;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .section-title span.badge {
+      font-size: 0.72rem;
+      padding: 2px 10px;
+      border-radius: 12px;
+      background: rgba(201, 168, 76, 0.15);
+      border: 1px solid rgba(201, 168, 76, 0.4);
+      color: #f5c842;
+    }
+
+    .cards-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+      gap: 30px;
+      justify-items: center;
+    }
+
+    .option-card-wrapper {
+      background: rgba(18, 18, 34, 0.75);
+      border: 1px solid rgba(201, 168, 76, 0.2);
+      border-radius: 12px;
+      padding: 20px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      transition: all 0.3s ease;
+      width: 100%;
+      max-width: 380px;
+      box-sizing: border-box;
+      position: relative;
+    }
+
+    .option-card-wrapper:hover {
+      border-color: #c9a84c;
+      box-shadow: 0 8px 30px rgba(0, 0, 0, 0.7), 0 0 15px rgba(201, 168, 76, 0.2);
+      transform: translateY(-3px);
+    }
+
+    .option-number-badge {
+      position: absolute;
+      top: -12px;
+      left: 20px;
+      background: #1a1a2e;
+      border: 1.5px solid #c9a84c;
+      color: #f5c842;
+      font-family: var(--font-heading, 'Cinzel', serif);
+      font-size: 0.8rem;
+      font-weight: 700;
+      padding: 2px 12px;
+      border-radius: 12px;
+      letter-spacing: 0.05em;
+    }
+
+    .option-info {
+      text-align: center;
+      margin-top: 18px;
+      width: 100%;
+    }
+
+    .option-title {
+      font-family: var(--font-heading, 'Cinzel', serif);
+      color: #f5c842;
+      font-size: 1.1rem;
+      margin: 0 0 6px 0;
+      font-weight: 700;
+    }
+
+    .option-desc {
+      color: #c5bdae;
+      font-size: 0.86rem;
+      line-height: 1.45;
+      margin: 0 0 14px 0;
+      min-height: 50px;
+    }
+
+    .option-tags {
+      display: flex;
+      justify-content: center;
+      flex-wrap: wrap;
+      gap: 6px;
+      margin-bottom: 12px;
+    }
+
+    .option-tag {
+      background: rgba(201, 168, 76, 0.1);
+      border: 0.5px solid rgba(201, 168, 76, 0.3);
+      color: #e6c875;
+      font-size: 0.72rem;
+      padding: 2px 8px;
+      border-radius: 4px;
+    }
+
+    /* Fixed Card Back Display Dimensions */
+    .card-preview-frame {
+      width: 260px;
+      height: 370px;
+      position: relative;
+      border-radius: 8px;
+      overflow: hidden;
+      box-shadow: 0 10px 25px rgba(0, 0, 0, 0.8);
+    }
+
+    .card-preview-frame .card-back {
+      width: 100%;
+      height: 100%;
+      border-radius: 8px;
+      padding: 12px;
+    }
+
+    /* SVG Emblem sizing inside preview */
+    .card-preview-frame .card-back__artifact-emblem,
+    .card-preview-frame .card-back__magic-circle,
+    .card-preview-frame .card-back__relic-svg,
+    .card-preview-frame .card-back__d20 {
+      width: 160px;
+      height: 160px;
+      display: block;
+      margin: 0 auto;
+    }
+
+    .card-preview-frame .card-back__title {
+      font-size: 11pt;
+      margin-top: 10px;
+    }
+
+    .card-preview-frame .card-back__signature {
+      font-size: 8.5pt;
+      margin-top: 4px;
+    }
+
+    .card-preview-frame .card-back__inner-frame {
+      inset: 8px;
+      border-radius: 5px;
+    }
+
+    .card-preview-frame .card-back__inner-frame::after {
+      inset: 4px;
+      border-radius: 3px;
+    }
+
+    .card-preview-frame .card-back__corner {
+      width: 20px;
+      height: 20px;
+    }
+    .card-preview-frame .card-back__corner--tl { top: 10px; left: 10px; border-width: 1.5px 0 0 1.5px; }
+    .card-preview-frame .card-back__corner--tr { top: 10px; right: 10px; border-width: 1.5px 1.5px 0 0; }
+    .card-preview-frame .card-back__corner--bl { bottom: 10px; left: 10px; border-width: 0 0 1.5px 1.5px; }
+    .card-preview-frame .card-back__corner--br { bottom: 10px; right: 10px; border-width: 0 1.5px 1.5px 0; }
+
+    /* Modal for Fullscreen Inspection */
+    .modal-backdrop {
+      position: fixed;
+      inset: 0;
+      background: rgba(4, 5, 12, 0.88);
+      backdrop-filter: blur(8px);
+      z-index: 1000;
+      display: none;
+      align-items: center;
+      justify-content: center;
+      opacity: 0;
+      transition: opacity 0.25s ease;
+    }
+
+    .modal-backdrop.open {
+      display: flex;
+      opacity: 1;
+    }
+
+    .modal-content {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      position: relative;
+    }
+
+    .modal-card-frame {
+      width: 360px;
+      height: 510px;
+      position: relative;
+      border-radius: 12px;
+      overflow: hidden;
+      box-shadow: 0 25px 70px rgba(0, 0, 0, 0.95), 0 0 35px rgba(201, 168, 76, 0.35);
+    }
+
+    .modal-card-frame .card-back {
+      width: 100%;
+      height: 100%;
+      border-radius: 12px;
+      padding: 18px;
+    }
+
+    .modal-card-frame .card-back__artifact-emblem,
+    .modal-card-frame .card-back__magic-circle,
+    .modal-card-frame .card-back__relic-svg,
+    .modal-card-frame .card-back__d20 {
+      width: 220px;
+      height: 220px;
+    }
+
+    .modal-card-frame .card-back__title {
+      font-size: 15pt;
+      margin-top: 14px;
+    }
+
+    .modal-card-frame .card-back__signature {
+      font-size: 11pt;
+      margin-top: 6px;
+    }
+
+    .modal-card-frame .card-back__inner-frame {
+      inset: 12px;
+      border-radius: 8px;
+    }
+    .modal-card-frame .card-back__inner-frame::after {
+      inset: 6px;
+      border-radius: 6px;
+    }
+    .modal-card-frame .card-back__corner {
+      width: 28px;
+      height: 28px;
+    }
+    .modal-card-frame .card-back__corner--tl { top: 14px; left: 14px; border-width: 2px 0 0 2px; }
+    .modal-card-frame .card-back__corner--tr { top: 14px; right: 14px; border-width: 2px 2px 0 0; }
+    .modal-card-frame .card-back__corner--bl { bottom: 14px; left: 14px; border-width: 0 0 2px 2px; }
+    .modal-card-frame .card-back__corner--br { bottom: 14px; right: 14px; border-width: 0 2px 2px 0; }
+
+    .modal-close {
+      position: absolute;
+      top: -46px;
+      right: -10px;
+      background: #1a1a2e;
+      border: 1px solid #c9a84c;
+      color: #f5c842;
+      font-size: 1.5rem;
+      width: 38px;
+      height: 38px;
+      border-radius: 50%;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: all 0.2s ease;
+    }
+
+    .modal-close:hover {
+      background: #c9a84c;
+      color: #070710;
+      transform: scale(1.1);
+    }
+
+    .back-nav {
+      position: absolute;
+      left: 30px;
+      top: 24px;
+      color: #c9a84c;
+      text-decoration: none;
+      font-family: var(--font-heading, 'Cinzel', serif);
+      font-size: 0.9rem;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      transition: color 0.2s ease;
+    }
+
+    .back-nav:hover {
+      color: #f5c842;
+    }
+  </style>
+</head>
+<body>
+
+  <header class="preview-header">
+    <a href="index.html" class="back-nav">← К картам предметов</a>
+    <h1>⚔️ Выбор дизайна рубашки карт</h1>
+    <p>Ознакомьтесь с вариантами оформления перед внедрением. Нажмите на любую карту для детального просмотра.</p>
+    
+    <div class="preview-toolbar">
+      <button id="btn-theme-color" class="toggle-btn active" onclick="setTheme('color')">
+        <span>🌟 Цветной (Dark Fantasy)</span>
+      </button>
+      <button id="btn-theme-bw" class="toggle-btn" onclick="setTheme('bw')">
+        <span>🖨 Чёрно-белый (Экономная печать)</span>
+      </button>
+    </div>
+  </header>
+
+  <main class="gallery-container">
+
+    <!-- РАЗДЕЛ 1: РАЗДЕЛЬНЫЕ РУБАШКИ ДЛЯ АРТЕФАКТОВ -->
+    <h2 class="section-title">
+      <span>👑 Варианты уникальной рубашки для Артефактов и Предметов</span>
+      <span class="badge">Только для предметов</span>
+    </h2>
+
+    <div class="cards-grid">
+
+      <!-- ВАРИАНТ 1: Корона, Клинок и Скипетр -->
+      <div class="option-card-wrapper" onclick="openZoom(1)">
+        <span class="option-number-badge">Вариант 1</span>
+        <div class="card-preview-frame" id="frame-opt-1">
+          <!-- Rendered via JS -->
+        </div>
+        <div class="option-info">
+          <h3 class="option-title">«Имперская Реликвия»</h3>
+          <p class="option-desc">Корона древних владык, скрещённый рунический клинок и скипетр власти, гранёный кристалл бессмертия и 8-лучевая звезда. Полностью без букв.</p>
+          <div class="option-tags">
+            <span class="option-tag">Без текста</span>
+            <span class="option-tag">Корона и оружие</span>
+            <span class="option-tag">3D Кристалл</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- ВАРИАНТ 2: Астролябия Древних -->
+      <div class="option-card-wrapper" onclick="openZoom(2)">
+        <span class="option-number-badge">Вариант 2</span>
+        <div class="card-preview-frame" id="frame-opt-2">
+          <!-- Rendered via JS -->
+        </div>
+        <div class="option-info">
+          <h3 class="option-title">«Астролябия Планов»</h3>
+          <p class="option-desc">Древний механизм перемещения между планами: армиллярные концентрические сферы, солнечный диск в сердцевине и орбитальные линзы реликвий.</p>
+          <div class="option-tags">
+            <span class="option-tag">Без текста</span>
+            <span class="option-tag">Древний механизм</span>
+            <span class="option-tag">Астролябия</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- ВАРИАНТ 3: Священная Кузница Морадина -->
+      <div class="option-card-wrapper" onclick="openZoom(3)">
+        <span class="option-number-badge">Вариант 3</span>
+        <div class="card-preview-frame" id="frame-opt-3">
+          <!-- Rendered via JS -->
+        </div>
+        <div class="option-info">
+          <h3 class="option-title">«Кузница Творения»</h3>
+          <p class="option-desc">Мифическая наковальня созидания, рунический молот ремесла, пламенеющий самоцвет и стилизованные драконьи крылья-хранители сокровищ.</p>
+          <div class="option-tags">
+            <span class="option-tag">Без текста</span>
+            <span class="option-tag">Кузница и Молот</span>
+            <span class="option-tag">Символ артефакта</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- ВАРИАНТ 4: Сакральная Призма и Око Вечности -->
+      <div class="option-card-wrapper" onclick="openZoom(4)" style="border-color: #22c55e; box-shadow: 0 0 16px rgba(34, 197, 94, 0.3);">
+        <span class="option-number-badge" style="border-color: #22c55e; color: #4ade80;">Вариант 4 • ВЫБРАНО</span>
+        <div class="card-preview-frame" id="frame-opt-4">
+          <!-- Rendered via JS -->
+        </div>
+        <div class="option-info">
+          <h3 class="option-title" style="color: #4ade80;">«Призма Вечности» (ВЫБРАН)</h3>
+          <p class="option-desc">Геометрическая сакральная призма с расходящимися 12 лучами древнего знания, вписанная в двойную звёздную мандалу созидания.</p>
+          <div class="option-tags">
+            <span class="option-tag" style="color: #4ade80; border-color: #22c55e;">Выбран для предметов</span>
+            <span class="option-tag">Без текста</span>
+            <span class="option-tag">Сакральная геометрия</span>
+            <span class="option-tag">Призма силы</span>
+          </div>
+        </div>
+      </div>
+
+    </div>
+
+
+    <!-- РАЗДЕЛ 2: ЕДИНАЯ РУБАШКА (ДЛЯ ВСЕХ КАРТ КОЛОДЫ) -->
+    <h2 class="section-title" style="margin-top: 50px;">
+      <span>🎲 Варианты ЕДИНОЙ рубашки (для заклинаний и предметов вместе)</span>
+      <span class="badge" style="background: rgba(99, 102, 241, 0.2); color: #a5b4fc; border-color: #6366f1;">Универсальная</span>
+    </h2>
+    <p style="color: #a8a090; margin-top: -10px; margin-bottom: 24px; font-size: 0.9rem;">
+      При выборе единой рубашки все карты (и магия, и предметы) печатаются с <b>абсолютно одинаковым оборотом</b>. Это позволяет перемешивать их в единую колоду сокровищ или персонажа, чтобы игроки не могли заранее угадать тип карты.
+    </p>
+
+    <div class="cards-grid">
+
+      <!-- ВАРИАНТ 5: Классический гранёный d20 -->
+      <div class="option-card-wrapper" onclick="openZoom(5)">
+        <span class="option-number-badge" style="border-color: #f59e0b; color: #fbbf24;">Единая 1</span>
+        <div class="card-preview-frame" id="frame-opt-5">
+          <!-- Rendered via JS -->
+        </div>
+        <div class="option-info">
+          <h3 class="option-title">«Классический d20 Реликвий»</h3>
+          <p class="option-desc">Культовый двадцатигранник с выпавшей «20», окружённый благородным лаврово-руническим венцом славы и звёздами. Титул: <b>D&D 5e</b>.</p>
+          <div class="option-tags">
+            <span class="option-tag" style="color: #6ee7b7; border-color: #059669;">Единая колода</span>
+            <span class="option-tag">Символ d20</span>
+            <span class="option-tag">Канон D&D</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- ВАРИАНТ 6: Универсальный Мистический Круг D&D -->
+      <div class="option-card-wrapper" onclick="openZoom(6)">
+        <span class="option-number-badge" style="border-color: #f59e0b; color: #fbbf24;">Единая 2</span>
+        <div class="card-preview-frame" id="frame-opt-6">
+          <!-- Rendered via JS -->
+        </div>
+        <div class="option-info">
+          <h3 class="option-title">«Великий Круг Судьбы»</h3>
+          <p class="option-desc">Декаграмма заклинаний, адаптированная под единую рубашку: руны мироздания, мистическое свечение и общий нейтральный титул: <b>D&D 5e</b>.</p>
+          <div class="option-tags">
+            <span class="option-tag" style="color: #6ee7b7; border-color: #059669;">Единая колода</span>
+            <span class="option-tag">Круг заклинаний</span>
+            <span class="option-tag">Мистический огонь</span>
+          </div>
+        </div>
+      </div>
+
+    </div>
+
+  </main>
+
+  <!-- Zoom Lightbox Modal -->
+  <div id="zoom-modal" class="modal-backdrop" onclick="closeZoom(event)">
+    <div class="modal-content" onclick="event.stopPropagation()">
+      <button class="modal-close" onclick="closeZoom()">✕</button>
+      <div class="modal-card-frame" id="modal-card-slot">
+        <!-- Injected on click -->
+      </div>
+    </div>
+  </div>
+
+  <script>
+    let currentTheme = 'color';
+
+    function setTheme(theme) {
+      currentTheme = theme;
+      document.getElementById('btn-theme-color').classList.toggle('active', theme === 'color');
+      document.getElementById('btn-theme-bw').classList.toggle('active', theme === 'bw');
+      renderAllCards();
+    }
+
+    // --- SVG 1: Grand Imperial Reliquary (Crown, Crossed Arms, Crystal) ---
+    function getSvg1(isBw) {
+      const strokeGold = isBw ? '#000000' : '#c9a84c';
+      const strokeBright = isBw ? '#000000' : '#f5c842';
+      const fillShieldBg = isBw ? '#ffffff' : 'rgba(15, 17, 34, 0.94)';
+      const glow = isBw ? '' : 'style="filter: drop-shadow(0 0 6px rgba(245, 200, 66, 0.55));"';
+
+      return `
+        <svg class="card-back__artifact-emblem" viewBox="0 0 200 200" fill="none" xmlns="http://www.w3.org/2000/svg" ${glow}>
+          <defs>
+            <radialGradient id="g1-${isBw?'bw':'c'}" cx="50%" cy="50%" r="50%">
+              <stop offset="0%" stop-color="${isBw ? 'transparent' : 'rgba(245, 200, 66, 0.38)'}"/>
+              <stop offset="55%" stop-color="${isBw ? 'transparent' : 'rgba(201, 168, 76, 0.14)'}"/>
+              <stop offset="100%" stop-color="transparent"/>
+            </radialGradient>
+            <radialGradient id="gem1-${isBw?'bw':'c'}" cx="35%" cy="30%" r="70%">
+              <stop offset="0%" stop-color="${isBw ? '#ffffff' : '#f87171'}"/>
+              <stop offset="50%" stop-color="${isBw ? '#ffffff' : '#dc2626'}"/>
+              <stop offset="100%" stop-color="${isBw ? '#000000' : '#7f1d1d'}"/>
+            </radialGradient>
+          </defs>
+          <circle cx="100" cy="100" r="90" fill="url(#g1-${isBw?'bw':'c'})"/>
+          <circle cx="100" cy="100" r="92" stroke="${strokeGold}" stroke-width="1.8" stroke-dasharray="3 2"/>
+          <circle cx="100" cy="100" r="88" stroke="${strokeBright}" stroke-width="1.2"/>
+          <circle cx="100" cy="100" r="84" stroke="${strokeGold}" stroke-width="0.8"/>
+          <circle cx="100" cy="8" r="2.8" fill="${strokeBright}" stroke="${strokeGold}" stroke-width="1"/>
+          <circle cx="100" cy="192" r="2.8" fill="${strokeBright}" stroke="${strokeGold}" stroke-width="1"/>
+          <circle cx="8" cy="100" r="2.8" fill="${strokeBright}" stroke="${strokeGold}" stroke-width="1"/>
+          <circle cx="192" cy="100" r="2.8" fill="${strokeBright}" stroke="${strokeGold}" stroke-width="1"/>
+          <g stroke-linecap="round" stroke-linejoin="round">
+            <line x1="38" y1="38" x2="164" y2="164" stroke="${strokeBright}" stroke-width="2.6"/>
+            <line x1="38" y1="38" x2="164" y2="164" stroke="#ffffff" stroke-width="1" opacity="0.8"/>
+            <line x1="28" y1="44" x2="44" y2="28" stroke="${strokeGold}" stroke-width="3"/>
+            <circle cx="20" cy="20" r="3.2" stroke="${strokeGold}" stroke-width="1.2" fill="${isBw ? '#ffffff' : '#f5c842'}"/>
+            <polygon points="164,164 172,168 168,172" fill="${strokeBright}"/>
+            <line x1="162" y1="38" x2="38" y2="162" stroke="${strokeGold}" stroke-width="2.4"/>
+            <circle cx="168" cy="32" r="7" stroke="${strokeBright}" stroke-width="1.6" fill="${fillShieldBg}"/>
+            <polygon points="168,23 171,29 177,32 171,35 168,41 165,35 159,32 165,29" fill="${strokeBright}"/>
+            <circle cx="168" cy="32" r="2.5" fill="${isBw ? '#000000' : '#ef4444'}"/>
+            <circle cx="26" cy="174" r="3" fill="${isBw ? '#ffffff' : '#c9a84c'}" stroke="${strokeGold}" stroke-width="1"/>
+          </g>
+          <g stroke-linejoin="round" stroke-linecap="round">
+            <path d="M 74,45 Q 100,48 126,45 L 128,49 Q 100,52 72,49 Z" stroke="${strokeGold}" stroke-width="1.2" fill="${strokeBright}"/>
+            <path d="M 73,45 L 75,32 L 85,39 L 100,22 L 115,39 L 125,32 L 127,45 Z" stroke="${strokeGold}" stroke-width="1.6" fill="${fillShieldBg}"/>
+            <circle cx="100" cy="22" r="3.2" fill="${isBw ? '#000000' : '#dc2626'}" stroke="${strokeBright}" stroke-width="1"/>
+            <circle cx="75" cy="32" r="2" fill="${strokeBright}"/>
+            <circle cx="125" cy="32" r="2" fill="${strokeBright}"/>
+          </g>
+          <path d="M 58,54 C 80,50 100,50 100,50 C 100,50 120,50 142,54 C 145,86 142,118 100,154 C 58,118 55,86 58,54 Z" stroke="${strokeGold}" stroke-width="2.6" fill="${fillShieldBg}"/>
+          <path d="M 65,60 C 82,57 100,57 100,57 C 100,57 118,57 135,60 C 137,86 134,112 100,144 C 66,112 63,86 65,60 Z" stroke="${strokeBright}" stroke-width="1.3" fill="none"/>
+          <g stroke="${strokeGold}" stroke-width="1.2">
+            <polygon points="100,68 114,94 136,102 114,110 100,136 86,110 64,102 86,94" stroke="${strokeBright}" stroke-width="1.4" fill="${isBw ? 'none' : 'rgba(245, 200, 66, 0.12)'}"/>
+          </g>
+          <polygon points="100,84 116,93 116,111 100,120 84,111 84,93" stroke="${strokeBright}" stroke-width="2" fill="url(#gem1-${isBw?'bw':'c'})"/>
+          <polygon points="100,84 116,93 100,102 84,93" stroke="${isBw ? '#000000' : '#fecaca'}" stroke-width="0.9" fill="${isBw ? 'none' : 'rgba(255, 255, 255, 0.35)'}"/>
+          <circle cx="100" cy="102" r="2.4" fill="${isBw ? '#000000' : '#ffffff'}"/>
+        </svg>
+      `;
+    }
+
+    // --- SVG 2: Planar Astrolabe & Mechanism of the Ancients ---
+    function getSvg2(isBw) {
+      const strokeGold = isBw ? '#000000' : '#c9a84c';
+      const strokeBright = isBw ? '#000000' : '#f5c842';
+      const glow = isBw ? '' : 'style="filter: drop-shadow(0 0 6px rgba(245, 200, 66, 0.6));"';
+
+      return `
+        <svg class="card-back__artifact-emblem" viewBox="0 0 200 200" fill="none" xmlns="http://www.w3.org/2000/svg" ${glow}>
+          <defs>
+            <radialGradient id="g2-${isBw?'bw':'c'}" cx="50%" cy="50%" r="50%">
+              <stop offset="0%" stop-color="${isBw ? 'transparent' : 'rgba(245, 200, 66, 0.35)'}"/>
+              <stop offset="60%" stop-color="${isBw ? 'transparent' : 'rgba(201, 168, 76, 0.1)'}"/>
+              <stop offset="100%" stop-color="transparent"/>
+            </radialGradient>
+            <radialGradient id="sun2-${isBw?'bw':'c'}" cx="35%" cy="35%" r="65%">
+              <stop offset="0%" stop-color="${isBw ? '#ffffff' : '#fef08a'}"/>
+              <stop offset="50%" stop-color="${isBw ? '#888888' : '#eab308'}"/>
+              <stop offset="100%" stop-color="${isBw ? '#000000' : '#854d0e'}"/>
+            </radialGradient>
+          </defs>
+          <circle cx="100" cy="100" r="92" fill="url(#g2-${isBw?'bw':'c'})"/>
+          <circle cx="100" cy="100" r="94" stroke="${strokeGold}" stroke-width="2"/>
+          <circle cx="100" cy="100" r="90" stroke="${strokeBright}" stroke-width="1.2" stroke-dasharray="4 2"/>
+          <circle cx="100" cy="100" r="86" stroke="${strokeGold}" stroke-width="0.8"/>
+          <!-- Celestial Cardinal Markers -->
+          <polygon points="100,2 104,10 100,8 96,10" fill="${strokeBright}"/>
+          <polygon points="100,198 104,190 100,192 96,190" fill="${strokeBright}"/>
+          <polygon points="2,100 10,104 8,100 10,96" fill="${strokeBright}"/>
+          <polygon points="198,100 190,104 192,100 190,96" fill="${strokeBright}"/>
+          <!-- 3 Tilted Armillary Rings -->
+          <ellipse cx="100" cy="100" rx="76" ry="32" stroke="${strokeGold}" stroke-width="1.6" transform="rotate(-30 100 100)"/>
+          <ellipse cx="100" cy="100" rx="76" ry="32" stroke="${strokeBright}" stroke-width="1.6" transform="rotate(30 100 100)"/>
+          <ellipse cx="100" cy="100" rx="76" ry="32" stroke="${strokeGold}" stroke-width="1.4" transform="rotate(90 100 100)"/>
+          <!-- Planetary Spheres & Orbital Lenses -->
+          <circle cx="48" cy="70" r="5" fill="${isBw ? '#000000' : '#38bdf8'}" stroke="${strokeBright}" stroke-width="1"/>
+          <circle cx="152" cy="130" r="4" fill="${isBw ? '#000000' : '#f43f5e'}" stroke="${strokeBright}" stroke-width="1"/>
+          <circle cx="140" cy="62" r="4.5" fill="${isBw ? '#000000' : '#a855f7'}" stroke="${strokeBright}" stroke-width="1"/>
+          <circle cx="60" cy="138" r="3.5" fill="${isBw ? '#000000' : '#22c55e'}" stroke="${strokeBright}" stroke-width="1"/>
+          <!-- Intermediate Ring with Compass Ticks -->
+          <circle cx="100" cy="100" r="50" stroke="${strokeGold}" stroke-width="1.4" stroke-dasharray="2 3"/>
+          <circle cx="100" cy="100" r="42" stroke="${strokeBright}" stroke-width="0.8"/>
+          <!-- Central Sunburst Core of the Relic -->
+          <g stroke="${strokeBright}" stroke-width="1.2">
+            <line x1="100" y1="62" x2="100" y2="76"/>
+            <line x1="100" y1="124" x2="100" y2="138"/>
+            <line x1="62" y1="100" x2="76" y2="100"/>
+            <line x1="124" y1="100" x2="138" y2="100"/>
+            <line x1="73" y1="73" x2="83" y2="83"/>
+            <line x1="127" y1="73" x2="117" y2="83"/>
+            <line x1="73" y1="127" x2="83" y2="117"/>
+            <line x1="127" y1="127" x2="117" y2="117"/>
+          </g>
+          <!-- Central Solar Sphere -->
+          <circle cx="100" cy="100" r="16" fill="url(#sun2-${isBw?'bw':'c'})" stroke="${strokeBright}" stroke-width="2"/>
+          <polygon points="100,88 104,96 112,100 104,104 100,112 96,104 88,100 96,96" fill="${isBw ? '#000000' : '#ffffff'}"/>
+        </svg>
+      `;
+    }
+
+    // --- SVG 3: Forge of Moradin & Hammer of Creation ---
+    function getSvg3(isBw) {
+      const strokeGold = isBw ? '#000000' : '#c9a84c';
+      const strokeBright = isBw ? '#000000' : '#f5c842';
+      const fillShieldBg = isBw ? '#ffffff' : 'rgba(15, 17, 34, 0.94)';
+      const glow = isBw ? '' : 'style="filter: drop-shadow(0 0 6px rgba(245, 200, 66, 0.55));"';
+
+      return `
+        <svg class="card-back__artifact-emblem" viewBox="0 0 200 200" fill="none" xmlns="http://www.w3.org/2000/svg" ${glow}>
+          <defs>
+            <radialGradient id="g3-${isBw?'bw':'c'}" cx="50%" cy="50%" r="50%">
+              <stop offset="0%" stop-color="${isBw ? 'transparent' : 'rgba(234, 88, 12, 0.35)'}"/>
+              <stop offset="60%" stop-color="${isBw ? 'transparent' : 'rgba(201, 168, 76, 0.12)'}"/>
+              <stop offset="100%" stop-color="transparent"/>
+            </radialGradient>
+            <radialGradient id="gem3-${isBw?'bw':'c'}" cx="35%" cy="30%" r="70%">
+              <stop offset="0%" stop-color="${isBw ? '#ffffff' : '#fb923c'}"/>
+              <stop offset="60%" stop-color="${isBw ? '#888888' : '#ea580c'}"/>
+              <stop offset="100%" stop-color="${isBw ? '#000000' : '#7c2d12'}"/>
+            </radialGradient>
+          </defs>
+          <circle cx="100" cy="100" r="92" fill="url(#g3-${isBw?'bw':'c'})"/>
+          <circle cx="100" cy="100" r="94" stroke="${strokeGold}" stroke-width="2"/>
+          <circle cx="100" cy="100" r="90" stroke="${strokeBright}" stroke-width="1.2" stroke-dasharray="3 3"/>
+          <circle cx="100" cy="100" r="86" stroke="${strokeGold}" stroke-width="0.8"/>
+          <!-- Guardian Dragon / Phoenix Wings -->
+          <path d="M 100,50 C 70,30 35,45 22,78 C 36,80 50,75 58,68 C 45,82 40,98 42,112 C 54,106 66,95 72,84 C 70,102 78,118 90,126 L 90,65 Z" fill="${isBw ? 'none' : 'rgba(201, 168, 76, 0.18)'}" stroke="${strokeGold}" stroke-width="1.4"/>
+          <path d="M 100,50 C 130,30 165,45 178,78 C 164,80 150,75 142,68 C 155,82 160,98 158,112 C 146,106 134,95 128,84 C 130,102 122,118 110,126 L 110,65 Z" fill="${isBw ? 'none' : 'rgba(201, 168, 76, 0.18)'}" stroke="${strokeGold}" stroke-width="1.4"/>
+          <!-- Crossed Runesmith Hammer & Tongs -->
+          <g stroke-linecap="round" stroke-linejoin="round">
+            <line x1="38" y1="162" x2="162" y2="38" stroke="${strokeGold}" stroke-width="3"/>
+            <!-- Hammer Head -->
+            <rect x="144" y="24" width="26" height="16" rx="2" transform="rotate(45 157 32)" fill="${fillShieldBg}" stroke="${strokeBright}" stroke-width="2"/>
+            <!-- Crossed Tongs/Chisel -->
+            <line x1="162" y1="162" x2="38" y2="38" stroke="${strokeGold}" stroke-width="2.5" stroke-dasharray="8 3"/>
+            <circle cx="34" cy="34" r="5" fill="${fillShieldBg}" stroke="${strokeBright}" stroke-width="1.5"/>
+          </g>
+          <!-- Great Anvil of Creation -->
+          <path d="M 68,114 L 132,114 L 144,124 L 126,128 L 122,148 L 134,158 L 66,158 L 78,148 L 74,128 L 56,124 Z" fill="${fillShieldBg}" stroke="${strokeBright}" stroke-width="2.2" stroke-linejoin="round"/>
+          <line x1="74" y1="126" x2="126" y2="126" stroke="${strokeGold}" stroke-width="1.2"/>
+          <circle cx="100" cy="138" r="4" fill="${strokeBright}"/>
+          <!-- Blazing Faceted Heartstone Gem above Anvil -->
+          <polygon points="100,55 116,72 100,95 84,72" fill="url(#gem3-${isBw?'bw':'c'})" stroke="${strokeBright}" stroke-width="1.8"/>
+          <polygon points="100,55 116,72 100,78 84,72" fill="${isBw ? '#ffffff' : 'rgba(255,255,255,0.4)'}" stroke="${isBw ? '#000000' : '#fed7aa'}" stroke-width="0.8"/>
+          <!-- Sparkles -->
+          <circle cx="100" cy="78" r="2" fill="${isBw ? '#000000' : '#ffffff'}"/>
+          <line x1="100" y1="46" x2="100" y2="52" stroke="${strokeBright}" stroke-width="1.4"/>
+          <line x1="100" y1="98" x2="100" y2="106" stroke="${strokeBright}" stroke-width="1.4"/>
+          <line x1="76" y1="74" x2="68" y2="74" stroke="${strokeBright}" stroke-width="1.4"/>
+          <line x1="124" y1="74" x2="132" y2="74" stroke="${strokeBright}" stroke-width="1.4"/>
+        </svg>
+      `;
+    }
+
+    // --- SVG 4: Sacred Prism of Eternity & Celestial Eye ---
+    function getSvg4(isBw) {
+      const strokeGold = isBw ? '#000000' : '#c9a84c';
+      const strokeBright = isBw ? '#000000' : '#f5c842';
+      const fillShieldBg = isBw ? '#ffffff' : 'rgba(15, 17, 34, 0.94)';
+      const glow = isBw ? '' : 'style="filter: drop-shadow(0 0 6px rgba(245, 200, 66, 0.55));"';
+
+      return `
+        <svg class="card-back__artifact-emblem" viewBox="0 0 200 200" fill="none" xmlns="http://www.w3.org/2000/svg" ${glow}>
+          <defs>
+            <radialGradient id="g4-${isBw?'bw':'c'}" cx="50%" cy="50%" r="50%">
+              <stop offset="0%" stop-color="${isBw ? 'transparent' : 'rgba(168, 85, 247, 0.28)'}"/>
+              <stop offset="60%" stop-color="${isBw ? 'transparent' : 'rgba(201, 168, 76, 0.12)'}"/>
+              <stop offset="100%" stop-color="transparent"/>
+            </radialGradient>
+            <radialGradient id="eye4-${isBw?'bw':'c'}" cx="40%" cy="40%" r="60%">
+              <stop offset="0%" stop-color="${isBw ? '#ffffff' : '#c084fc'}"/>
+              <stop offset="50%" stop-color="${isBw ? '#888888' : '#7e22ce'}"/>
+              <stop offset="100%" stop-color="${isBw ? '#000000' : '#3b0764'}"/>
+            </radialGradient>
+          </defs>
+          <circle cx="100" cy="100" r="92" fill="url(#g4-${isBw?'bw':'c'})"/>
+          <circle cx="100" cy="100" r="94" stroke="${strokeGold}" stroke-width="2"/>
+          <circle cx="100" cy="100" r="88" stroke="${strokeBright}" stroke-width="1.2"/>
+          <!-- 12 Radiating Beam Flairs -->
+          <g stroke="${strokeGold}" stroke-width="0.8" opacity="0.65">
+            <line x1="100" y1="10" x2="100" y2="35"/>
+            <line x1="100" y1="165" x2="100" y2="190"/>
+            <line x1="10" y1="100" x2="35" y2="100"/>
+            <line x1="165" y1="100" x2="190" y2="100"/>
+            <line x1="36" y1="36" x2="54" y2="54"/>
+            <line x1="164" y1="36" x2="146" y2="54"/>
+            <line x1="36" y1="164" x2="54" y2="146"/>
+            <line x1="164" y1="164" x2="146" y2="146"/>
+          </g>
+          <!-- Double Interlaced Triangles (Hexagram / Mystic Prism) -->
+          <polygon points="100,32 158,134 42,134" stroke="${strokeBright}" stroke-width="2" fill="${isBw ? 'none' : 'rgba(201, 168, 76, 0.08)'}"/>
+          <polygon points="100,168 42,66 158,66" stroke="${strokeGold}" stroke-width="1.8" fill="${isBw ? 'none' : 'rgba(168, 85, 247, 0.06)'}"/>
+          <!-- Inscribed Sacred Circle -->
+          <circle cx="100" cy="100" r="42" stroke="${strokeBright}" stroke-width="1.4" stroke-dasharray="3 2"/>
+          <!-- Central Diamond Prism / All-Seeing Eye of the Relic -->
+          <path d="M 62,100 Q 100,74 138,100 Q 100,126 62,100 Z" fill="${fillShieldBg}" stroke="${strokeBright}" stroke-width="2"/>
+          <circle cx="100" cy="100" r="15" fill="url(#eye4-${isBw?'bw':'c'})" stroke="${strokeGold}" stroke-width="1.5"/>
+          <circle cx="100" cy="100" r="6" fill="${isBw ? '#000000' : '#ffffff'}"/>
+          <circle cx="102" cy="98" r="2.2" fill="${isBw ? '#ffffff' : '#f5c842'}"/>
+        </svg>
+      `;
+    }
+
+    // --- SVG 5: Unified Classic d20 Seal (First Iteration Classic) ---
+    function getSvg5(isBw) {
+      const strokeGold = isBw ? '#000000' : '#c9a84c';
+      const strokeBright = isBw ? '#000000' : '#f5c842';
+      const fillShieldBg = isBw ? '#ffffff' : 'rgba(15, 17, 34, 0.94)';
+      const textColor = isBw ? '#000000' : '#f5c842';
+      const glow = isBw ? '' : 'style="filter: drop-shadow(0 0 6px rgba(245, 200, 66, 0.55));"';
+
+      return `
+        <svg class="card-back__d20" viewBox="0 0 200 200" fill="none" xmlns="http://www.w3.org/2000/svg" ${glow}>
+          <defs>
+            <radialGradient id="g5-${isBw?'bw':'c'}" cx="50%" cy="50%" r="50%">
+              <stop offset="0%" stop-color="${isBw ? 'transparent' : 'rgba(245, 200, 66, 0.35)'}"/>
+              <stop offset="60%" stop-color="${isBw ? 'transparent' : 'rgba(201, 168, 76, 0.12)'}"/>
+              <stop offset="100%" stop-color="transparent"/>
+            </radialGradient>
+          </defs>
+          <circle cx="100" cy="100" r="92" fill="url(#g5-${isBw?'bw':'c'})"/>
+          <circle cx="100" cy="100" r="94" stroke="${strokeGold}" stroke-width="2"/>
+          <circle cx="100" cy="100" r="90" stroke="${strokeBright}" stroke-width="1.2"/>
+          <circle cx="100" cy="100" r="86" stroke="${strokeGold}" stroke-width="0.8" stroke-dasharray="3 2"/>
+          
+          <!-- Laurel Wreath of Mastery & Luck (Left & Right) -->
+          <g stroke="${strokeGold}" stroke-width="1.4" fill="${isBw ? '#ffffff' : 'rgba(201, 168, 76, 0.3)'}">
+            <path d="M 40,140 C 26,110 26,75 48,45 C 46,55 52,65 58,62 C 50,75 52,88 60,92 C 52,106 58,118 68,122 C 56,130 50,136 40,140 Z"/>
+            <path d="M 160,140 C 174,110 174,75 152,45 C 154,55 148,65 142,62 C 150,75 148,88 140,92 C 148,106 142,118 132,122 C 144,130 150,136 160,140 Z"/>
+          </g>
+
+          <!-- 3D Isometric d20 Die -->
+          <!-- Top Triangle with "20" -->
+          <polygon points="100,56 138,98 62,98" fill="${fillShieldBg}" stroke="${strokeBright}" stroke-width="2.2" stroke-linejoin="round"/>
+          <text x="100" y="90" text-anchor="middle" font-family="'Cinzel', Georgia, serif" font-weight="900" font-size="24" fill="${textColor}" letter-spacing="1px">20</text>
+          
+          <!-- Surrounding d20 Facets -->
+          <polygon points="100,56 62,98 52,62" fill="${isBw ? 'none' : 'rgba(201, 168, 76, 0.12)'}" stroke="${strokeGold}" stroke-width="1.6" stroke-linejoin="round"/>
+          <polygon points="100,56 138,98 148,62" fill="${isBw ? 'none' : 'rgba(201, 168, 76, 0.08)'}" stroke="${strokeGold}" stroke-width="1.6" stroke-linejoin="round"/>
+          <polygon points="100,56 52,62 100,38" fill="${isBw ? 'none' : 'rgba(245, 200, 66, 0.16)'}" stroke="${strokeGold}" stroke-width="1.6" stroke-linejoin="round"/>
+          <polygon points="100,56 148,62 100,38" fill="${isBw ? 'none' : 'rgba(245, 200, 66, 0.22)'}" stroke="${strokeGold}" stroke-width="1.6" stroke-linejoin="round"/>
+          
+          <!-- Bottom Facets -->
+          <polygon points="62,98 138,98 100,146" fill="${isBw ? 'none' : 'rgba(201, 168, 76, 0.18)'}" stroke="${strokeBright}" stroke-width="2" stroke-linejoin="round"/>
+          <polygon points="62,98 100,146 52,132" fill="${isBw ? 'none' : 'rgba(201, 168, 76, 0.1)'}" stroke="${strokeGold}" stroke-width="1.6" stroke-linejoin="round"/>
+          <polygon points="138,98 100,146 148,132" fill="${isBw ? 'none' : 'rgba(201, 168, 76, 0.14)'}" stroke="${strokeGold}" stroke-width="1.6" stroke-linejoin="round"/>
+          <polygon points="52,62 62,98 52,132 40,96" fill="${isBw ? 'none' : 'rgba(201, 168, 76, 0.06)'}" stroke="${strokeGold}" stroke-width="1.4" stroke-linejoin="round"/>
+          <polygon points="148,62 138,98 148,132 160,96" fill="${isBw ? 'none' : 'rgba(201, 168, 76, 0.06)'}" stroke="${strokeGold}" stroke-width="1.4" stroke-linejoin="round"/>
+          <polygon points="100,146 52,132 100,164" fill="${isBw ? 'none' : 'rgba(201, 168, 76, 0.08)'}" stroke="${strokeGold}" stroke-width="1.6" stroke-linejoin="round"/>
+          <polygon points="100,146 148,132 100,164" fill="${isBw ? 'none' : 'rgba(201, 168, 76, 0.12)'}" stroke="${strokeGold}" stroke-width="1.6" stroke-linejoin="round"/>
+
+          <!-- 4 Floating Stars -->
+          <polygon points="100,18 102,23 107,24 103,27 104,32 100,29 96,32 97,27 93,24 98,23" fill="${strokeBright}"/>
+          <polygon points="100,172 102,176 106,177 103,179 104,183 100,181 96,183 97,179 94,177 98,176" fill="${strokeBright}"/>
+        </svg>
+      `;
+    }
+
+    // --- SVG 6: Unified Arcane Magic Circle (The Spell Circle with Neutral Title) ---
+    function getSvg6(isBw) {
+      const strokeColor = isBw ? '#000000' : '#ff4d29';
+      const strokeAlt = isBw ? '#000000' : '#f59e0b';
+      const textColor = isBw ? '#000000' : '#ffedd5';
+      const glow = isBw ? '' : 'style="filter: drop-shadow(0 0 5px rgba(255, 77, 41, 0.65));"';
+
+      const glyphs = ['α', 'β', 'γ', 'δ', 'ε', 'ζ', 'η', 'θ', 'ι', 'κ'];
+      let nodeCircles = '';
+      for (let i = 0; i < 10; i++) {
+        const rad = (i * 36 - 90) * Math.PI / 180;
+        const nx = +(100 + 55 * Math.cos(rad)).toFixed(2);
+        const ny = +(100 + 55 * Math.sin(rad)).toFixed(2);
+        nodeCircles += `
+          <circle cx="${nx}" cy="${ny}" r="4.2" fill="${isBw ? '#ffffff' : 'rgba(13, 13, 26, 0.9)'}" stroke="${strokeColor}" stroke-width="1.2"/>
+          <text x="${nx}" y="${ny + 1.2}" text-anchor="middle" dominant-baseline="middle" font-family="'Cinzel', Georgia, serif" font-weight="700" font-size="5" fill="${textColor}">${glyphs[i]}</text>
+        `;
+      }
+
+      const chords = [
+        [0, 3], [3, 6], [6, 9], [9, 2], [2, 5], [5, 8], [8, 1], [1, 4], [4, 7], [7, 0],
+        [0, 4], [4, 8], [8, 2], [2, 6], [6, 0], [1, 5], [5, 9], [9, 3], [3, 7], [7, 1]
+      ];
+      let chordLines = '';
+      for (const [a, b] of chords) {
+        const r1 = (a * 36 - 90) * Math.PI / 180;
+        const r2 = (b * 36 - 90) * Math.PI / 180;
+        const x1 = +(100 + 55 * Math.cos(r1)).toFixed(2);
+        const y1 = +(100 + 55 * Math.sin(r1)).toFixed(2);
+        const x2 = +(100 + 55 * Math.cos(r2)).toFixed(2);
+        const y2 = +(100 + 55 * Math.sin(r2)).toFixed(2);
+        chordLines += `<line x1="${x1}" y1="${y1}" x2="${x2}" y2="${y2}" stroke="${strokeColor}" stroke-width="0.8" opacity="0.75" />`;
+      }
+
+      return `
+        <svg class="card-back__magic-circle" viewBox="0 0 200 200" fill="none" xmlns="http://www.w3.org/2000/svg" ${glow}>
+          <defs>
+            <path id="circle6-runepath" d="M 100,14 A 86,86 0 1,1 99.9,14" fill="none" />
+            <radialGradient id="g6-${isBw?'bw':'c'}" cx="50%" cy="50%" r="50%">
+              <stop offset="0%" stop-color="${isBw ? 'transparent' : 'rgba(255, 77, 41, 0.22)'}"/>
+              <stop offset="70%" stop-color="${isBw ? 'transparent' : 'rgba(245, 158, 11, 0.08)'}"/>
+              <stop offset="100%" stop-color="transparent"/>
+            </radialGradient>
+          </defs>
+          <circle cx="100" cy="100" r="92" fill="url(#g6-${isBw?'bw':'c'})"/>
+          <circle cx="100" cy="100" r="94" stroke="${strokeColor}" stroke-width="2.2"/>
+          <circle cx="100" cy="100" r="91" stroke="${strokeAlt}" stroke-width="1"/>
+          <circle cx="100" cy="100" r="77" stroke="${strokeAlt}" stroke-width="1"/>
+          <circle cx="100" cy="100" r="75" stroke="${strokeColor}" stroke-width="1.8"/>
+          <text font-family="'Cinzel', Georgia, serif" font-size="7" font-weight="600" fill="${textColor}" letter-spacing="4px">
+            <textPath href="#circle6-runepath">✦ ARCANUM ✦ MAGICA ✦ POTENTIA ✦ AETERNA ✦ VITA ✦ MORTIS ✦ CAELUM ✦</textPath>
+          </text>
+          <g stroke-linecap="round">${chordLines}</g>
+          <circle cx="100" cy="100" r="55" stroke="${strokeColor}" stroke-width="1.2" stroke-dasharray="2 1.5"/>
+          <circle cx="100" cy="100" r="38" stroke="${strokeAlt}" stroke-width="1.4"/>
+          <circle cx="100" cy="100" r="35" stroke="${strokeColor}" stroke-width="1.8"/>
+          ${nodeCircles}
+          <circle cx="100" cy="100" r="22" stroke="${strokeColor}" stroke-width="1.2" fill="${isBw ? 'none' : 'rgba(255, 77, 41, 0.12)'}"/>
+          <polygon points="100,81 116,94 110,113 90,113 84,94" stroke="${strokeAlt}" stroke-width="1" fill="none"/>
+          <circle cx="100" cy="100" r="5" fill="${isBw ? '#000000' : '#ff4d29'}"/>
+        </svg>
+      `;
+    }
+
+    // Card Back HTML Template Builder
+    function buildCardBackHtml(svgContent, titleText, isBw) {
+      return `
+        <div class="card-back ${isBw ? 'theme--bw' : ''}">
+          <div class="card-back__inner-frame"></div>
+          <div class="card-back__corner card-back__corner--tl"></div>
+          <div class="card-back__corner card-back__corner--tr"></div>
+          <div class="card-back__corner card-back__corner--bl"></div>
+          <div class="card-back__corner card-back__corner--br"></div>
+          <div class="card-back__emblem">
+            ${svgContent}
+            <div class="card-back__title">${titleText}</div>
+            <div class="card-back__signature">By Shiz</div>
+          </div>
+        </div>
+      `;
+    }
+
+    function renderAllCards() {
+      const isBw = currentTheme === 'bw';
+
+      document.getElementById('frame-opt-1').innerHTML = buildCardBackHtml(getSvg1(isBw), 'D&amp;D ARTIFACT', isBw);
+      document.getElementById('frame-opt-2').innerHTML = buildCardBackHtml(getSvg2(isBw), 'D&amp;D ARTIFACT', isBw);
+      document.getElementById('frame-opt-3').innerHTML = buildCardBackHtml(getSvg3(isBw), 'D&amp;D ARTIFACT', isBw);
+      document.getElementById('frame-opt-4').innerHTML = buildCardBackHtml(getSvg4(isBw), 'D&amp;D ARTIFACT', isBw);
+      document.getElementById('frame-opt-5').innerHTML = buildCardBackHtml(getSvg5(isBw), 'D&amp;D 5E', isBw);
+      document.getElementById('frame-opt-6').innerHTML = buildCardBackHtml(getSvg6(isBw), 'D&amp;D 5E', isBw);
+    }
+
+    // Modal Zoom Handling
+    function openZoom(optionId) {
+      const isBw = currentTheme === 'bw';
+      let svg = '';
+      let title = '';
+
+      switch (optionId) {
+        case 1: svg = getSvg1(isBw); title = 'D&amp;D ARTIFACT'; break;
+        case 2: svg = getSvg2(isBw); title = 'D&amp;D ARTIFACT'; break;
+        case 3: svg = getSvg3(isBw); title = 'D&amp;D ARTIFACT'; break;
+        case 4: svg = getSvg4(isBw); title = 'D&amp;D ARTIFACT'; break;
+        case 5: svg = getSvg5(isBw); title = 'D&amp;D 5E'; break;
+        case 6: svg = getSvg6(isBw); title = 'D&amp;D 5E'; break;
+      }
+
+      document.getElementById('modal-card-slot').innerHTML = buildCardBackHtml(svg, title, isBw);
+      const modal = document.getElementById('zoom-modal');
+      modal.classList.add('open');
+    }
+
+    function closeZoom(e) {
+      const modal = document.getElementById('zoom-modal');
+      modal.classList.remove('open');
+    }
+
+    document.addEventListener('keydown', (e) => {
+      if (e.key === 'Escape') closeZoom();
+    });
+
+    // Initial Render
+    renderAllCards();
+  </script>
+</body>
+</html>

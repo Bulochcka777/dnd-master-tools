@@ -1,0 +1,341 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Кузница Случайностей — Генераторы для Мастера D&D 5e</title>
+  <meta name="description" content="Кузница Случайностей DnD Master Tools — генераторы имён 10 рас, названий городов, таверн, случайных встреч, слухов и сокровищ для D&D 5e.">
+
+  <!-- Core Theme & Fonts -->
+  <link rel="stylesheet" href="../../css/theme.css">
+  <link rel="stylesheet" href="generators.css">
+</head>
+<body>
+
+  <!-- Background Ambience -->
+  <div class="stars-bg" aria-hidden="true"></div>
+
+  <!-- ===== Header ===== -->
+  <header class="app-header">
+    <a href="../../index.html" class="app-back-link">← На главную</a>
+    <div class="app-title-block">
+      <h1 class="app-title"><span class="app-title-icon">⚒️</span>КУЗНИЦА СЛУЧАЙНОСТЕЙ</h1>
+    </div>
+  </header>
+
+  <div class="container" style="margin-top: var(--space-lg);">
+
+    <!-- ===== Bidirectional Bar: Available ONLY when a scene was generated ===== -->
+    <div id="bar-to-scene" class="forge-nav-bar" style="display: none;">
+      <div class="forge-nav-bar__text">
+        <span>⚡</span>
+        <span>Сгенерированная сцена:</span>
+        <strong id="label-goto-scene-title" style="color: var(--color-gold-bright);">«Сцена приключения»</strong>
+      </div>
+      <button id="btn-goto-scene" class="btn-goto-result" title="Вернуться к сгенерированной сцене">
+        <span>К сгенерированной сцене</span> ➔
+      </button>
+    </div>
+
+    <!-- ============================================
+         VIEW 1: GENERATORS GRID & COMPACT CONTROLS
+         ============================================ -->
+    <div id="view-generators">
+
+      <!-- Hero Banner: Express Scene -->
+      <section class="forge-hero">
+        <div class="forge-hero__content">
+          <h2 class="forge-hero__title">
+            <span>🔥</span> Мастерская спонтанного вдохновения
+          </h2>
+          <p class="forge-hero__desc">
+            Нажимайте на «Сковать готовую сцену» для мгновенной сборки цельного сюжета на месте всей страницы или используйте компактные генераторы ниже.
+          </p>
+        </div>
+        <div>
+          <button id="btn-forge-scene" class="btn-forge-master" title="Сгенерировать готовую сцену: город, таверну, персонажа, слух, засаду и лут">
+            <span>⚡</span> Сковать готовую сцену
+          </button>
+        </div>
+      </section>
+
+      <!-- Category Tabs -->
+      <div class="forge-tabs" role="tablist" aria-label="Категории генераторов">
+        <button class="forge-tab active" data-filter="all">🌟 Все генераторы</button>
+        <button class="forge-tab" data-filter="names">🧝 Имена персонажей</button>
+        <button class="forge-tab" data-filter="settlements">🏰 Города и веси</button>
+        <button class="forge-tab" data-filter="taverns">🍺 Таверны и вывески</button>
+        <button class="forge-tab" data-filter="encounters">⚔️ Случайные встречи</button>
+        <button class="forge-tab" data-filter="rumors">📜 Квестовые слухи</button>
+        <button class="forge-tab" data-filter="loot">💎 Добыча и лут</button>
+      </div>
+
+      <!-- Generators Grid -->
+      <main class="forge-grid">
+
+        <!-- 1. Имена персонажей -->
+        <section class="gen-card" data-category="names" id="card-gen-names">
+          <div class="gen-card__header">
+            <span class="gen-card__icon" aria-hidden="true">🧝</span>
+            <div class="gen-card__title-group">
+              <h2 class="gen-card__title">Генератор имён</h2>
+              <p class="gen-card__desc">Имена, фамилии, кланы и титулы для 10 игровых рас D&D 5e.</p>
+            </div>
+          </div>
+
+          <div class="gen-card__controls">
+            <div class="gen-control-group">
+              <label for="name-race">Раса</label>
+              <select id="name-race" class="gen-select">
+                <option value="any" selected>🎲 Любая раса</option>
+                <option value="human">Человек</option>
+                <option value="elf">Эльф</option>
+                <option value="dwarf">Дварф</option>
+                <option value="halfling">Полурослик</option>
+                <option value="dragonborn">Драконорождённый</option>
+                <option value="gnome">Гном</option>
+                <option value="half_elf">Полуэльф</option>
+                <option value="half_orc">Полуорк</option>
+                <option value="tiefling">Тифлинг</option>
+                <option value="orc">Орк</option>
+                <option value="goliath">Голиаф</option>
+                <option value="aasimar">Аасимар</option>
+              </select>
+            </div>
+
+            <div class="gen-control-group">
+              <label for="name-gender">Пол</label>
+              <select id="name-gender" class="gen-select">
+                <option value="any" selected>Любой</option>
+                <option value="male">Мужской</option>
+                <option value="female">Женский</option>
+              </select>
+            </div>
+
+            <div class="gen-control-group">
+              <label for="name-count">Количество</label>
+              <select id="name-count" class="gen-select">
+                <option value="1" selected>1 имя</option>
+                <option value="5">5 имён</option>
+                <option value="10">10 имён</option>
+              </select>
+            </div>
+          </div>
+
+          <button id="btn-roll-names" class="btn-gen-roll">
+            <span class="dice-icon">🎲</span> Сгенерировать имя
+          </button>
+
+          <div id="result-names" class="gen-result">
+            <div class="gen-result__placeholder">Нажмите кнопку для генерации имени...</div>
+          </div>
+        </section>
+
+        <!-- 2. Города и поселения -->
+        <section class="gen-card" data-category="settlements" id="card-gen-settlements">
+          <div class="gen-card__header">
+            <span class="gen-card__icon" aria-hidden="true">🏰</span>
+            <div class="gen-card__title-group">
+              <h2 class="gen-card__title">Города и поселения</h2>
+              <p class="gen-card__desc">Название, правитель, достопримечательность и текущий кризис.</p>
+            </div>
+          </div>
+
+          <div class="gen-card__controls">
+            <div class="gen-control-group" style="grid-column: 1 / -1;">
+              <label for="settlement-scale">Масштаб поселения</label>
+              <select id="settlement-scale" class="gen-select">
+                <option value="any" selected>🎲 Любой масштаб</option>
+                <option value="metropolis">Столица / Мегаполис (30k-100k)</option>
+                <option value="city">Торговый город (8k-25k)</option>
+                <option value="port">Портовый город (5k-20k)</option>
+                <option value="fortress">Горная цитадель / Крепость</option>
+                <option value="mining">Шахтёрское поселение</option>
+                <option value="town">Городок / Посад (2k-6k)</option>
+                <option value="village">Деревня / Хутор (100-800)</option>
+                <option value="magic_spire">Магический анклав / Шпиль</option>
+              </select>
+            </div>
+          </div>
+
+          <button id="btn-roll-settlement" class="btn-gen-roll">
+            <span class="dice-icon">🎲</span> Сгенерировать город
+          </button>
+
+          <div id="result-settlement" class="gen-result">
+            <div class="gen-result__placeholder">Нажмите кнопку для создания поселения...</div>
+          </div>
+        </section>
+
+        <!-- 3. Таверны и вывески -->
+        <section class="gen-card" data-category="taverns" id="card-gen-taverns">
+          <div class="gen-card__header">
+            <span class="gen-card__icon" aria-hidden="true">🍺</span>
+            <div class="gen-card__title-group">
+              <h2 class="gen-card__title">Таверны и постоялые дворы</h2>
+              <p class="gen-card__desc">Вывеска, личность трактирщика, коронное блюдо, выпивка и атмосфера.</p>
+            </div>
+          </div>
+
+          <div class="gen-card__controls">
+            <div class="gen-control-group" style="grid-column: 1 / -1;">
+              <label for="tavern-type">Категория заведения</label>
+              <select id="tavern-type" class="gen-select">
+                <option value="any" selected>🎲 Любое заведение</option>
+                <option value="dive">Притон в трущобах</option>
+                <option value="harbor">Портовая таверна</option>
+                <option value="cozy">Уютный сельский трактир</option>
+                <option value="elite">Элитный клуб / Ресторация</option>
+                <option value="roadside">Придорожный постоялый двор</option>
+              </select>
+            </div>
+          </div>
+
+          <button id="btn-roll-tavern" class="btn-gen-roll">
+            <span class="dice-icon">🎲</span> Сгенерировать таверну
+          </button>
+
+          <div id="result-tavern" class="gen-result">
+            <div class="gen-result__placeholder">Нажмите кнопку для открытия таверны...</div>
+          </div>
+        </section>
+
+        <!-- 4. Случайные встречи (Энкаунтеры) -->
+        <section class="gen-card" data-category="encounters" id="card-gen-encounters">
+          <div class="gen-card__header">
+            <span class="gen-card__icon" aria-hidden="true">⚔️</span>
+            <div class="gen-card__title-group">
+              <h2 class="gen-card__title">Случайные встречи</h2>
+              <p class="gen-card__desc">Боевые засады, социальные встречи, загадки и опасности окружения.</p>
+            </div>
+          </div>
+
+          <div class="gen-card__controls">
+            <div class="gen-control-group" style="grid-column: 1 / -1;">
+              <label for="encounter-biome">Местность (Биом)</label>
+              <select id="encounter-biome" class="gen-select">
+                <option value="any" selected>🎲 Любая местность</option>
+                <option value="forest">🌲 Дикий лес</option>
+                <option value="dungeon">🏰 Подземелье / Руины</option>
+                <option value="road">🛣️ Королевский тракт</option>
+                <option value="mountains">🏔️ Горы и перевалы</option>
+                <option value="city">🏙️ Городские трущобы</option>
+                <option value="swamp">🐊 Гнилые болота и топи</option>
+                <option value="sea">⛵ Морской берег и острова</option>
+              </select>
+            </div>
+          </div>
+
+          <button id="btn-roll-encounter" class="btn-gen-roll">
+            <span class="dice-icon">🎲</span> Сгенерировать энкаунтер
+          </button>
+
+          <div id="result-encounter" class="gen-result">
+            <div class="gen-result__placeholder">Нажмите кнопку для генерации энкаунтера...</div>
+          </div>
+        </section>
+
+        <!-- 5. Квестовые слухи и сплетни -->
+        <section class="gen-card" data-category="rumors" id="card-gen-rumors">
+          <div class="gen-card__header">
+            <span class="gen-card__icon" aria-hidden="true">📜</span>
+            <div class="gen-card__title-group">
+              <h2 class="gen-card__title">Квестовые слухи</h2>
+              <p class="gen-card__desc">Городские слухи со скрытым уровнем достоверности для Мастера.</p>
+            </div>
+          </div>
+
+          <button id="btn-roll-rumor" class="btn-gen-roll" style="margin-top: 4px;">
+            <span class="dice-icon">🎲</span> Подслушать слух
+          </button>
+
+          <div id="result-rumor" class="gen-result">
+            <div class="gen-result__placeholder">Нажмите кнопку, чтобы подслушать слух...</div>
+          </div>
+        </section>
+
+        <!-- 6. Добыча, безделушки и лут -->
+        <section class="gen-card" data-category="loot" id="card-gen-loot">
+          <div class="gen-card__header">
+            <span class="gen-card__icon" aria-hidden="true">💎</span>
+            <div class="gen-card__title-group">
+              <h2 class="gen-card__title">Карманная добыча и лут</h2>
+              <p class="gen-card__desc">Звенящие монеты, безделушки D&D (Trinkets) и ценные находки.</p>
+            </div>
+          </div>
+
+          <div class="gen-card__controls">
+            <div class="gen-control-group" style="grid-column: 1 / -1;">
+              <label for="loot-target">Источник добычи</label>
+              <select id="loot-target" class="gen-select">
+                <option value="any" selected>🎲 Любой источник</option>
+                <option value="pockets">Карманы бандита / прохожего</option>
+                <option value="chest">Старый кованый сундук</option>
+                <option value="mage_bag">Сумка бродячего мага</option>
+                <option value="altar">Тайник под алтарём</option>
+                <option value="monster_lair">Логово чудовища / Пещера</option>
+                <option value="noble_desk">Секретер аристократа / Кабинет</option>
+              </select>
+            </div>
+          </div>
+
+          <button id="btn-roll-loot" class="btn-gen-roll">
+            <span class="dice-icon">🎲</span> Обыскать и сгенерировать лут
+          </button>
+
+          <div id="result-loot" class="gen-result">
+            <div class="gen-result__placeholder">Нажмите кнопку для поиска добычи...</div>
+          </div>
+        </section>
+
+      </main>
+    </div>
+
+    <!-- ============================================
+         VIEW 2: FULL SCENE VIEW (REPLACES ALL GENERATORS)
+         (Styled like NPC Sheet with bidirectional arrows)
+         ============================================ -->
+    <div id="view-scene" class="forge-view-result" style="display: none;">
+
+      <!-- Return / Action Bar -->
+      <div class="result-action-bar">
+        <button id="btn-back-to-generators" class="btn-forge-back" title="Вернуться к генераторам">
+          ← Вернуться к генераторам
+        </button>
+
+        <div class="result-action-bar__right">
+          <button id="btn-reroll-scene" class="btn-secondary" title="Сгенерировать другую случайную сцену">
+            🎲 Сковать новую сцену
+          </button>
+          <button id="btn-copy-scene" class="btn-secondary" title="Скопировать весь сценарий в буфер обмена">
+            📋 Скопировать сценарий
+          </button>
+        </div>
+      </div>
+
+      <!-- Grand Sheet Display (like NPC Generator) -->
+      <article class="forge-sheet" id="forge-scene-sheet">
+        <!-- Ornate Corners -->
+        <span class="forge-sheet__ornament-tl" aria-hidden="true"></span>
+        <span class="forge-sheet__ornament-tr" aria-hidden="true"></span>
+        <span class="forge-sheet__ornament-bl" aria-hidden="true"></span>
+        <span class="forge-sheet__ornament-br" aria-hidden="true"></span>
+
+        <!-- Scene Content -->
+        <div id="forge-scene-content">
+          <!-- Populated dynamically via JS -->
+        </div>
+      </article>
+
+    </div>
+
+  </div>
+
+  <!-- Toast notification container -->
+  <div id="toast-container" class="toast-container" aria-live="polite"></div>
+
+  <!-- Scripts -->
+  <script src="generators-data.js"></script>
+  <script src="generators.js"></script>
+</body>
+</html>

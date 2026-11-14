@@ -1,0 +1,727 @@
+/* ============================================
+   DnD Master Tools — NPC Generator Styles
+   ============================================ */
+
+/* --- Top Navigation Bar --- */
+.npc-nav {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding-block: var(--space-md);
+  border-block-end: 1px solid rgba(201, 168, 76, 0.2);
+  margin-block-end: var(--space-xl);
+  flex-wrap: wrap;
+  gap: var(--space-md);
+}
+
+.npc-nav__left {
+  display: flex;
+  align-items: center;
+  gap: var(--space-md);
+}
+
+.npc-nav__back {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-xs);
+  color: var(--color-gold);
+  font-family: var(--font-heading);
+  font-size: var(--fs-sm);
+  text-decoration: none;
+  font-weight: 600;
+  transition: color var(--transition-fast), transform var(--transition-fast);
+}
+
+.npc-nav__back:hover {
+  color: var(--color-gold-bright);
+  transform: translateX(-3px);
+}
+
+.npc-nav__title {
+  font-family: var(--font-heading);
+  font-size: var(--fs-lg);
+  color: var(--color-gold);
+  text-shadow: var(--glow-text-gold);
+  margin: 0;
+  display: flex;
+  align-items: center;
+  gap: var(--space-sm);
+}
+
+.npc-nav__actions {
+  display: flex;
+  align-items: center;
+  gap: var(--space-sm);
+}
+
+/* --- Filter & Control Bar --- */
+.npc-controls {
+  background: var(--color-bg-card);
+  border: 1px solid rgba(201, 168, 76, 0.25);
+  border-radius: var(--radius-lg);
+  padding: var(--space-lg);
+  box-shadow: var(--shadow-card);
+  margin-block-end: var(--space-2xl);
+}
+
+.npc-controls__grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+  gap: var(--space-md);
+  margin-block-end: var(--space-lg);
+}
+
+.control-group {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-xs);
+}
+
+.control-group label {
+  font-family: var(--font-heading);
+  font-size: var(--fs-xs);
+  color: var(--color-text-light);
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+}
+
+.control-select, .control-input {
+  background: var(--color-bg-deepest);
+  border: 1px solid rgba(201, 168, 76, 0.3);
+  color: var(--color-text-parchment);
+  font-family: var(--font-body);
+  font-size: var(--fs-sm);
+  padding: 0.5rem 0.75rem;
+  border-radius: var(--radius-sm);
+  transition: border-color var(--transition-fast), box-shadow var(--transition-fast);
+  outline: none;
+}
+
+.control-select:focus, .control-input:focus {
+  border-color: var(--color-gold-bright);
+  box-shadow: 0 0 10px rgba(201, 168, 76, 0.3);
+}
+
+.npc-controls__buttons {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-md);
+  padding-block-start: var(--space-md);
+  border-block-start: 1px solid rgba(201, 168, 76, 0.15);
+}
+
+.npc-controls__buttons-left,
+.npc-controls__buttons-right {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-sm);
+}
+
+/* Big Generate Button */
+.btn-generate {
+  font-size: var(--fs-md);
+  padding: 0.75rem 1.8rem;
+  background: linear-gradient(135deg, #c9a84c 0%, #8a7230 100%);
+  color: #07070f;
+  font-family: var(--font-heading);
+  font-weight: 700;
+  border: none;
+  border-radius: var(--radius-md);
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-sm);
+  box-shadow: 0 4px 15px rgba(201, 168, 76, 0.4);
+  transition: all var(--transition-fast);
+}
+
+.btn-generate:hover {
+  background: linear-gradient(135deg, #f5c842 0%, #c9a84c 100%);
+  box-shadow: 0 6px 25px rgba(245, 200, 66, 0.6);
+  transform: translateY(-2px);
+}
+
+.btn-generate:active {
+  transform: translateY(1px);
+}
+
+/* Secondary Buttons */
+.btn-secondary {
+  background: rgba(201, 168, 76, 0.08);
+  border: 1px solid rgba(201, 168, 76, 0.3);
+  color: var(--color-text-parchment);
+  font-family: var(--font-heading);
+  font-size: var(--fs-xs);
+  padding: 0.6rem 1rem;
+  border-radius: var(--radius-sm);
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-xs);
+  transition: all var(--transition-fast);
+}
+
+.btn-secondary:hover {
+  background: rgba(201, 168, 76, 0.2);
+  border-color: var(--color-gold);
+  color: var(--color-gold-bright);
+}
+
+/* --- NPC Sheet (Parchment Card) --- */
+.npc-sheet-wrapper {
+  perspective: 1000px;
+}
+
+.npc-sheet {
+  background: radial-gradient(circle at 50% 10%, #1e1e35 0%, #111122 100%);
+  border: 2px solid var(--color-gold-dim);
+  border-radius: var(--radius-lg);
+  padding: var(--space-2xl);
+  box-shadow: var(--shadow-card-hover), inset 0 0 30px rgba(0, 0, 0, 0.8);
+  position: relative;
+  overflow: hidden;
+  animation: cardAppear 0.5s cubic-bezier(0.16, 1, 0.3, 1) both;
+}
+
+@keyframes cardAppear {
+  0% {
+    opacity: 0;
+    transform: translateY(20px) scale(0.98);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+.npc-sheet::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 4px;
+  background: linear-gradient(90deg, transparent, var(--color-gold), transparent);
+}
+
+/* Ornate Corner Accents */
+.npc-sheet__ornament-tl,
+.npc-sheet__ornament-tr,
+.npc-sheet__ornament-bl,
+.npc-sheet__ornament-br {
+  position: absolute;
+  width: 24px;
+  height: 24px;
+  border: 2px solid var(--color-gold-dim);
+  pointer-events: none;
+  opacity: 0.6;
+}
+.npc-sheet__ornament-tl { top: 8px; left: 8px; border-right: none; border-bottom: none; }
+.npc-sheet__ornament-tr { top: 8px; right: 8px; border-left: none; border-bottom: none; }
+.npc-sheet__ornament-bl { bottom: 8px; left: 8px; border-right: none; border-top: none; }
+.npc-sheet__ornament-br { bottom: 8px; right: 8px; border-left: none; border-top: none; }
+
+/* Sheet Header */
+.npc-sheet__header {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  border-block-end: 2px solid rgba(201, 168, 76, 0.3);
+  padding-block-end: var(--space-lg);
+  margin-block-end: var(--space-lg);
+  gap: var(--space-md);
+  flex-wrap: wrap;
+}
+
+.npc-sheet__name-group {
+  flex-grow: 1;
+}
+
+.npc-sheet__name {
+  font-family: var(--font-heading);
+  font-size: var(--fs-xl);
+  font-weight: 700;
+  color: var(--color-gold-bright);
+  text-shadow: var(--glow-text-gold);
+  line-height: 1.2;
+  margin: 0 0 var(--space-xs) 0;
+  display: flex;
+  align-items: center;
+  gap: var(--space-sm);
+}
+
+.npc-sheet__meta {
+  font-family: var(--font-body);
+  font-size: var(--fs-md);
+  color: var(--color-text-light);
+  font-style: italic;
+  display: flex;
+  align-items: center;
+  gap: var(--space-sm);
+  flex-wrap: wrap;
+}
+
+.npc-sheet__header-actions {
+  display: flex;
+  gap: var(--space-sm);
+}
+
+/* Vitals Bar (HP, AC, Speed, PB) */
+.npc-vitals {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(130px, 1fr));
+  gap: var(--space-md);
+  background: rgba(7, 7, 15, 0.6);
+  border: 1px solid rgba(201, 168, 76, 0.2);
+  border-radius: var(--radius-md);
+  padding: var(--space-md);
+  margin-block-end: var(--space-xl);
+  text-align: center;
+}
+
+.vital-item {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.vital-label {
+  font-family: var(--font-heading);
+  font-size: var(--fs-xs);
+  color: var(--color-text-muted);
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+.vital-value {
+  font-family: var(--font-heading);
+  font-size: var(--fs-lg);
+  font-weight: 700;
+  color: var(--color-gold);
+}
+
+.vital-sub {
+  font-size: var(--fs-xs);
+  color: var(--color-text-dim);
+}
+
+/* Ability Scores (STR, DEX, CON, INT, WIS, CHA) */
+.npc-stats-grid {
+  display: grid;
+  grid-template-columns: repeat(6, 1fr);
+  gap: var(--space-md);
+  margin-block-end: var(--space-xl);
+}
+
+.stat-box {
+  background: rgba(13, 13, 26, 0.85);
+  border: 1px solid rgba(201, 168, 76, 0.3);
+  border-radius: var(--radius-md);
+  padding: var(--space-sm) var(--space-xs);
+  text-align: center;
+  position: relative;
+  transition: transform var(--transition-fast), border-color var(--transition-fast);
+}
+
+.stat-box:hover {
+  transform: translateY(-2px);
+  border-color: var(--color-gold);
+}
+
+.stat-name {
+  font-family: var(--font-heading);
+  font-size: var(--fs-xs);
+  font-weight: 700;
+  color: var(--color-gold);
+  text-transform: uppercase;
+}
+
+.stat-score {
+  font-family: var(--font-heading);
+  font-size: var(--fs-lg);
+  font-weight: 900;
+  color: var(--color-text-parchment);
+  line-height: 1.1;
+  margin: var(--space-xs) 0;
+}
+
+.stat-modifier {
+  display: inline-block;
+  background: var(--color-bg-deepest);
+  border: 1px solid var(--color-gold-dim);
+  border-radius: 50%;
+  width: 32px;
+  height: 32px;
+  line-height: 30px;
+  font-family: var(--font-heading);
+  font-size: var(--fs-sm);
+  font-weight: 700;
+  color: var(--color-gold-bright);
+}
+
+/* Reroll mini-button */
+.btn-reroll {
+  background: transparent;
+  border: none;
+  color: var(--color-text-muted);
+  cursor: pointer;
+  padding: 2px 6px;
+  font-size: 0.9rem;
+  border-radius: 3px;
+  transition: all var(--transition-fast);
+}
+
+.btn-reroll:hover {
+  color: var(--color-gold-bright);
+  transform: rotate(45deg);
+}
+
+/* Narrative Sections */
+.npc-sections-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+  gap: var(--space-lg);
+  margin-block-end: var(--space-xl);
+}
+
+.npc-section {
+  background: rgba(13, 13, 26, 0.5);
+  border: 1px solid rgba(201, 168, 76, 0.15);
+  border-radius: var(--radius-md);
+  padding: var(--space-md);
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-sm);
+}
+
+.npc-section__header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  border-block-end: 1px solid rgba(201, 168, 76, 0.2);
+  padding-block-end: var(--space-xs);
+}
+
+.npc-section__title {
+  font-family: var(--font-heading);
+  font-size: var(--fs-sm);
+  color: var(--color-gold);
+  font-weight: 700;
+  display: flex;
+  align-items: center;
+  gap: var(--space-xs);
+  margin: 0;
+}
+
+.npc-section__content {
+  font-family: var(--font-body);
+  font-size: var(--fs-base);
+  color: var(--color-text-parchment);
+  line-height: 1.6;
+}
+
+.npc-section__content strong {
+  color: var(--color-gold-bright);
+  font-weight: 600;
+}
+
+/* Secret Box: Special Highlight */
+.npc-section--secret {
+  border-color: rgba(123, 45, 139, 0.4);
+  background: linear-gradient(135deg, rgba(123, 45, 139, 0.1) 0%, rgba(13, 13, 26, 0.7) 100%);
+  box-shadow: 0 0 15px rgba(123, 45, 139, 0.15);
+}
+
+.npc-section--secret .npc-section__title {
+  color: var(--color-magic-purple-bright);
+}
+
+.npc-section--secret .btn-reroll:hover {
+  color: var(--color-magic-purple-bright);
+}
+
+/* Equipment & Features List */
+.npc-tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-xs);
+  margin-block-start: var(--space-xs);
+}
+
+.npc-tag {
+  background: rgba(201, 168, 76, 0.1);
+  border: 1px solid rgba(201, 168, 76, 0.25);
+  color: var(--color-text-light);
+  font-size: var(--fs-xs);
+  padding: 2px 8px;
+  border-radius: var(--radius-sm);
+}
+
+/* --- Dice Animation Overlay --- */
+.dice-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(7, 7, 15, 0.75);
+  backdrop-filter: blur(4px);
+  z-index: 1000;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.2s ease;
+}
+
+.dice-overlay.active {
+  opacity: 1;
+  pointer-events: auto;
+}
+
+.dice-d20-container {
+  width: 140px;
+  height: 140px;
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.dice-d20 {
+  width: 110px;
+  height: 110px;
+  animation: diceRoll 0.7s cubic-bezier(0.2, 0.8, 0.2, 1) infinite;
+  filter: drop-shadow(0 0 20px rgba(245, 200, 66, 0.8));
+}
+
+@keyframes diceRoll {
+  0% { transform: rotate(0deg) scale(0.9); }
+  50% { transform: rotate(180deg) scale(1.15); }
+  100% { transform: rotate(360deg) scale(0.9); }
+}
+
+.dice-overlay__text {
+  font-family: var(--font-heading);
+  font-size: var(--fs-lg);
+  color: var(--color-gold-bright);
+  text-shadow: var(--glow-text-gold);
+  margin-block-start: var(--space-md);
+  animation: magicPulse 1s infinite alternate;
+}
+
+/* --- Saved NPCs Drawer / Modal --- */
+.drawer-backdrop {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.7);
+  backdrop-filter: blur(4px);
+  z-index: 900;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity var(--transition-base);
+}
+
+.drawer-backdrop.open {
+  opacity: 1;
+  pointer-events: auto;
+}
+
+.drawer {
+  position: fixed;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  width: min(500px, 90vw);
+  background: var(--color-bg-dark);
+  border-inline-start: 2px solid var(--color-gold-dim);
+  box-shadow: -8px 0 30px rgba(0, 0, 0, 0.8);
+  z-index: 950;
+  transform: translateX(100%);
+  transition: transform var(--transition-base) cubic-bezier(0.16, 1, 0.3, 1);
+  display: flex;
+  flex-direction: column;
+}
+
+.drawer.open {
+  transform: translateX(0);
+}
+
+.drawer__header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: var(--space-lg);
+  border-block-end: 1px solid rgba(201, 168, 76, 0.2);
+}
+
+.drawer__title {
+  font-family: var(--font-heading);
+  font-size: var(--fs-md);
+  color: var(--color-gold);
+  margin: 0;
+}
+
+.drawer__close {
+  background: transparent;
+  border: none;
+  color: var(--color-text-muted);
+  font-size: 1.5rem;
+  cursor: pointer;
+  padding: 4px 8px;
+  transition: color var(--transition-fast);
+}
+
+.drawer__close:hover {
+  color: var(--color-gold-bright);
+}
+
+.drawer__content {
+  flex-grow: 1;
+  overflow-y: auto;
+  padding: var(--space-lg);
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-md);
+}
+
+.saved-npc-card {
+  background: var(--color-bg-card);
+  border: 1px solid rgba(201, 168, 76, 0.2);
+  border-radius: var(--radius-md);
+  padding: var(--space-md);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  transition: all var(--transition-fast);
+}
+
+.saved-npc-card:hover {
+  border-color: var(--color-gold);
+  background: var(--color-bg-card-hover);
+}
+
+.saved-npc-info h4 {
+  font-family: var(--font-heading);
+  font-size: var(--fs-sm);
+  color: var(--color-gold-bright);
+  margin: 0 0 4px 0;
+}
+
+.saved-npc-info p {
+  font-size: var(--fs-xs);
+  color: var(--color-text-muted);
+  margin: 0;
+}
+
+.saved-npc-actions {
+  display: flex;
+  gap: var(--space-xs);
+}
+
+/* Toast Notifications */
+.toast-container {
+  position: fixed;
+  bottom: 24px;
+  right: 24px;
+  z-index: 1100;
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-sm);
+  pointer-events: none;
+}
+
+.toast {
+  background: var(--color-bg-card);
+  border: 1px solid var(--color-gold);
+  color: var(--color-text-parchment);
+  padding: 0.75rem 1.2rem;
+  border-radius: var(--radius-md);
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.8), 0 0 10px rgba(201, 168, 76, 0.3);
+  font-family: var(--font-heading);
+  font-size: var(--fs-xs);
+  animation: toastIn 0.3s ease, toastOut 0.3s ease 2.7s forwards;
+}
+
+@keyframes toastIn {
+  from { opacity: 0; transform: translateY(15px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes toastOut {
+  from { opacity: 1; transform: translateY(0); }
+  to { opacity: 0; transform: translateY(-10px); }
+}
+
+/* --- Print Styles (@media print) --- */
+@media print {
+  body {
+    background: #ffffff !important;
+    color: #000000 !important;
+  }
+
+  .app-header, .npc-nav, .npc-controls, .dice-overlay, .drawer, .drawer-backdrop, .toast-container, .btn-reroll, .npc-sheet__header-actions {
+    display: none !important;
+  }
+
+  .npc-sheet {
+    border: 2px solid #000000 !important;
+    background: #ffffff !important;
+    color: #000000 !important;
+    box-shadow: none !important;
+    padding: 1cm !important;
+  }
+
+  .npc-sheet__name {
+    color: #000000 !important;
+    text-shadow: none !important;
+  }
+
+  .vital-value, .stat-modifier, .stat-name {
+    color: #000000 !important;
+  }
+
+  .stat-box, .npc-vitals, .npc-section {
+    border: 1px solid #666666 !important;
+    background: #f9f9f9 !important;
+    color: #000000 !important;
+  }
+
+  .npc-section__content, .vital-label, .npc-sheet__meta {
+    color: #333333 !important;
+  }
+}
+
+/* --- Responsive Breakpoints --- */
+@media (max-width: 768px) {
+  .npc-stats-grid {
+    grid-template-columns: repeat(3, 1fr);
+  }
+
+  .npc-sheet {
+    padding: var(--space-md);
+  }
+
+  .npc-controls__buttons {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .npc-controls__buttons-left,
+  .npc-controls__buttons-right {
+    width: 100%;
+    justify-content: stretch;
+  }
+
+  .btn-generate, .btn-secondary {
+    flex-grow: 1;
+    justify-content: center;
+  }
+}
+
+@media (max-width: 480px) {
+  .npc-stats-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}

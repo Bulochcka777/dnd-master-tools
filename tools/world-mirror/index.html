@@ -1,0 +1,468 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Зеркало миров — DnD Master Tools</title>
+  <link rel="stylesheet" href="../../css/theme.css">
+  <link rel="stylesheet" href="world-mirror.css">
+</head>
+<body>
+  <!-- Header -->
+  <header class="app-header wm-header">
+    <a href="../../index.html" class="app-back-link wm-back-link">← На главную</a>
+    <div class="wm-title-block">
+      <h1 class="app-title wm-title"><span class="app-title-icon wm-title-icon">🔮</span>ЗЕРКАЛО МИРОВ</h1>
+    </div>
+    <div class="app-header-actions wm-header-actions">
+      <button id="playerViewBtn" class="btn wm-btn-player-view" title="Переключить на чистый экран для игроков (100% туман, без панелей)">
+        👁️ <span class="wm-btn-text">Вид игроков</span>
+      </button>
+    </div>
+  </header>
+
+  <main class="wm-layout">
+    <!-- Sidebar Controls -->
+    <aside class="wm-sidebar" id="sidebar">
+      
+      <!-- Top 3-Button Switcher -->
+      <nav class="wm-tabs-nav" aria-label="Разделы верстака">
+        <button type="button" class="wm-tab-btn active" data-tab="grid">
+          <span class="wm-tab-icon">📐</span>
+          <span class="wm-tab-label">Сетка</span>
+        </button>
+        <button type="button" class="wm-tab-btn" data-tab="interactive">
+          <span class="wm-tab-icon">🌟</span>
+          <span class="wm-tab-label">Интерактив</span>
+        </button>
+        <button type="button" class="wm-tab-btn" data-tab="save">
+          <span class="wm-tab-icon">💾</span>
+          <span class="wm-tab-label">Сохранить</span>
+        </button>
+      </nav>
+
+      <!-- ==============================================
+           TAB 1: GRID CONTROLS (📐 Сетка)
+           ============================================== -->
+      <div class="wm-tab-content active" id="tab-grid">
+        
+        <!-- Upload Section -->
+        <div class="wm-control-group">
+          <h3 class="wm-group-title">📁 Карта (Изображение или Видео)</h3>
+          <div class="wm-dropzone" id="dropzone">
+            <span class="wm-dropzone-icon">🗺️</span>
+            <span class="wm-dropzone-text">Перетащите карту сюда</span>
+            <span class="wm-dropzone-hint">PNG, JPG, WEBP, GIF, MP4, WebM</span>
+            <input type="file" id="fileInput" accept="image/*,video/mp4,video/webm" class="wm-file-input">
+          </div>
+          <div class="wm-file-info" id="fileInfo" hidden>
+            <span id="fileName"></span>
+            <span id="fileSize"></span>
+          </div>
+        </div>
+
+        <!-- Grid Type -->
+        <div class="wm-control-group">
+          <h3 class="wm-group-title">⬡ Тип сетки</h3>
+          <div class="wm-radio-group">
+            <label class="wm-radio-label">
+              <input type="radio" name="gridType" value="square" checked> Квадратная
+            </label>
+            <label class="wm-radio-label">
+              <input type="radio" name="gridType" value="hex"> Гексагональная
+            </label>
+          </div>
+        </div>
+
+        <!-- Grid Size -->
+        <div class="wm-control-group">
+          <h3 class="wm-group-title">🔢 Размер сетки</h3>
+          <div class="wm-input-row">
+            <label class="wm-label">
+              <span>Столбцы</span>
+              <input type="number" id="colsInput" value="10" min="1" max="200" class="wm-input">
+            </label>
+            <label class="wm-label" id="rowsLabel">
+              <span>Строки</span>
+              <input type="number" id="rowsInput" value="10" min="1" max="200" class="wm-input">
+            </label>
+          </div>
+          <label class="wm-checkbox-label" id="squareToggleLabel">
+            <input type="checkbox" id="squareToggle"> Квадратные ячейки 1:1
+          </label>
+        </div>
+
+        <!-- Appearance -->
+        <div class="wm-control-group">
+          <h3 class="wm-group-title">🎨 Внешний вид</h3>
+          <label class="wm-label">
+            <span>Цвет сетки</span>
+            <input type="color" id="colorPicker" value="#c9a84c" class="wm-color-input">
+          </label>
+          <label class="wm-label">
+            <span>Толщина линий: <strong id="thicknessValue">2</strong>px</span>
+            <input type="range" id="thicknessInput" value="2" min="1" max="10" step="1" class="wm-range">
+          </label>
+          <label class="wm-label">
+            <span>Прозрачность: <strong id="opacityValue">80</strong>%</span>
+            <input type="range" id="opacityInput" value="80" min="5" max="100" step="5" class="wm-range">
+          </label>
+        </div>
+
+        <!-- Options -->
+        <div class="wm-control-group">
+          <h3 class="wm-group-title">⚙️ Опции</h3>
+          <label class="wm-checkbox-label">
+            <input type="checkbox" id="labelsToggle"> 🏷️ Метки ячеек (A1, B2...)
+          </label>
+          <label class="wm-checkbox-label" id="diagonalToggleLabel">
+            <input type="checkbox" id="diagonalToggle"> ❌ Диагональные линии
+          </label>
+        </div>
+
+        <!-- Drag Grid Mode -->
+        <div class="wm-control-group">
+          <h3 class="wm-group-title">✋ Перемещение сетки</h3>
+          <button id="dragToggle" class="btn wm-btn-action">Перетащить сетку</button>
+          <button id="resetPosition" class="btn wm-btn-secondary" hidden>Сбросить позицию</button>
+        </div>
+
+      </div>
+
+      <!-- ==============================================
+           TAB 2: INTERACTIVE & FOG (🌟 Интерактив)
+           ============================================== -->
+      <div class="wm-tab-content" id="tab-interactive">
+        
+        <!-- Fog of War -->
+        <div class="wm-control-group">
+          <div class="wm-group-header-row">
+            <h3 class="wm-group-title">🌫️ Туман войны</h3>
+            <label class="wm-switch-label" title="Включить туман войны">
+              <input type="checkbox" id="fogToggle">
+              <span class="wm-switch-slider"></span>
+            </label>
+          </div>
+
+          <div id="fogControls" class="wm-subcontrols" hidden>
+            <!-- Brush Mode Buttons -->
+            <div class="wm-brush-modes">
+              <button id="brushRevealBtn" class="btn wm-btn-tool active" title="Горячая клавиша: R">
+                🔦 Кисть света (Стереть)
+              </button>
+              <button id="brushHideBtn" class="btn wm-btn-tool" title="Горячая клавиша: H">
+                ⬛ Накрыть туманом
+              </button>
+            </div>
+
+            <!-- Brush Size -->
+            <label class="wm-label">
+              <span>Радиус обзора: <strong id="brushSizeVal">60</strong>px</span>
+              <input type="range" id="brushSizeInput" value="60" min="15" max="300" step="5" class="wm-range">
+            </label>
+
+            <!-- Feathering / Soft Edge -->
+            <label class="wm-label">
+              <span>Мягкость краев: <strong id="brushFeatherVal">50</strong>%</span>
+              <input type="range" id="brushFeatherInput" value="50" min="0" max="100" step="5" class="wm-range">
+            </label>
+
+            <!-- DM Opacity -->
+            <label class="wm-label" title="Мастер видит сквозь туман в режиме редактирования">
+              <span>Прозрачность тумана для DM: <strong id="dmOpacityVal">35</strong>%</span>
+              <input type="range" id="dmOpacityInput" value="35" min="0" max="100" step="5" class="wm-range">
+            </label>
+
+            <!-- Quick Actions -->
+            <div class="wm-input-row" style="margin-top: 6px;">
+              <button id="coverAllFogBtn" class="btn wm-btn-secondary" style="font-size: 0.78rem;">
+                🪣 Залить всё
+              </button>
+              <button id="clearAllFogBtn" class="btn wm-btn-secondary" style="font-size: 0.78rem;">
+                ☀️ Очистить всё
+              </button>
+            </div>
+          </div>
+        </div>
+
+        <!-- Interactive Props & Hazards Library -->
+        <div class="wm-control-group">
+          <div class="wm-group-header-row">
+            <h3 class="wm-group-title">✨ Интерактивные объекты</h3>
+            <span class="badge badge--gold" style="font-size: 0.65rem;" id="activeObjectBadge">Выберите объект</span>
+          </div>
+          <p class="wm-hint-text">Нажмите на любой объект ниже и кликните на карту, чтобы разместить его. Уже установленные объекты можно двигать мышкой!</p>
+
+          <!-- Palette Category: Огонь и Свет -->
+          <div class="wm-prop-category-label">🔥 Свет и пламя</div>
+          <div class="wm-props-grid">
+            <button class="wm-prop-btn" data-type="torch" title="Настенный факел с теплым светом">
+              <span class="wm-prop-icon">
+                <svg viewBox="0 0 24 24" width="24" height="24" fill="none"><path d="M8.5 21.5l3.2-7.5" stroke="#a07d3b" stroke-width="2.2" stroke-linecap="round"/><path d="M10 21.5l1.5-3" stroke="#5c4318" stroke-width="2.5" stroke-linecap="round"/><path d="M8.5 13.5h7l-1 3.5h-5z" fill="#3e3831" stroke="#c9a84c" stroke-width="1.3" stroke-linejoin="round"/><path d="M12 2c2 3.5 4 5.2 4 8a4 4 0 0 1-8 0c0-2.8 2-4.5 4-8z" fill="#f59e0b" stroke="#fef08a" stroke-width="1.2"/><path d="M12 5.5c1 1.6 2 2.5 2 4.2a2 2 0 0 1-4 0c0-1.7 1-2.6 2-4.2z" fill="#fef08a"/></svg>
+              </span>
+              <span class="wm-prop-name">Факел</span>
+            </button>
+            <button class="wm-prop-btn" data-type="campfire" title="Походный костёр с искрами и углями">
+              <span class="wm-prop-icon">
+                <svg viewBox="0 0 24 24" width="24" height="24" fill="none"><ellipse cx="12" cy="19.5" rx="9" ry="2.5" stroke="#64748b" stroke-width="1.2" stroke-dasharray="2 3"/><path d="M4 19l16-3M20 19L4 16" stroke="#78350f" stroke-width="2.2" stroke-linecap="round"/><path d="M12 4c2.5 3 4.5 5.5 4.5 8.5a4.5 4.5 0 0 1-9 0c0-2.5 2-4.5 4.5-8.5z" fill="#ea580c" stroke="#f59e0b" stroke-width="1.3"/><path d="M12 7.5c1.5 2 2.5 3.5 2.5 5.5a2.5 2.5 0 0 1-5 0c0-1.5 1-2.8 2.5-5.5z" fill="#fef08a"/></svg>
+              </span>
+              <span class="wm-prop-name">Костёр</span>
+            </button>
+            <button class="wm-prop-btn" data-type="crystal" title="Магический пульсирующий кристалл">
+              <span class="wm-prop-icon">
+                <svg viewBox="0 0 24 24" width="24" height="24" fill="none"><path d="M12 2l7 7-7 13-7-13 7-7z" fill="rgba(192, 132, 252, 0.4)" stroke="#c084fc" stroke-width="1.6"/><path d="M12 2v20M5 9h14M12 2l3.5 7L12 22l-3.5-13L12 2z" stroke="#e9d5ff" stroke-width="1.2"/><path d="M19 4l.7 1.5 1.5.7-1.5.7-.7 1.5-.7-1.5-1.5-.7 1.5-.7.7-1.5z" fill="#7dd3fc"/></svg>
+              </span>
+              <span class="wm-prop-name">Кристалл</span>
+            </button>
+            <button class="wm-prop-btn" data-type="candles" title="Группа алтарных свечей">
+              <span class="wm-prop-icon">
+                <svg viewBox="0 0 24 24" width="24" height="24" fill="none"><rect x="4" y="11" width="4" height="10" rx="1" fill="#fef3c7" stroke="#d97706" stroke-width="1.2"/><path d="M6 11v-2" stroke="#78350f" stroke-width="1.2" stroke-linecap="round"/><path d="M6 5.5c.8 1 1.2 1.8 1.2 2.5a1.2 1.2 0 0 1-2.4 0c0-.7.4-1.5 1.2-2.5z" fill="#f59e0b"/><rect x="10" y="8" width="4" height="13" rx="1" fill="#fffbeb" stroke="#d97706" stroke-width="1.2"/><path d="M12 8v-2" stroke="#78350f" stroke-width="1.2" stroke-linecap="round"/><path d="M12 2.5c.9 1.1 1.4 2 1.4 2.8a1.4 1.4 0 0 1-2.8 0c0-.8.5-1.7 1.4-2.8z" fill="#fef08a"/><rect x="16" y="14" width="4" height="7" rx="1" fill="#fef3c7" stroke="#d97706" stroke-width="1.2"/><path d="M18 14v-2" stroke="#78350f" stroke-width="1.2" stroke-linecap="round"/><path d="M18 8.5c.7.9 1.1 1.5 1.1 2.2a1.1 1.1 0 0 1-2.2 0c0-.7.4-1.3 1.1-2.2z" fill="#f59e0b"/></svg>
+              </span>
+              <span class="wm-prop-name">Свечи</span>
+            </button>
+          </div>
+
+          <!-- Palette Category: Вода и Жидкости -->
+          <div class="wm-prop-category-label">💧 Вода и жидкости</div>
+          <div class="wm-props-grid">
+            <button class="wm-prop-btn" data-type="water" title="Водная гладь с расходящейся рябью">
+              <span class="wm-prop-icon">
+                <svg viewBox="0 0 24 24" width="24" height="24" fill="none"><path d="M2 13c3-1.5 6-1.5 9 0s6 1.5 9 0" stroke="#38bdf8" stroke-width="1.8" stroke-linecap="round"/><path d="M3 17c2.5-1.2 5-1.2 7.5 0s5 1.2 7.5 0" stroke="#0ea5e9" stroke-width="1.6" stroke-linecap="round"/><path d="M12 3c-1.5 2-3 4-3 6a3 3 0 0 0 6 0c0-2-1.5-4-3-6z" fill="#38bdf8" stroke="#bae6fd" stroke-width="1.2"/><ellipse cx="12" cy="18" rx="8" ry="3" stroke="#7dd3fc" stroke-width="1.2" stroke-dasharray="3 3"/></svg>
+              </span>
+              <span class="wm-prop-name">Вода/Рябь</span>
+            </button>
+            <button class="wm-prop-btn" data-type="puddle" title="Неглубокая лужа на каменном полу">
+              <span class="wm-prop-icon">
+                <svg viewBox="0 0 24 24" width="24" height="24" fill="none"><path d="M4 14c-1 3 2 6 7 6s9-1.5 9-4.5c0-2.5-3-4-6-4.5-2-.3-3.5-1.5-5.5-1-2.5.6-3.5 2-4.5 4z" fill="rgba(56, 189, 248, 0.3)" stroke="#38bdf8" stroke-width="1.8" stroke-linejoin="round"/><path d="M7 16c1.5 1 4 1.5 7 1" stroke="#e0f2fe" stroke-width="1.4" stroke-linecap="round"/><path d="M12 4c-.8 1.2-1.5 2.2-1.5 3.2a1.5 1.5 0 0 0 3 0c0-1-.7-2-1.5-3.2z" fill="#38bdf8"/></svg>
+              </span>
+              <span class="wm-prop-name">Лужа</span>
+            </button>
+            <button class="wm-prop-btn" data-type="acid" title="Кипящая едкая кислота с пузырьками">
+              <span class="wm-prop-icon">
+                <svg viewBox="0 0 24 24" width="24" height="24" fill="none"><path d="M10 2h4M11 2v4.5L6.5 16A4 4 0 0 0 10 22h4a4 4 0 0 0 3.5-6L13 6.5V2" stroke="#4ade80" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/><path d="M7.8 14h8.4" stroke="#86efac" stroke-width="1.4"/><path d="M8.5 17.5c1.5.5 5.5.5 7 0" stroke="#22c55e" stroke-width="1.4" stroke-linecap="round"/><circle cx="10" cy="18" r="1.2" fill="#bbf7d0"/><circle cx="13.5" cy="16" r="0.9" fill="#bbf7d0"/><circle cx="12" cy="12" r="1" fill="#4ade80"/></svg>
+              </span>
+              <span class="wm-prop-name">Кислота</span>
+            </button>
+            <button class="wm-prop-btn" data-type="blood" title="Багровая лужа крови / жертвенник">
+              <span class="wm-prop-icon">
+                <svg viewBox="0 0 24 24" width="24" height="24" fill="none"><path d="M12 2.5C10 6 7 9.5 7 13.5a5 5 0 0 0 10 0c0-4-3-7.5-5-11z" fill="#991b1b" stroke="#e11d48" stroke-width="1.5"/><path d="M10 12c-1.5 2 0 4 2 4" stroke="#fecdd3" stroke-width="1.2" stroke-linecap="round"/><circle cx="4" cy="18" r="1.6" fill="#be123c"/><circle cx="19.5" cy="17" r="1.8" fill="#be123c"/><circle cx="17.5" cy="10" r="1.2" fill="#be123c"/></svg>
+              </span>
+              <span class="wm-prop-name">Кровь</span>
+            </button>
+          </div>
+
+          <!-- Palette Category: Опасности и Магия -->
+          <div class="wm-prop-category-label">🌋 Опасности и магия</div>
+          <div class="wm-props-grid">
+            <button class="wm-prop-btn" data-type="lava" title="Раскаленная лава с жаром и искрами">
+              <span class="wm-prop-icon">
+                <svg viewBox="0 0 24 24" width="24" height="24" fill="none"><path d="M3 20l4-6 5 2 3-5 6 9H3z" fill="rgba(239, 68, 68, 0.3)" stroke="#78350f" stroke-width="1.5" stroke-linejoin="round"/><path d="M4 18l4-4 3 2 4-5 5 7" stroke="#f97316" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/><path d="M8 14l2 3 3-2" stroke="#fef08a" stroke-width="1.4" stroke-linecap="round"/><path d="M15 11l2 4" stroke="#fef08a" stroke-width="1.4" stroke-linecap="round"/></svg>
+              </span>
+              <span class="wm-prop-name">Лава</span>
+            </button>
+            <button class="wm-prop-btn" data-type="portal" title="Вращающийся космический портал">
+              <span class="wm-prop-icon">
+                <svg viewBox="0 0 24 24" width="24" height="24" fill="none"><circle cx="12" cy="12" r="9" stroke="#8b5cf6" stroke-width="2"/><circle cx="12" cy="12" r="6" stroke="#c084fc" stroke-width="1.5" stroke-dasharray="3 2"/><path d="M12 7a5 5 0 0 1 5 5c0 2.5-2.5 4-4 4s-3-1.5-3-3 1-2 2-2 1 .5 1 1" stroke="#67e8f9" stroke-width="1.6" stroke-linecap="round"/><circle cx="12" cy="12" r="1.5" fill="#f5f3ff"/></svg>
+              </span>
+              <span class="wm-prop-name">Портал</span>
+            </button>
+            <button class="wm-prop-btn" data-type="smoke" title="Клубящийся дым или ядовитый газ">
+              <span class="wm-prop-icon">
+                <svg viewBox="0 0 24 24" width="24" height="24" fill="none"><path d="M7 19c-2.5 0-4-1.8-4-4 0-1.8 1.2-3.3 2.8-3.8C6.3 8.5 8.7 7 11.5 7c3.3 0 6 2.2 6.5 5.2 1.8.4 3 2 3 3.8 0 2.2-1.8 4-4 4H7z" fill="rgba(148, 163, 184, 0.3)" stroke="#94a3b8" stroke-width="1.8" stroke-linejoin="round"/><path d="M7 15c1-1.5 3-2 5-1.5" stroke="#cbd5e1" stroke-width="1.4" stroke-linecap="round"/><path d="M10 5c-.5-1 .5-2 1.5-2s1.5.5 2 1.5" stroke="#64748b" stroke-width="1.2" stroke-linecap="round"/></svg>
+              </span>
+              <span class="wm-prop-name">Дым/Газ</span>
+            </button>
+            <button class="wm-prop-btn" data-type="web" title="Паучья липкая паутина">
+              <span class="wm-prop-icon">
+                <svg viewBox="0 0 24 24" width="24" height="24" fill="none"><path d="M12 2v20M2 12h20M5 5l14 14M19 5L5 19" stroke="#94a3b8" stroke-width="1.2"/><path d="M12 6l4.2 1.8L18 12l-1.8 4.2L12 18l-4.2-1.8L6 12l1.8-4.2L12 6z" stroke="#e2e8f0" stroke-width="1.4" stroke-linejoin="round"/><path d="M12 9l2.1.9L15 12l-.9 2.1L12 15l-2.1-.9L9 12l.9-2.1L12 9z" stroke="#f8fafc" stroke-width="1.2" stroke-linejoin="round"/></svg>
+              </span>
+              <span class="wm-prop-name">Паутина</span>
+            </button>
+          </div>
+
+          <!-- Active Object Controls -->
+          <div class="wm-active-object-bar" id="activeObjectBar" hidden>
+            <div class="wm-input-row" style="align-items: center; margin-bottom: 6px;">
+              <span id="activeObjectDesc" style="font-size: 0.76rem; font-weight: 600; color: #f5c842;">📍 Кликните на карту...</span>
+              <button id="cancelPlacementBtn" class="btn wm-btn-secondary" style="font-size: 0.72rem; padding: 3px 8px;">Отмена (Esc)</button>
+            </div>
+            <div class="wm-shape-mode-switch" id="shapeModeSwitch">
+              <span style="font-size: 0.68rem; color: #a09885; margin-right: 4px;">Режим:</span>
+              <button type="button" class="btn wm-shape-mode-btn active" id="shapePointBtn" data-shape="point">📍 Точка</button>
+              <button type="button" class="btn wm-shape-mode-btn" id="shapeLassoBtn" data-shape="lasso">✏️ Лассо (Контур)</button>
+            </div>
+          </div>
+
+          <!-- Object Size Slider -->
+          <label class="wm-label" style="margin-top: 6px;">
+            <span>Размер / Радиус объекта: <strong id="propSizeVal">100</strong>px</span>
+            <input type="range" id="propSizeInput" value="100" min="20" max="350" step="5" class="wm-range">
+          </label>
+
+          <!-- Animation & Flickering Intensity Slider -->
+          <label class="wm-label" style="margin-top: 4px;">
+            <span>⚡ Интенсивность анимации / мигания: <strong id="animSpeedVal">100</strong>%</span>
+            <input type="range" id="animSpeedInput" value="100" min="0" max="200" step="5" class="wm-range">
+          </label>
+
+          <label class="wm-checkbox-label" style="margin-top: 4px;">
+            <input type="checkbox" id="lightsRevealFogToggle" checked> 🔥 Огонь и кристаллы рассеивают туман
+          </label>
+
+          <!-- List of Placed Objects -->
+          <div class="wm-objects-header">
+            <span style="font-size: 0.75rem; color: #c9a84c; font-weight: 600;">Размещено: <strong id="objectsCount">0</strong></span>
+            <button id="clearLightsBtn" class="btn wm-btn-secondary" style="font-size: 0.7rem; padding: 2px 8px;" title="Удалить все объекты">
+              🗑️ Очистить всё
+            </button>
+          </div>
+          <div id="lightsList" class="wm-lights-list">
+            <!-- Dynamically populated props list -->
+          </div>
+        </div>
+
+        <!-- Weather Effects -->
+        <div class="wm-control-group">
+          <h3 class="wm-group-title">🌦️ Погода и атмосфера</h3>
+          <label class="wm-label">
+            <span>Эффект окружения</span>
+            <select id="weatherSelect" class="wm-select">
+              <option value="none">Нет (Ясно)</option>
+              <option value="rain">Дождь 🌧️</option>
+              <option value="snow">Снегопад ❄️</option>
+              <option value="embers">Огненные искры / пепел 🔥</option>
+              <option value="magic">Магические чары ✨</option>
+            </select>
+          </label>
+        </div>
+
+      </div>
+
+      <!-- ==============================================
+           TAB 3: SAVE & EXPORT (💾 Сохранить)
+           ============================================== -->
+      <div class="wm-tab-content" id="tab-save">
+        
+        <!-- Save/Load DNDMAP Project -->
+        <div class="wm-control-group">
+          <h3 class="wm-group-title">📦 Проект карты (.dndmap)</h3>
+          <p class="wm-hint-text">Сохраняет всё: карту, параметры сетки, открытый туман войны и все расставленные факелы в единый файл.</p>
+          
+          <label class="wm-label">
+            <span>Название сцены</span>
+            <input type="text" id="mapNameInput" value="Подземелье_сцена" class="wm-input">
+          </label>
+
+          <button id="saveProjectBtn" class="btn btn--primary wm-btn-full" style="margin-top: 6px;">
+            💾 Скачать проект (.dndmap)
+          </button>
+
+          <div class="wm-dropzone wm-dropzone--compact" id="projectDropzone" style="margin-top: 10px;">
+            <span class="wm-dropzone-icon">📂</span>
+            <span class="wm-dropzone-text">Загрузить проект (.dndmap)</span>
+            <input type="file" id="projectFileInput" accept=".dndmap,application/json" class="wm-file-input">
+          </div>
+        </div>
+
+        <!-- Standalone HTML Map (Автономная живая карта) -->
+        <div class="wm-control-group">
+          <h3 class="wm-group-title">🌐 Автономный файл карты (.html)</h3>
+          <p class="wm-hint-text">Скачивает один независимый файл: карта, анимации огня и воды, сетка и туман войны внутри. Работает офлайн без сайта!</p>
+          <button id="exportHtmlBtn" class="btn wm-btn-action wm-btn-full" style="margin-top: 4px;">
+            🌐 Скачать живую карту (.html)
+          </button>
+        </div>
+
+        <!-- Quick Image Export -->
+        <div class="wm-control-group">
+          <h3 class="wm-group-title">🖼️ Быстрый экспорт изображения</h3>
+          <div class="wm-input-row">
+            <select id="formatSelect" class="wm-select">
+              <option value="png">PNG</option>
+              <option value="jpg">JPG</option>
+              <option value="webp">WEBP</option>
+            </select>
+            <button id="downloadBtn" class="btn btn--primary wm-btn-download" disabled>
+              Скачать снимок
+            </button>
+          </div>
+        </div>
+
+        <!-- Reset All -->
+        <div class="wm-control-group">
+          <button id="resetBtn" class="btn btn--danger wm-btn-reset">🗑️ Сбросить всё к началу</button>
+        </div>
+
+      </div>
+
+    </aside>
+
+    <!-- Canvas Interactive Viewport Area -->
+    <section class="wm-canvas-area" id="canvasArea">
+      
+      <!-- Placeholder when empty -->
+      <div class="wm-canvas-placeholder" id="placeholder">
+        <span class="wm-placeholder-icon">🔮</span>
+        <h2>Добро пожаловать в Зеркало Миров</h2>
+        <p>Загрузите статичную карту или анимированное видео баттлмапа</p>
+        <p class="wm-placeholder-hint">Поддерживаются форматы: PNG, JPG, WEBP, GIF, MP4, WebM</p>
+        <button id="placeholderUploadBtn" class="btn btn--primary" style="margin-top: 14px;">
+          📁 Выбрать карту
+        </button>
+      </div>
+
+      <!-- Canvas Stage Wrapper -->
+      <div class="wm-canvas-wrapper" id="canvasWrapper" hidden>
+        <canvas id="mainCanvas"></canvas>
+      </div>
+
+      <!-- Floating Canvas HUD (Zoom, Pan, Info) -->
+      <div class="wm-hud" id="hud" hidden>
+        <span class="wm-hud-chip" id="hudZoom">100%</span>
+        <button id="zoomInBtn" class="wm-hud-btn" title="Приблизить (+)">➕</button>
+        <button id="zoomOutBtn" class="wm-hud-btn" title="Отдалить (-)">➖</button>
+        <button id="zoomFitBtn" class="wm-hud-btn" title="По размеру экрана">⤢</button>
+        <span class="wm-hud-divider"></span>
+        <span class="wm-hud-hint">Пробел + ЛКМ для перемещения • Колёсико для зума</span>
+      </div>
+
+      <!-- Floating Exit Player View button (shown only in Player View) -->
+      <button id="exitPlayerViewBtn" class="btn wm-exit-player-view" hidden>
+        ✕ Выйти из вида игроков (Esc)
+      </button>
+
+    </section>
+  </main>
+
+  <!-- Hidden Video Element for Video Battlemaps -->
+  <video id="bgVideo" playsinline loop muted crossorigin="anonymous" style="display:none;"></video>
+
+  <!-- Floating Context Menu on Right-Click (ПКМ) -->
+  <div id="propContextMenu" class="wm-context-menu" hidden>
+    <div class="wm-ctx-header">
+      <span class="wm-ctx-icon" id="ctxIcon">🔥</span>
+      <span class="wm-ctx-title" id="ctxTitle">Свойства объекта</span>
+      <button type="button" class="wm-ctx-close" id="ctxCloseBtn" title="Закрыть">✕</button>
+    </div>
+    <div class="wm-ctx-body">
+      <label class="wm-ctx-label" id="ctxRadiusRow">
+        <span>Размер: <strong id="ctxRadiusVal">100</strong>px</span>
+        <input type="range" id="ctxRadiusInput" min="20" max="450" step="5" class="wm-range">
+      </label>
+      <label class="wm-ctx-label">
+        <span>⚡ Интенсивность мигания: <strong id="ctxSpeedVal">100</strong>%</span>
+        <input type="range" id="ctxSpeedInput" min="0" max="200" step="5" class="wm-range">
+      </label>
+      <label class="wm-checkbox-label" id="ctxRevealFogRow" style="margin-top: 6px; font-size: 0.73rem;">
+        <input type="checkbox" id="ctxRevealFogInput"> 🔥 Рассеивать туман войны
+      </label>
+      <div class="wm-ctx-actions">
+        <button type="button" class="btn wm-btn-secondary" id="ctxDuplicateBtn" title="Создать копию рядом">📋 Клон</button>
+        <button type="button" class="btn wm-btn-danger" id="ctxDeleteBtn" title="Удалить объект">🗑️ Удалить</button>
+      </div>
+    </div>
+  </div>
+
+  <script src="world-mirror.js"></script>
+</body>
+</html>
